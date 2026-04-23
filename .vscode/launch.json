@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ChifaXinYanApplication<ChifaXinYan>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "apf1.ChifaXinYan.ChifaXinYanApplication",
+            "projectName": "ChifaXinYan",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

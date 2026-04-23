@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chifa Xin Yan - Sistema de Gestión</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rojo: #C0392B;
+    --rojo-oscuro: #922B21;
+    --rojo-claro: #FADBD8;
+    --dorado: #D4AC0D;
+    --dorado-claro: #FEF9E7;
+    --negro: #1A1A1A;
+    --gris-oscuro: #2C2C2C;
+    --gris-medio: #6B6B6B;
+    --gris-claro: #F5F5F5;
+    --blanco: #FFFFFF;
+    --verde: #1E8449;
+    --verde-claro: #D5F5E3;
+    --naranja: #E67E22;
+    --naranja-claro: #FDEBD0;
+    --azul: #2471A3;
+    --azul-claro: #D6EAF8;
+    --borde: #E0E0E0;
+    --sidebar-w: 240px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #F0EFEA; color: var(--negro); display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: var(--sidebar-w); background: var(--gris-oscuro); color: #fff;
+    display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100;
+  }
+  .sidebar-logo {
+    padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-icon {
+    width: 40px; height: 40px; background: var(--rojo); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .logo-text { line-height: 1.2; }
+  .logo-text strong { font-family: 'Noto Serif SC', serif; font-size: 15px; color: #fff; display: block; }
+  .logo-text span { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; }
+  .sidebar-user {
+    padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .user-avatar {
+    width: 34px; height: 34px; border-radius: 50%; background: var(--rojo);
+    display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;
+  }
+  .user-info span { display: block; font-size: 13px; font-weight: 500; }
+  .user-info small { font-size: 11px; color: rgba(255,255,255,0.5); }
+  .rol-badge {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 4px; background: var(--rojo); color: #fff; display: inline-block;
+  }
+  nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+  .nav-section { padding: 8px 20px 4px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+    cursor: pointer; transition: background 0.15s; color: rgba(255,255,255,0.7);
+    font-size: 14px; border: none; background: none; width: 100%; text-align: left;
+    text-decoration: none;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .nav-item.active { background: var(--rojo); color: #fff; }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+  .sidebar-bottom { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .logout-btn {
+    display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.5);
+    background: none; border: none; cursor: pointer; font-size: 13px; padding: 6px 0;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .logout-btn:hover { color: #fff; }
+
+  /* MAIN */
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+  .topbar {
+    background: var(--blanco); border-bottom: 1px solid var(--borde);
+    padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-left { display: flex; flex-direction: column; }
+  .topbar-left h1 { font-size: 18px; font-weight: 600; color: var(--negro); }
+  .topbar-left span { font-size: 12px; color: var(--gris-medio); }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .btn-icon {
+    width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--borde);
+    background: var(--blanco); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; transition: background 0.15s;
+  }
+  .btn-icon:hover { background: var(--gris-claro); }
+  .notif-dot { position: relative; }
+  .notif-dot::after {
+    content: ''; position: absolute; top: 6px; right: 6px; width: 7px; height: 7px;
+    background: var(--rojo); border-radius: 50%; border: 1.5px solid var(--blanco);
+  }
+  .content { padding: 28px 32px; flex: 1; }
+
+  /* VIEWS */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* STATS GRID */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--blanco); border-radius: 12px; padding: 20px;
+    border: 1px solid var(--borde); position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .stat-card.red::before { background: var(--rojo); }
+  .stat-card.gold::before { background: var(--dorado); }
+  .stat-card.green::before { background: var(--verde); }
+  .stat-card.blue::before { background: var(--azul); }
+  .stat-label { font-size: 12px; color: var(--gris-medio); font-weight: 500; letter-spacing: 0.3px; margin-bottom: 8px; text-transform: uppercase; }
+  .stat-value { font-size: 28px; font-weight: 600; color: var(--negro); line-height: 1; }
+  .stat-sub { font-size: 12px; color: var(--gris-medio); margin-top: 6px; }
+  .stat-icon { position: absolute; top: 18px; right: 18px; font-size: 24px; opacity: 0.15; }
+
+  /* CARDS */
+  .card {
+    background: var(--blanco); border-radius: 12px; border: 1px solid var(--borde);
+    overflow: hidden; margin-bottom: 20px;
+  }
+  .card-header {
+    padding: 18px 24px; border-bottom: 1px solid var(--borde);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 15px; font-weight: 600; color: var(--negro); }
+  .card-body { padding: 24px; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--gris-medio); border-bottom: 1px solid var(--borde); background: var(--gris-claro); }
+  td { padding: 13px 16px; border-bottom: 1px solid #F0F0F0; color: var(--negro); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #FAFAFA; }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex; align-items: center; padding: 3px 10px;
+    border-radius: 20px; font-size: 12px; font-weight: 500; white-space: nowrap;
+  }
+  .badge-libre { background: var(--verde-claro); color: #145A32; }
+  .badge-ocupada { background: var(--rojo-claro); color: var(--rojo-oscuro); }
+  .badge-reservada { background: var(--naranja-claro); color: #784212; }
+  .badge-pendiente { background: #FEF9E7; color: #7D6608; }
+  .badge-en_cocina { background: var(--naranja-claro); color: #784212; }
+  .badge-listo { background: var(--azul-claro); color: #1A5276; }
+  .badge-entregado { background: var(--verde-claro); color: #145A32; }
+  .badge-cancelado { background: #F2F3F4; color: #626567; }
+  .badge-mozo { background: var(--azul-claro); color: #1A5276; }
+  .badge-cocina { background: var(--naranja-claro); color: #784212; }
+  .badge-admin { background: var(--rojo-claro); color: var(--rojo-oscuro); }
+  .badge-chaufa { background: #FEF9E7; color: #7D6608; }
+  .badge-sopa { background: #D6EAF8; color: #1A5276; }
+  .badge-tallerines { background: #E8DAEF; color: #6C3483; }
+  .badge-menu { background: #D5F5E3; color: #145A32; }
+  .badge-bebidas { background: #FADBD8; color: #922B21; }
+  .badge-platos { background: #FDEBD0; color: #784212; }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; border: 1px solid transparent;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary { background: var(--rojo); color: #fff; border-color: var(--rojo); }
+  .btn-primary:hover { background: var(--rojo-oscuro); }
+  .btn-secondary { background: var(--blanco); color: var(--negro); border-color: var(--borde); }
+  .btn-secondary:hover { background: var(--gris-claro); }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-gold { background: var(--dorado); color: var(--negro); border-color: var(--dorado); }
+  .btn-gold:hover { background: #B7950B; }
+  .btn-danger { background: var(--blanco); color: var(--rojo); border-color: var(--rojo-claro); }
+  .btn-danger:hover { background: var(--rojo-claro); }
+
+  /* GRID LAYOUTS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* MESAS GRID */
+  .mesas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; padding: 24px; }
+  .mesa-card {
+    border: 2px solid var(--borde); border-radius: 12px; padding: 20px 16px;
+    text-align: center; cursor: pointer; transition: all 0.2s; position: relative;
+    background: var(--blanco);
+  }
+  .mesa-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .mesa-card.libre { border-color: #A9DFBF; }
+  .mesa-card.ocupada { border-color: var(--rojo); background: #FFF9F9; }
+  .mesa-card.reservada { border-color: var(--naranja); background: #FFFBF5; }
+  .mesa-numero { font-size: 28px; font-weight: 700; color: var(--negro); font-family: 'Noto Serif SC', serif; }
+  .mesa-cap { font-size: 12px; color: var(--gris-medio); margin-top: 4px; }
+  .mesa-estado { margin-top: 10px; }
+
+  /* PRODUCTOS GRID */
+  .productos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; padding: 24px; }
+  .producto-card {
+    border: 1px solid var(--borde); border-radius: 12px; overflow: hidden;
+    background: var(--blanco); transition: all 0.2s; cursor: pointer;
+  }
+  .producto-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .producto-img { height: 130px; background: linear-gradient(135deg, #F9EBEA, #FAD7A0); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+  .producto-info { padding: 14px; }
+  .producto-nombre { font-size: 14px; font-weight: 600; color: var(--negro); margin-bottom: 4px; }
+  .producto-precio { font-size: 18px; font-weight: 700; color: var(--rojo); }
+  .producto-stock { font-size: 12px; color: var(--gris-medio); margin-top: 4px; }
+  .producto-stock.bajo { color: var(--rojo); font-weight: 500; }
+
+  /* PEDIDO DETAIL */
+  .pedido-detail-grid { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
+  .cart-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F0F0F0; }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item-emoji { font-size: 24px; width: 44px; height: 44px; background: var(--gris-claro); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-size: 14px; font-weight: 500; color: var(--negro); }
+  .cart-item-price { font-size: 12px; color: var(--gris-medio); }
+  .qty-control { display: flex; align-items: center; gap: 8px; }
+  .qty-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--borde); background: var(--blanco); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .qty-btn:hover { background: var(--rojo); color: #fff; border-color: var(--rojo); }
+  .cart-total-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 14px; color: var(--gris-medio); }
+  .cart-total-final { display: flex; justify-content: space-between; padding: 14px 0 0; font-size: 18px; font-weight: 700; color: var(--negro); border-top: 2px solid var(--negro); margin-top: 4px; }
+
+  /* COCINA BOARD */
+  .cocina-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .cocina-col-header { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 14px 20px; border-bottom: 1px solid var(--borde); }
+  .cocina-col-header.pendiente { color: #7D6608; background: #FEF9E7; }
+  .cocina-col-header.cocina { color: #784212; background: var(--naranja-claro); }
+  .cocina-col-header.listo { color: #1A5276; background: var(--azul-claro); }
+  .cocina-ticket {
+    margin: 12px; border: 1px solid var(--borde); border-radius: 10px;
+    overflow: hidden; background: var(--blanco);
+  }
+  .cocina-ticket-header { padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; background: var(--gris-claro); }
+  .cocina-ticket-mesa { font-weight: 700; font-size: 15px; color: var(--negro); }
+  .cocina-ticket-time { font-size: 11px; color: var(--gris-medio); }
+  .cocina-ticket-body { padding: 10px 14px; }
+  .cocina-item { font-size: 13px; padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+  .cocina-item::before { content: '•'; color: var(--rojo); font-size: 16px; }
+  .cocina-ticket-footer { padding: 10px 14px; border-top: 1px solid #F0F0F0; display: flex; justify-content: flex-end; }
+  .timer { font-size: 20px; font-weight: 700; font-family: monospace; }
+  .timer.urgent { color: var(--rojo); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  /* FORMS */
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--gris-oscuro); margin-bottom: 6px; }
+  .form-control {
+    width: 100%; padding: 9px 13px; border: 1px solid var(--borde); border-radius: 8px;
+    font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--negro);
+    background: var(--blanco); transition: border-color 0.15s;
+  }
+  .form-control:focus { outline: none; border-color: var(--rojo); box-shadow: 0 0 0 3px rgba(192,57,43,0.08); }
+  select.form-control { cursor: pointer; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* LOGIN */
+  .login-page {
+    min-height: 100vh; background: var(--gris-oscuro);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .login-card {
+    background: var(--blanco); border-radius: 16px; padding: 48px 40px;
+    width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .login-logo { text-align: center; margin-bottom: 32px; }
+  .login-logo-icon {
+    width: 64px; height: 64px; background: var(--rojo); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 32px;
+    margin: 0 auto 12px;
+  }
+  .login-logo h1 { font-family: 'Noto Serif SC', serif; font-size: 22px; color: var(--negro); }
+  .login-logo p { font-size: 13px; color: var(--gris-medio); margin-top: 4px; }
+  .login-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+  .login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: var(--borde); }
+  .login-divider span { font-size: 12px; color: var(--gris-medio); }
+  .quick-login-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .quick-btn {
+    padding: 8px 4px; border-radius: 8px; border: 1px solid var(--borde);
+    background: var(--blanco); cursor: pointer; font-size: 12px; text-align: center;
+    transition: all 0.15s; color: var(--negro); font-family: 'DM Sans', sans-serif;
+  }
+  .quick-btn:hover { border-color: var(--rojo); background: var(--rojo-claro); color: var(--rojo-oscuro); }
+  .quick-btn small { display: block; color: var(--gris-medio); font-size: 10px; margin-top: 2px; }
+
+  /* DASHBOARD CHART */
+  .mini-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; padding: 0 4px; }
+  .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar { border-radius: 4px 4px 0 0; background: var(--rojo); width: 100%; opacity: 0.7; min-height: 4px; transition: height 0.5s; }
+  .bar.hoy { opacity: 1; }
+  .bar-label { font-size: 10px; color: var(--gris-medio); }
+
+  /* ALERTS */
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .alert-warning { background: var(--naranja-claro); color: #784212; border: 1px solid #F0B27A; }
+  .alert-success { background: var(--verde-claro); color: #145A32; border: 1px solid #A9DFBF; }
+  .alert-info { background: var(--azul-claro); color: #1A5276; border: 1px solid #85C1E9; }
+
+  /* MODAL */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+    display: none; align-items: center; justify-content: center;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--blanco); border-radius: 16px; width: 480px; max-height: 90vh;
+    overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--borde);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-header h3 { font-size: 16px; font-weight: 600; }
+  .modal-body { padding: 24px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--borde); display: flex; justify-content: flex-end; gap: 10px; }
+  .close-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: var(--gris-medio); }
+  .close-btn:hover { color: var(--negro); }
+
+  /* CHIP FILTERS */
+  .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .chip {
+    padding: 5px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
+    border: 1px solid var(--borde); background: var(--blanco); color: var(--gris-medio);
+    transition: all 0.15s;
+  }
+  .chip.active { background: var(--rojo); color: #fff; border-color: var(--rojo); }
+  .chip:hover:not(.active) { border-color: var(--gris-medio); color: var(--negro); }
+
+  /* SEARCH */
+  .search-input {
+    padding: 8px 14px 8px 38px; border: 1px solid var(--borde); border-radius: 8px;
+    font-size: 14px; font-family: 'DM Sans', sans-serif; background: var(--gris-claro);
+    width: 220px; color: var(--negro);
+  }
+  .search-wrap { position: relative; }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--gris-medio); }
+
+  /* ORNAMENTAL */
+  .page-ornament {
+    height: 2px;
+    background: linear-gradient(90deg, var(--rojo) 0%, var(--dorado) 50%, var(--rojo) 100%);
+    margin-bottom: 24px; border-radius: 2px; opacity: 0.3;
+  }
+
+  /* VENTA TOTAL */
+  .venta-metodos { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .metodo-btn {
+    padding: 16px 8px; border-radius: 10px; border: 2px solid var(--borde);
+    background: var(--blanco); cursor: pointer; text-align: center; transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .metodo-btn:hover, .metodo-btn.selected { border-color: var(--rojo); background: var(--rojo-claro); }
+  .metodo-btn .metodo-icon { font-size: 24px; margin-bottom: 4px; }
+  .metodo-btn .metodo-label { font-size: 13px; font-weight: 500; color: var(--negro); }
+
+  .section-title { font-size: 16px; font-weight: 600; color: var(--negro); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .section-title::before { content: ''; width: 3px; height: 16px; background: var(--rojo); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginPage" class="login-page" style="position:fixed;inset:0;z-index:999;">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🍜</div>
+      <h1>Chifa Xin Yan</h1>
+      <p>Sistema de Gestión de Restaurante</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" id="loginEmail" class="form-control" placeholder="usuario@chifa.com" value="admin@chifa.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" id="loginPass" class="form-control" placeholder="••••••••" value="admin123">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:11px;" onclick="doLogin()">
+      Ingresar al sistema
+    </button>
+    <div class="login-divider"><span>acceso rápido demo</span></div>
+    <div class="quick-login-btns">
+      <button class="quick-btn" onclick="quickLogin('admin')">🏛️ Admin<small>Administrador</small></button>
+      <button class="quick-btn" onclick="quickLogin('mozo')">🍽️ Mozo<small>Mozos</small></button>
+      <button class="quick-btn" onclick="quickLogin('cocina')">👨‍🍳 Cocina<small>Chef</small></button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="appShell" style="display:none;width:100%;display:none;">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🍜</div>
+    <div class="logo-text">
+      <strong>Xin Yan</strong>
+      <span>GESTIÓN CHIFA</span>
+    </div>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="sidebarInitials">AD</div>
+    <div class="user-info">
+      <span id="sidebarName">Administrador</span>
+      <small><span class="rol-badge" id="sidebarRol">ADMIN</span></small>
+    </div>
+  </div>
+  <nav id="sidebarNav">
+    <!-- se llena con JS -->
+  </nav>
+  <div class="sidebar-bottom">
+    <button class="logout-btn" onclick="doLogout()">↩ Cerrar sesión</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1 id="topbarTitle">Dashboard</h1>
+      <span id="topbarDate"></span>
+    </div>
+    <div class="topbar-right">
+      <div class="btn-icon notif-dot" title="Alertas">🔔</div>
+      <div class="btn-icon" title="Configuración">⚙️</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="view-dashboard" class="view">
+      <div class="stats-grid">
+        <div class="stat-card red">
+          <div class="stat-label">Ventas hoy</div>
+          <div class="stat-value">S/ 847</div>
+          <div class="stat-sub">↑ 12% vs ayer</div>
+          <div class="stat-icon">💰</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Pedidos activos</div>
+          <div class="stat-value">7</div>
+          <div class="stat-sub">3 en cocina</div>
+          <div class="stat-icon">📋</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Mesas ocupadas</div>
+          <div class="stat-value">5/12</div>
+          <div class="stat-sub">7 libres disponibles</div>
+          <div class="stat-icon">🪑</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Stock bajo</div>
+          <div class="stat-value">3</div>
+          <div class="stat-sub">productos críticos</div>
+          <div class="stat-icon">⚠️</div>
+        </div>
+      </div>
+      <div class="alert alert-warning">⚠️ <strong>Sopa Wantan</strong>, <strong>Tallarin Saltado</strong> y <strong>Coca Cola 400ml</strong> tienen stock bajo (menos de 20 unidades).
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <h2>Ventas últimos 7 días</h2>
+            <span style="font-size:13px;color:var(--gris-medio);">S/ 5,243 semana</span>
+          </div>
+          <div class="card-body">
+            <div class="mini-chart">
+              <div class="bar-wrap"><div class="bar" style="height:52px"></div><div class="bar-label">Lu</div></div>
+              <div class="bar-wrap"><div class="bar" style="height:68px"></div><div class="bar-label">Ma</div></div>
+              <div class="bar-wrap"><div class="bar" style="height:45px"></div><div class="bar-label">Mi</div></div>
+              <div class="bar-wrap"><div class="bar" style="height:74px"></div><div class="bar-label">Ju</div></div>
+              <div class="bar-wrap"><div class="bar" style="height:60px"></div><div class="bar-label">Vi</div></div>
+              <div class="bar-wrap"><div class="bar" style="height:78px"></div><div class="bar-label">Sá</div></div>
+              <div class="bar-wrap"><div class="bar hoy" style="height:64px"></div><div class="bar-label">Do</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2>Pedidos recientes</h2></div>
+          <table>
+            <thead><tr><th>Mesa</th><th>Estado</th><th>Total</th><th>Hora</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Mesa 3</strong></td><td><span class="badge badge-en_cocina">En cocina</span></td><td>S/ 62.00</td><td>12:45</td></tr>
+              <tr><td><strong>Mesa 7</strong></td><td><span class="badge badge-listo">Listo</span></td><td>S/ 38.50</td><td>12:38</td></tr>
+              <tr><td><strong>Mesa 1</strong></td><td><span class="badge badge-entregado">Entregado</span></td><td>S/ 95.00</td><td>12:20</td></tr>
+              <tr><td><strong>Mesa 9</strong></td><td><span class="badge badge-pendiente">Pendiente</span></td><td>S/ 44.00</td><td>13:02</td></tr>
+              <tr><td><strong>Mesa 5</strong></td><td><span class="badge badge-en_cocina">En cocina</span></td><td>S/ 71.50</td><td>13:10</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MESAS ===== -->
+    <div id="view-mesas" class="view">
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <h2>Estado de Mesas</h2>
+            <span class="badge badge-libre">12 mesas</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="display:flex;gap:6px;align-items:center;font-size:12px;color:var(--gris-medio);">
+              <span style="width:10px;height:10px;border-radius:50%;background:#A9DFBF;display:inline-block;"></span>Libre
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--rojo);display:inline-block;margin-left:6px;"></span>Ocupada
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--naranja);display:inline-block;margin-left:6px;"></span>Reservada
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modalNuevaMesa')">+ Nueva mesa</button>
+          </div>
+        </div>
+        <div class="mesas-grid">
+          <div class="mesa-card libre" onclick="openModal('modalMesaDetalle')">
+            <div class="mesa-numero">01</div>
+            <div class="mesa-cap">👤 4 personas</div>
+            <div class="mesa-estado"><span class="badge badge-libre">Libre</span></div>
+          </div>
+          <div class="mesa-card ocupada" onclick="openModal('modalMesaDetalle')">
+            <div class="mesa-numero">02</div>
+            <div class="mesa-cap">👤 6 personas</div>
+            <div class="mesa-estado"><span class="badge badge-ocupada">Ocupada</span></div>
+            <div style="font-size:11px;color:var(--gris-medio);margin-top:6px;">Pedido #47</div>
+          </div>
+          <div class="mesa-card ocupada" onclick="openModal('modalMesaDetalle')">
+            <div class="mesa-numero">03</div>
+            <div class="mesa-cap">👤 4 personas</div>
+            <div class="mesa-estado"><span class="badge badge-ocupada">Ocupada</span></div>
+            <div style="font-size:11px;color:var(--gris-medio);margin-top:6px;">Pedido #48</div>
+          </div>
+          <div class="mesa-card libre">
+            <div class="mesa-numero">04</div>
+            <div class="mesa-cap">👤 2 personas</div>
+            <div class="mesa-estado"><span class="badge badge-libre">Libre</span></div>
+          </div>
+          <div class="mesa-card ocupada">
+            <div class="mesa-numero">05</div>
+            <div class="mesa-cap">👤 4 personas</div>
+            <div class="mesa-estado"><span class="badge badge-ocupada">Ocupada</span></div>
+            <div style="font-size:11px;color:var(--gris-medio);margin-top:6px;">Pedido #49</div>
+          </div>
+          <div class="mesa-card libre">
+            <div class="mesa-numero">06</div>
+            <div class="mesa-cap">👤 8 personas</div>
+            <div class="mesa-estado"><span class="badge badge-libre">Libre</span></div>
+          </div>
+          <div class="mesa-card ocupada">
+            <div class="mesa-numero">07</div>
+            <div class="mesa-cap">👤 4 personas</div>
+            <div class="mesa-estado"><span class="badge badge-ocupada">Ocupada</span></div>
+          </div>
+          <div class="mesa-card reservada">
+            <div class="mesa-numero">08</div>
+            <div class="mesa-cap">👤 6 personas</div>
+            <div class="mesa-estado"><span class="badge badge-reservada">Reservada</span></div>
+            <div style="font-size:11px;color:var(--gris-medio);margin-top:6px;">13:30 hrs</div>
+          </div>
+          <div class="mesa-card libre">
+            <div class="mesa-numero">09</div>
+            <div class="mesa-cap">👤 4 personas</div>
+            <div class="mesa-estado"><span class="badge badge-libre">Libre</span></div>
+          </div>
+          <div class="mesa-card ocupada">
+            <div class="mesa-numero">10</div>
+            <div class="mesa-cap">👤 2 personas</div>
+            <div class="mesa-estado"><span class="badge badge-ocupada">Ocupada</span></div>
+          </div>
+          <div class="mesa-card libre">
+            <div class="mesa-numero">11</div>
+            <div class="mesa-cap">👤 4 personas</div>
+            <div class="mesa-estado"><span class="badge badge-libre">Libre</span></div>
+          </div>
+          <div class="mesa-card libre">
+            <div class="mesa-numero">12</div>
+            <div class="mesa-cap">👤 8 personas</div>
+            <div class="mesa-estado"><span class="badge badge-libre">Libre</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PEDIDOS ===== -->
+    <div id="view-pedidos" class="view">
+      <div class="filter-chips">
+        <div class="chip active" onclick="filterChip(this)">Todos</div>
+        <div class="chip" onclick="filterChip(this)">Pendiente</div>
+        <div class="chip" onclick="filterChip(this)">En cocina</div>
+        <div class="chip" onclick="filterChip(this)">Listo</div>
+        <div class="chip" onclick="filterChip(this)">Entregado</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h2>Pedidos del día</h2>
+          <button class="btn btn-primary btn-sm" onclick="showView('nuevo-pedido')">+ Nuevo pedido</button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>#</th><th>Mesa</th><th>Items</th><th>Estado</th><th>Total</th><th>Hora</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>#047</strong></td>
+              <td>Mesa 2</td>
+              <td><span style="font-size:12px;color:var(--gris-medio);">Arroz Chaufa × 2, Sopa Wantan × 1</span></td>
+              <td><span class="badge badge-en_cocina">En cocina</span></td>
+              <td><strong>S/ 62.00</strong></td>
+              <td>12:45</td>
+              <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>#048</strong></td>
+              <td>Mesa 3</td>
+              <td><span style="font-size:12px;color:var(--gris-medio);">Tallarin Saltado × 1, Tipakay × 1</span></td>
+              <td><span class="badge badge-listo">Listo</span></td>
+              <td><strong>S/ 58.50</strong></td>
+              <td>12:38</td>
+              <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>#049</strong></td>
+              <td>Mesa 5</td>
+              <td><span style="font-size:12px;color:var(--gris-medio);">Menú Combinado × 3</span></td>
+              <td><span class="badge badge-en_cocina">En cocina</span></td>
+              <td><strong>S/ 71.50</strong></td>
+              <td>13:10</td>
+              <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>#050</strong></td>
+              <td>Mesa 9</td>
+              <td><span style="font-size:12px;color:var(--gris-medio);">Sopa Wantan × 2, Bebidas × 2</span></td>
+              <td><span class="badge badge-pendiente">Pendiente</span></td>
+              <td><strong>S/ 44.00</strong></td>
+              <td>13:02</td>
+              <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>#046</strong></td>
+              <td>Mesa 1</td>
+              <td><span style="font-size:12px;color:var(--gris-medio);">Chaufa Especial × 2, Jugo × 1</span></td>
+              <td><span class="badge badge-entregado">Entregado</span></td>
+              <td><strong>S/ 95.00</strong></td>
+              <td>12:20</td>
+              <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== NUEVO PEDIDO ===== -->
+    <div id="view-nuevo-pedido" class="view">
+      <div class="pedido-detail-grid">
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-body" style="padding:16px 20px;">
+              <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                <div class="form-group" style="margin:0;flex:1;min-width:140px;">
+                  <label class="form-label" style="font-size:12px;">Mesa</label>
+                  <select class="form-control" style="padding:7px 10px;">
+                    <option>Mesa 1 — Libre (4p)</option>
+                    <option>Mesa 4 — Libre (2p)</option>
+                    <option>Mesa 6 — Libre (8p)</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin:0;flex:1;min-width:140px;">
+                  <label class="form-label" style="font-size:12px;">Mozo</label>
+                  <select class="form-control" style="padding:7px 10px;">
+                    <option>Juan Pérez</option>
+                    <option>María Quispe</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin:0;flex:1;min-width:140px;">
+                  <label class="form-label" style="font-size:12px;">Personas</label>
+                  <input type="number" class="form-control" style="padding:7px 10px;" value="2" min="1" max="20">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="filter-chips">
+            <div class="chip active" onclick="filterChip(this)">Todo</div>
+            <div class="chip" onclick="filterChip(this)">🍚 Chaufas</div>
+            <div class="chip" onclick="filterChip(this)">🍜 Sopas</div>
+            <div class="chip" onclick="filterChip(this)">🍝 Tallarines</div>
+            <div class="chip" onclick="filterChip(this)">🍽️ Menú</div>
+            <div class="chip" onclick="filterChip(this)">⭐ Especiales</div>
+            <div class="chip" onclick="filterChip(this)">🥤 Bebidas</div>
+          </div>
+          <div class="productos-grid" style="padding:0;">
+            <div class="producto-card" onclick="addToCart(this,'Arroz Chaufa Especial',28)">
+              <div class="producto-img">🍚</div>
+              <div class="producto-info">
+                <div class="producto-nombre">Arroz Chaufa Especial</div>
+                <div class="producto-precio">S/ 28.00</div>
+                <div class="producto-stock">Stock: 45 und.</div>
+              </div>
+            </div>
+            <div class="producto-card" onclick="addToCart(this,'Chaufa de Pollo',24)">
+              <div class="producto-img">🍳</div>
+              <div class="producto-info">
+                <div class="producto-nombre">Chaufa de Pollo</div>
+                <div class="producto-precio">S/ 24.00</div>
+                <div class="producto-stock">Stock: 32 und.</div>
+              </div>
+            </div>
+            <div class="producto-card" onclick="addToCart(this,'Sopa Wantan',18)">
+              <div class="producto-img">🍲</div>
+              <div class="producto-info">
+                <div class="producto-nombre">Sopa Wantan</div>
+                <div class="producto-precio">S/ 18.00</div>
+                <div class="producto-stock bajo">⚠ Stock: 8 und.</div>
+              </div>
+            </div>
+            <div class="producto-card" onclick="addToCart(this,'Tallarin Saltado',26)">
+              <div class="producto-img">🍝</div>
+              <div class="producto-info">
+                <div class="producto-nombre">Tallarin Saltado</div>
+                <div class="producto-precio">S/ 26.00</div>
+                <div class="producto-stock bajo">⚠ Stock: 12 und.</div>
+              </div>
+            </div>
+            <div class="producto-card" onclick="addToCart(this,'Pollo Tipakay',32)">
+              <div class="producto-img">🍗</div>
+              <div class="producto-info">
+                <div class="producto-nombre">Pollo Tipakay</div>
+                <div class="producto-precio">S/ 32.00</div>
+                <div class="producto-stock">Stock: 20 und.</div>
+              </div>
+            </div>
+            <div class="producto-card" onclick="addToCart(this,'Menú Combinado',22)">
+              <div class="producto-img">🥡</div>
+              <div class="producto-info">
+                <div class="producto-nombre">Menú Combinado</div>
+                <div class="producto-precio">S/ 22.00</div>
+                <div class="producto-stock">Stock: 50 und.</div>
+              </div>
+            </div>
+            <div class="producto-card" onclick="addToCart(this,'Coca Cola 400ml',6)">
+              <div class="producto-img">🥤</div>
+              <div class="producto-info">
+                <div class="producto-nombre">Coca Cola 400ml</div>
+                <div class="producto-precio">S/ 6.00</div>
+                <div class="producto-stock bajo">⚠ Stock: 15 und.</div>
+              </div>
+            </div>
+            <div class="producto-card" onclick="addToCart(this,'Limonada con Hierba Luisa',9)">
+              <div class="producto-img">🍋</div>
+              <div class="producto-info">
+                <div class="producto-nombre">Limonada H. Luisa</div>
+                <div class="producto-precio">S/ 9.00</div>
+                <div class="producto-stock">Stock: 30 und.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CART -->
+        <div>
+          <div class="card" style="position:sticky;top:80px;">
+            <div class="card-header">
+              <h2>Pedido actual</h2>
+              <span id="cartCount" class="badge badge-ocupada">0 items</span>
+            </div>
+            <div class="card-body" style="padding:16px 20px;">
+              <div id="cartItems" style="min-height:120px;">
+                <div id="cartEmpty" style="text-align:center;padding:30px 0;color:var(--gris-medio);font-size:13px;">
+                  🍽️<br>Agrega platos desde el menú
+                </div>
+              </div>
+              <div id="cartSummary" style="display:none;border-top:1px solid var(--borde);margin-top:12px;padding-top:12px;">
+                <div class="cart-total-row"><span>Subtotal</span><span id="subtotal">S/ 0.00</span></div>
+                <div class="cart-total-row"><span>IGV (18%)</span><span id="igv">S/ 0.00</span></div>
+                <div class="cart-total-final"><span>Total</span><span id="total">S/ 0.00</span></div>
+              </div>
+              <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+                <textarea class="form-control" placeholder="Observaciones (sin cebolla, extra salsa...)" rows="2" style="resize:none;font-size:13px;"></textarea>
+                <button class="btn btn-primary" style="justify-content:center;padding:11px;" onclick="openModal('modalConfirmarPedido')">
+                  Enviar a cocina →
+                </button>
+                <button class="btn btn-secondary" style="justify-content:center;" onclick="showView('pedidos')">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COCINA ===== -->
+    <div id="view-cocina" class="view">
+      <div class="alert alert-info">👨‍🍳 Vista de cocina — Solo se muestran pedidos activos. Actualización automática cada 30 seg.</div>
+      <div class="cocina-cols">
+        <div class="card" style="margin:0;">
+          <div class="cocina-col-header pendiente">🕐 Pendientes (2)</div>
+          <div class="cocina-ticket">
+            <div class="cocina-ticket-header">
+              <div><span class="cocina-ticket-mesa">Mesa 9</span> — Pedido #050</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="timer">03:21</span>
+              </div>
+            </div>
+            <div class="cocina-ticket-body">
+              <div class="cocina-item">Sopa Wantan × 2</div>
+              <div class="cocina-item">Kola Amarilla 500ml × 2</div>
+              <div style="font-size:11px;color:var(--gris-medio);margin-top:8px;padding:6px;background:#FEF9E7;border-radius:6px;">📝 Sin mariscos en la sopa</div>
+            </div>
+            <div class="cocina-ticket-footer">
+              <button class="btn btn-gold btn-sm">Iniciar preparación →</button>
+            </div>
+          </div>
+          <div class="cocina-ticket">
+            <div class="cocina-ticket-header">
+              <div><span class="cocina-ticket-mesa">Mesa 7</span> — Pedido #051</div>
+              <span class="timer">01:05</span>
+            </div>
+            <div class="cocina-ticket-body">
+              <div class="cocina-item">Arroz Chaufa Especial × 1</div>
+              <div class="cocina-item">Pollo Tipakay × 2</div>
+            </div>
+            <div class="cocina-ticket-footer">
+              <button class="btn btn-gold btn-sm">Iniciar preparación →</button>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin:0;">
+          <div class="cocina-col-header cocina">🔥 En preparación (2)</div>
+          <div class="cocina-ticket">
+            <div class="cocina-ticket-header">
+              <div><span class="cocina-ticket-mesa">Mesa 2</span> — Pedido #047</div>
+              <span class="timer urgent">12:45</span>
+            </div>
+            <div class="cocina-ticket-body">
+              <div class="cocina-item">Arroz Chaufa Especial × 2</div>
+              <div class="cocina-item">Sopa Wantan × 1</div>
+            </div>
+            <div class="cocina-ticket-footer">
+              <button class="btn btn-primary btn-sm">Marcar listo ✓</button>
+            </div>
+          </div>
+          <div class="cocina-ticket">
+            <div class="cocina-ticket-header">
+              <div><span class="cocina-ticket-mesa">Mesa 5</span> — Pedido #049</div>
+              <span class="timer">08:30</span>
+            </div>
+            <div class="cocina-ticket-body">
+              <div class="cocina-item">Menú Combinado × 3</div>
+            </div>
+            <div class="cocina-ticket-footer">
+              <button class="btn btn-primary btn-sm">Marcar listo ✓</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PRODUCTOS ===== -->
+    <div id="view-productos" class="view">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <h2>Gestión de Productos</h2>
+            <span class="badge badge-cocina">32 productos</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div class="search-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" placeholder="Buscar producto...">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modalNuevoProducto')">+ Nuevo producto</button>
+          </div>
+        </div>
+        <div style="padding:16px 24px;border-bottom:1px solid var(--borde);">
+          <div class="filter-chips" style="margin:0;">
+            <div class="chip active" onclick="filterChip(this)">Todos</div>
+            <div class="chip" onclick="filterChip(this)">🍚 Chaufas</div>
+            <div class="chip" onclick="filterChip(this)">🍲 Sopas</div>
+            <div class="chip" onclick="filterChip(this)">🍝 Tallarines</div>
+            <div class="chip" onclick="filterChip(this)">🍽️ Menú</div>
+            <div class="chip" onclick="filterChip(this)">⭐ Especiales</div>
+            <div class="chip" onclick="filterChip(this)">🥤 Bebidas</div>
+            <div class="chip" onclick="filterChip(this)">⚠️ Stock bajo</div>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Arroz Chaufa Especial</strong></td>
+              <td><span class="badge badge-chaufa">Chaufas</span></td>
+              <td>S/ 28.00</td>
+              <td>45</td>
+              <td><span class="badge badge-libre">Disponible</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><strong>Chaufa de Pollo</strong></td>
+              <td><span class="badge badge-chaufa">Chaufas</span></td>
+              <td>S/ 24.00</td>
+              <td>32</td>
+              <td><span class="badge badge-libre">Disponible</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><strong>Sopa Wantan</strong></td>
+              <td><span class="badge badge-sopa">Sopas</span></td>
+              <td>S/ 18.00</td>
+              <td style="color:var(--rojo);font-weight:600;">8 ⚠</td>
+              <td><span class="badge badge-ocupada">Stock bajo</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><strong>Tallarin Saltado</strong></td>
+              <td><span class="badge badge-tallerines">Tallarines</span></td>
+              <td>S/ 26.00</td>
+              <td style="color:var(--rojo);font-weight:600;">12 ⚠</td>
+              <td><span class="badge badge-ocupada">Stock bajo</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><strong>Pollo Tipakay</strong></td>
+              <td><span class="badge badge-platos">Platos Especiales</span></td>
+              <td>S/ 32.00</td>
+              <td>20</td>
+              <td><span class="badge badge-libre">Disponible</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><strong>Menú Combinado</strong></td>
+              <td><span class="badge badge-menu">Menú</span></td>
+              <td>S/ 22.00</td>
+              <td>50</td>
+              <td><span class="badge badge-libre">Disponible</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><strong>Coca Cola 400ml</strong></td>
+              <td><span class="badge badge-bebidas">Bebidas</span></td>
+              <td>S/ 6.00</td>
+              <td style="color:var(--rojo);font-weight:600;">15 ⚠</td>
+              <td><span class="badge badge-ocupada">Stock bajo</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><strong>Kola Amarilla 500ml</strong></td>
+              <td><span class="badge badge-bebidas">Bebidas</span></td>
+              <td>S/ 5.00</td>
+              <td>60</td>
+              <td><span class="badge badge-libre">Disponible</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== VENTAS ===== -->
+    <div id="view-ventas" class="view">
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="stat-card red">
+          <div class="stat-label">Ventas hoy</div>
+          <div class="stat-value">S/ 847</div>
+          <div class="stat-sub">18 transacciones</div>
+          <div class="stat-icon">📈</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Ventas semana</div>
+          <div class="stat-value">S/ 5,243</div>
+          <div class="stat-sub">↑ 8% vs semana ant.</div>
+          <div class="stat-icon">📊</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Ticket promedio</div>
+          <div class="stat-value">S/ 47.06</div>
+          <div class="stat-sub">por pedido</div>
+          <div class="stat-icon">🧾</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h2>Historial de ventas</h2>
+          <div style="display:flex;gap:8px;">
+            <select class="form-control" style="padding:7px 10px;font-size:13px;width:auto;">
+              <option>Hoy</option><option>Esta semana</option><option>Este mes</option>
+            </select>
+            <button class="btn btn-secondary btn-sm">⬇ Exportar</button>
+          </div>
+        </div>
+        <table>
+          <thead><tr><th>#Venta</th><th>Pedido</th><th>Método pago</th><th>Monto</th><th>Hora</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td><strong>V-018</strong></td><td>#046</td><td>💳 Tarjeta</td><td><strong>S/ 95.00</strong></td><td>12:22</td><td><span class="badge badge-libre">Completado</span></td></tr>
+            <tr><td><strong>V-017</strong></td><td>#044</td><td>💵 Efectivo</td><td><strong>S/ 44.00</strong></td><td>11:58</td><td><span class="badge badge-libre">Completado</span></td></tr>
+            <tr><td><strong>V-016</strong></td><td>#042</td><td>📱 Yape</td><td><strong>S/ 62.50</strong></td><td>11:30</td><td><span class="badge badge-libre">Completado</span></td></tr>
+            <tr><td><strong>V-015</strong></td><td>#041</td><td>💵 Efectivo</td><td><strong>S/ 38.00</strong></td><td>11:05</td><td><span class="badge badge-libre">Completado</span></td></tr>
+            <tr><td><strong>V-014</strong></td><td>#039</td><td>📱 Plin</td><td><strong>S/ 78.50</strong></td><td>10:45</td><td><span class="badge badge-libre">Completado</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== USUARIOS ===== -->
+    <div id="view-usuarios" class="view">
+      <div class="card">
+        <div class="card-header">
+          <h2>Gestión de Usuarios</h2>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modalNuevoUsuario')">+ Nuevo usuario</button>
+        </div>
+        <table>
+          <thead><tr><th>Usuario</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:var(--rojo-claro);color:var(--rojo-oscuro);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">AD</div><strong>Admin General</strong></div></td>
+              <td>admin@chifa.com</td>
+              <td><span class="badge badge-admin">Admin</span></td>
+              <td><span class="badge badge-libre">Activo</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:var(--azul-claro);color:#1A5276;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">JP</div><strong>Juan Pérez</strong></div></td>
+              <td>juan@chifa.com</td>
+              <td><span class="badge badge-mozo">Mozo</span></td>
+              <td><span class="badge badge-libre">Activo</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:var(--azul-claro);color:#1A5276;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">MQ</div><strong>María Quispe</strong></div></td>
+              <td>maria@chifa.com</td>
+              <td><span class="badge badge-mozo">Mozo</span></td>
+              <td><span class="badge badge-libre">Activo</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:50%;background:var(--naranja-claro);color:#784212;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">CL</div><strong>Chef Luis</strong></div></td>
+              <td>cocina@chifa.com</td>
+              <td><span class="badge badge-cocina">Cocina</span></td>
+              <td><span class="badge badge-libre">Activo</span></td>
+              <td><button class="btn btn-secondary btn-sm">✏️ Editar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+</div><!-- /appShell -->
+
+<!-- ===== MODALS ===== -->
+
+<div class="modal-backdrop" id="modalNuevaMesa">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>➕ Nueva Mesa</h3>
+      <button class="close-btn" onclick="closeModal('modalNuevaMesa')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Número de mesa</label><input type="number" class="form-control" placeholder="Ej: 13" min="1"></div>
+      <div class="form-group"><label class="form-label">Capacidad (personas)</label><input type="number" class="form-control" placeholder="Ej: 4" min="1" max="20"></div>
+      <div class="form-group"><label class="form-label">Estado inicial</label><select class="form-control"><option>LIBRE</option><option>RESERVADA</option></select></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalNuevaMesa')">Cancelar</button>
+      <button class="btn btn-primary" onclick="closeModal('modalNuevaMesa')">Crear mesa</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalMesaDetalle">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🪑 Mesa 2 — Pedido #047</h3>
+      <button class="close-btn" onclick="closeModal('modalMesaDetalle')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+        <div style="background:var(--gris-claro);padding:12px;border-radius:8px;text-align:center;"><div style="font-size:12px;color:var(--gris-medio);">Capacidad</div><div style="font-size:20px;font-weight:700;">6 personas</div></div>
+        <div style="background:var(--rojo-claro);padding:12px;border-radius:8px;text-align:center;"><div style="font-size:12px;color:var(--rojo-oscuro);">Estado</div><div style="font-size:20px;font-weight:700;color:var(--rojo);">Ocupada</div></div>
+      </div>
+      <h4 style="font-size:14px;font-weight:600;margin-bottom:12px;">Pedido en curso</h4>
+      <div class="cart-item">
+        <div class="cart-item-emoji">🍚</div>
+        <div class="cart-item-info"><div class="cart-item-name">Arroz Chaufa Especial</div><div class="cart-item-price">S/ 28.00 × 2</div></div>
+        <div style="font-weight:600;">S/ 56.00</div>
+      </div>
+      <div class="cart-item">
+        <div class="cart-item-emoji">🍲</div>
+        <div class="cart-item-info"><div class="cart-item-name">Sopa Wantan</div><div class="cart-item-price">S/ 18.00 × 1</div></div>
+        <div style="font-weight:600;">S/ 18.00</div>
+      </div>
+      <div style="border-top:2px solid var(--negro);margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;font-size:18px;font-weight:700;">
+        <span>Total</span><span>S/ 74.00</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalMesaDetalle')">Cerrar</button>
+      <button class="btn btn-danger btn-sm" onclick="closeModal('modalMesaDetalle')">Liberar mesa</button>
+      <button class="btn btn-primary" onclick="closeModal('modalMesaDetalle')">💳 Cobrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalNuevoProducto">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>➕ Nuevo Producto</h3>
+      <button class="close-btn" onclick="closeModal('modalNuevoProducto')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Nombre del producto</label><input type="text" class="form-control" placeholder="Ej: Chaufa de Mariscos"></div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Categoría</label>
+          <select class="form-control">
+            <option>Chaufas</option><option>Sopas</option><option>Tallarines</option>
+            <option>Menú</option><option>Platos Especiales</option><option>Guarniciones</option><option>Bebidas</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Precio (S/)</label><input type="number" class="form-control" placeholder="0.00" step="0.50" min="0"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Stock inicial</label><input type="number" class="form-control" placeholder="Ej: 50" min="0"></div>
+      <div class="form-group"><label class="form-label">URL de imagen</label><input type="text" class="form-control" placeholder="https://..."></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalNuevoProducto')">Cancelar</button>
+      <button class="btn btn-primary" onclick="closeModal('modalNuevoProducto')">Crear producto</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalNuevoUsuario">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>➕ Nuevo Usuario</h3>
+      <button class="close-btn" onclick="closeModal('modalNuevoUsuario')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Nombre completo</label><input type="text" class="form-control" placeholder="Ej: Carlos García"></div>
+      <div class="form-group"><label class="form-label">Correo electrónico</label><input type="email" class="form-control" placeholder="usuario@chifa.com"></div>
+      <div class="form-group"><label class="form-label">Rol</label>
+        <select class="form-control"><option>MOZO</option><option>COCINA</option><option>ADMIN</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Contraseña temporal</label><input type="password" class="form-control" placeholder="••••••••"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalNuevoUsuario')">Cancelar</button>
+      <button class="btn btn-primary" onclick="closeModal('modalNuevoUsuario')">Crear usuario</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalConfirmarPedido">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>✅ Confirmar pedido</h3>
+      <button class="close-btn" onclick="closeModal('modalConfirmarPedido')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-success">El pedido se enviará directamente a cocina. ¿Confirmar?</div>
+      <div style="background:var(--gris-claro);padding:14px;border-radius:10px;font-size:14px;line-height:2;">
+        <div style="display:flex;justify-content:space-between;"><span>Mesa seleccionada</span><strong>Mesa 1</strong></div>
+        <div style="display:flex;justify-content:space-between;"><span>Items en pedido</span><strong id="modalCartCount">0</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;border-top:1px solid var(--borde);padding-top:8px;margin-top:4px;"><span>Total</span><span id="modalTotal">S/ 0.00</span></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalConfirmarPedido')">Volver</button>
+      <button class="btn btn-primary" onclick="confirmarPedido()">🔥 Enviar a cocina</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ROLES = {
+  admin: { nombre: 'Admin General', rol: 'ADMIN', initials: 'AD',
+    nav: [
+      { label: 'Dashboard', icon: '📊', view: 'dashboard' },
+      { sep: 'Operaciones' },
+      { label: 'Mesas', icon: '🪑', view: 'mesas' },
+      { label: 'Pedidos', icon: '📋', view: 'pedidos' },
+      { label: 'Nuevo pedido', icon: '➕', view: 'nuevo-pedido' },
+      { sep: 'Administración' },
+      { label: 'Productos', icon: '🍜', view: 'productos' },
+      { label: 'Ventas', icon: '💰', view: 'ventas' },
+      { label: 'Usuarios', icon: '👥', view: 'usuarios' },
+    ]
+  },
+  mozo: { nombre: 'Juan Pérez', rol: 'MOZO', initials: 'JP',
+    nav: [
+      { sep: 'Mi turno' },
+      { label: 'Mesas', icon: '🪑', view: 'mesas' },
+      { label: 'Pedidos', icon: '📋', view: 'pedidos' },
+      { label: 'Nuevo pedido', icon: '➕', view: 'nuevo-pedido' },
+    ]
+  },
+  cocina: { nombre: 'Chef Luis', rol: 'COCINA', initials: 'CL',
+    nav: [
+      { sep: 'Cocina' },
+      { label: 'Tablero cocina', icon: '🔥', view: 'cocina' },
+      { label: 'Productos', icon: '🍜', view: 'productos' },
+    ]
+  }
+};
+
+let currentRole = null;
+let cart = [];
+let currentView = 'dashboard';
+
+function quickLogin(role) {
+  document.getElementById('loginEmail').value = role + '@chifa.com';
+  document.getElementById('loginPass').value = role + '123';
+  doLogin(role);
+}
+
+function doLogin(forceRole) {
+  const role = forceRole || 'admin';
+  currentRole = ROLES[role];
+  document.getElementById('loginPage').style.display = 'none';
+  const app = document.getElementById('appShell');
+  app.style.display = 'flex';
+  document.getElementById('sidebarName').textContent = currentRole.nombre;
+  document.getElementById('sidebarRol').textContent = currentRole.rol;
+  document.getElementById('sidebarInitials').textContent = currentRole.initials;
+  buildNav(currentRole.nav);
+  const firstView = currentRole.nav.find(n => n.view);
+  if (firstView) showView(firstView.view);
+}
+
+function buildNav(items) {
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = '';
+  items.forEach(item => {
+    if (item.sep) {
+      const sec = document.createElement('div');
+      sec.className = 'nav-section';
+      sec.textContent = item.sep;
+      nav.appendChild(sec);
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'nav-item';
+      btn.dataset.view = item.view;
+      btn.innerHTML = `<span class="nav-icon">${item.icon}</span>${item.label}`;
+      btn.onclick = () => showView(item.view);
+      nav.appendChild(btn);
+    }
+  });
+}
+
+function showView(view) {
+  currentView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + view);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.view === view);
+  });
+  const titles = {
+    'dashboard': 'Dashboard', 'mesas': 'Mesas', 'pedidos': 'Pedidos',
+    'nuevo-pedido': 'Nuevo Pedido', 'cocina': 'Tablero de Cocina',
+    'productos': 'Productos', 'ventas': 'Ventas', 'usuarios': 'Usuarios'
+  };
+  document.getElementById('topbarTitle').textContent = titles[view] || view;
+}
+
+function doLogout() {
+  currentRole = null; cart = [];
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'modalConfirmarPedido') {
+    document.getElementById('modalCartCount').textContent = cart.reduce((s,i) => s + i.qty, 0);
+    document.getElementById('modalTotal').textContent = 'S/ ' + getTotal().toFixed(2);
+  }
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-backdrop').forEach(b => {
+  b.addEventListener('click', e => { if (e.target === b) b.classList.remove('open'); });
+});
+
+function filterChip(el) {
+  el.closest('.filter-chips').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function addToCart(el, name, price) {
+  const existing = cart.find(i => i.name === name);
+  if (existing) { existing.qty++; }
+  else { cart.push({ name, price, qty: 1 }); }
+  renderCart();
+  el.style.transform = 'scale(0.97)';
+  setTimeout(() => el.style.transform = '', 150);
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  const empty = document.getElementById('cartEmpty');
+  const summary = document.getElementById('cartSummary');
+  const count = document.getElementById('cartCount');
+  if (cart.length === 0) {
+    empty.style.display = 'block';
+    summary.style.display = 'none';
+    count.textContent = '0 items';
+    container.innerHTML = '';
+    container.appendChild(empty);
+    return;
+  }
+  empty.style.display = 'none';
+  summary.style.display = 'block';
+  const emojis = {'Arroz Chaufa Especial':'🍚','Chaufa de Pollo':'🍳','Sopa Wantan':'🍲','Tallarin Saltado':'🍝','Pollo Tipakay':'🍗','Menú Combinado':'🥡','Coca Cola 400ml':'🥤','Limonada H. Luisa':'🍋'};
+  container.innerHTML = '';
+  cart.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <div class="cart-item-emoji">${emojis[item.name] || '🍽️'}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">S/ ${item.price.toFixed(2)} c/u</div>
+      </div>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+        <span style="font-size:15px;font-weight:600;min-width:20px;text-align:center;">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+      </div>
+      <div style="font-weight:600;min-width:60px;text-align:right;">S/ ${(item.price * item.qty).toFixed(2)}</div>`;
+    container.appendChild(div);
+  });
+  container.appendChild(summary);
+  const sub = getSubtotal();
+  const igv = sub * 0.18;
+  const total = sub + igv;
+  document.getElementById('subtotal').textContent = 'S/ ' + sub.toFixed(2);
+  document.getElementById('igv').textContent = 'S/ ' + igv.toFixed(2);
+  document.getElementById('total').textContent = 'S/ ' + total.toFixed(2);
+  const totalItems = cart.reduce((s,i) => s + i.qty, 0);
+  count.textContent = totalItems + ' item' + (totalItems !== 1 ? 's' : '');
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  renderCart();
+}
+
+function getSubtotal() { return cart.reduce((s,i) => s + i.price * i.qty, 0); }
+function getTotal() { return getSubtotal() * 1.18; }
+
+function confirmarPedido() {
+  closeModal('modalConfirmarPedido');
+  cart = [];
+  renderCart();
+  showView('pedidos');
+  setTimeout(() => {
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-success';
+    alert.innerHTML = '✅ <strong>Pedido #052 enviado a cocina</strong> — Mesa 1 ahora está ocupada.';
+    alert.style.marginBottom = '16px';
+    const v = document.getElementById('view-pedidos');
+    v.insertBefore(alert, v.firstChild);
+    setTimeout(() => alert.remove(), 5000);
+  }, 100);
+}
+
+// Date
+const now = new Date();
+document.getElementById('topbarDate').textContent = now.toLocaleDateString('es-PE', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+// Cocina timer update
+setInterval(() => {
+  document.querySelectorAll('.timer').forEach(t => {
+    const parts = t.textContent.split(':').map(Number);
+    let secs = parts[0] * 60 + parts[1] + 1;
+    const m = String(Math.floor(secs / 60)).padStart(2,'0');
+    const s = String(secs % 60).padStart(2,'0');
+    t.textContent = m + ':' + s;
+    t.classList.toggle('urgent', Math.floor(secs / 60) >= 10);
+  });
+}, 1000);
+</script>
+</body>
+</html>
