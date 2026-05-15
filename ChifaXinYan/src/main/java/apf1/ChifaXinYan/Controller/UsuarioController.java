@@ -43,11 +43,9 @@ public class UsuarioController {
     // GET /api/usuarios/{id} - Obtener usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> obtenerPorId(@PathVariable Long id) {
-        Usuario usuario = usuarioService.obtenerPorId(id);
-        if (usuario != null) {
-            return ResponseEntity.ok(usuario);
-        }
-        return ResponseEntity.notFound().build();
+        return usuarioService.obtenerPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // POST /api/usuarios - Crear nuevo usuario (solo ADMIN)
@@ -60,11 +58,9 @@ public class UsuarioController {
     // PUT /api/usuarios/{id} - Actualizar usuario
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        Usuario actualizado = usuarioService.actualizarUsuario(id, usuario);
-        if (actualizado != null) {
-            return ResponseEntity.ok(actualizado);
-        }
-        return ResponseEntity.notFound().build();
+        return usuarioService.actualizarUsuario(id, usuario)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // DELETE /api/usuarios/{id} - Eliminar usuario
