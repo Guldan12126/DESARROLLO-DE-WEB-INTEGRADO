@@ -1,4 +1,4 @@
-package apf1.ChifaXinYan.Controller;
+package apf2.ChifaXinYan.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import apf1.ChifaXinYan.Model.Usuario;
-import apf1.ChifaXinYan.Service.UsuarioService;
+import apf2.ChifaXinYan.Model.Usuario;
+import apf2.ChifaXinYan.Service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller

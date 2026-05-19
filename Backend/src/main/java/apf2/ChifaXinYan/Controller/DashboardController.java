@@ -1,4 +1,4 @@
-package apf1.ChifaXinYan.Controller;
+package apf2.ChifaXinYan.Controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import apf1.ChifaXinYan.Service.PedidoService;
-import apf1.ChifaXinYan.Service.ProductoService;
-import apf1.ChifaXinYan.Service.VentaService;
+import apf2.ChifaXinYan.Service.PedidoService;
+import apf2.ChifaXinYan.Service.ProductoService;
+import apf2.ChifaXinYan.Service.VentaService;
 
 @RestController
 @RequestMapping("/api/dashboard")

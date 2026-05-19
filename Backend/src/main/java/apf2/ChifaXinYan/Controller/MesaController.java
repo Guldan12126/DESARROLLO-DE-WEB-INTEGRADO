@@ -1,4 +1,4 @@
-package apf1.ChifaXinYan.Controller;
+package apf2.ChifaXinYan.Controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import apf1.ChifaXinYan.Model.Mesa;
-import apf1.ChifaXinYan.Service.MesaService;
+import apf2.ChifaXinYan.Model.Mesa;
+import apf2.ChifaXinYan.Service.MesaService;
 
 @RestController
 @RequestMapping("/api/mesas")
