@@ -48,7 +48,7 @@ public class MesaService {
 
     @Transactional(readOnly = true)
     public Mesa obtenerPorNumero(Integer numero) {
-        return mesaRepository.findByNumero(numero);
+        return mesaRepository.findByNumero(numero).orElse(null);
     }
 
     @Transactional(readOnly = true)
@@ -59,6 +59,16 @@ public class MesaService {
     @Transactional(readOnly = true)
     public long contarOcupadas() {
         return mesaRepository.countByEstado(EstadoMesa.OCUPADA);
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Mesa actualizarEstado(Long id, String estado) {
+        Mesa mesa = mesaRepository.findById(id).orElse(null);
+        if (mesa == null) {
+            return null;
+        }
+        EstadoMesa nuevoEstado = EstadoMesa.fromString(estado);
+        mesa.setEstado(nuevoEstado);
+        return mesaRepository.save(mesa);
     }
 
     @Transactional(rollbackFor = Exception.class)

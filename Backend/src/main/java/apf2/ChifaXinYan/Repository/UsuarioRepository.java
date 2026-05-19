@@ -10,6 +10,7 @@ import apf2.ChifaXinYan.Model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByEmail(String email);
+    Optional<Usuario> findByNombre(String nombre);
 
     List<Usuario> findByRol(String rol);
 }
