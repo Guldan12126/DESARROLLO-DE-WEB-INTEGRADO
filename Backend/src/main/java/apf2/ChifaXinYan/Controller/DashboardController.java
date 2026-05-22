@@ -11,11 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+<<<<<<< HEAD
 import apf2.ChifaXinYan.Service.MesaService;
 import apf2.ChifaXinYan.Service.PedidoService;
 import apf2.ChifaXinYan.Service.ProductoService;
 import apf2.ChifaXinYan.Service.VentaService;
 
+=======
+import apf2.ChifaXinYan.Service.PedidoService;
+import apf2.ChifaXinYan.Service.ProductoService;
+import apf2.ChifaXinYan.Service.VentaService;
+>>>>>>> 0a71042947e863f58f51a24e38f758253f8febe9
 
 @RestController
 @RequestMapping("/api/dashboard")

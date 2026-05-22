@@ -65,11 +65,16 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public Usuario login(String email, String password) {
-        Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
-        if (usuario != null && usuario.getPassword().equals(password)) {
-            return usuario;
-        }
-        return null;
+public Usuario login(String identifier, String password) {
+    // Primero intentamos por email
+    Usuario usuario = usuarioRepository.findByEmail(identifier).orElse(null);
+    // Si no existe, intentamos por nombre (porque no hay columna username)
+    if (usuario == null) {
+        usuario = usuarioRepository.findByNombre(identifier).orElse(null);
     }
+    if (usuario != null && usuario.getPassword().equals(password)) {
+        return usuario;
+    }
+    return null;
+}
 }

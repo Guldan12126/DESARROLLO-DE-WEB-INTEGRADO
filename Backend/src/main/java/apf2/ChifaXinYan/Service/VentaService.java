@@ -58,6 +58,10 @@ public class VentaService {
         LocalDateTime fin = LocalDateTime.now().with(LocalTime.MAX);
         return obtenerTotalVentasPorRango(inicio, fin);
     }
+    @Transactional(readOnly = true)
+    public Double obtenerTotalVentasHoy() {
+        return obtenerVentasDelDia();
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public Venta registrarVenta(Long pedidoId, MetodoPago metodoPago, Double montoRecibido, Long cajeroId) {

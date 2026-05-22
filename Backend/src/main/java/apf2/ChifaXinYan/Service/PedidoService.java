@@ -39,6 +39,11 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
+    public List<Pedido> listarPedidosPorMesa(Long idMesa) {
+        return pedidoRepository.findByIdMesa(idMesa);
+    }
+
+    @Transactional(readOnly = true)
     public List<Pedido> listarPorEstado(EstadoPedido estado) {
         return pedidoRepository.findByEstado(estado);
     }
