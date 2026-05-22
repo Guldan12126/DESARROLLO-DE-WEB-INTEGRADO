@@ -1,4 +1,4 @@
-package apf1.ChifaXinYan.Controller;
+package apf2.ChifaXinYan.Controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import apf1.ChifaXinYan.Model.Usuario;
-import apf1.ChifaXinYan.Service.UsuarioService;
+import apf2.ChifaXinYan.Model.Usuario;
+import apf2.ChifaXinYan.Service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/auth")

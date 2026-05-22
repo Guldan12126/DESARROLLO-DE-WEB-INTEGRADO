@@ -14,16 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import apf2.ChifaXinYan.Enum.EstadoPedido;
+import apf2.ChifaXinYan.Enum.RolUsuario;
 import apf2.ChifaXinYan.Model.DetallePedido;
+import apf2.ChifaXinYan.Model.Mesa;
 import apf2.ChifaXinYan.Model.Pedido;
 import apf2.ChifaXinYan.Model.Producto;
 import apf2.ChifaXinYan.Model.Usuario;
-import apf2.ChifaXinYan.Enum.EstadoPedido;
-import apf2.ChifaXinYan.Enum.RolUsuario;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Transactional  // Para que los tests no afecten la base de datos real
+@Transactional 
 public class PedidoServiceTest {
 
     @Autowired
@@ -46,13 +47,10 @@ public class PedidoServiceTest {
     @Order(1)
     @DisplayName("1. Debe crear un nuevo pedido")
     public void testCrearPedido() {
-        // Crear una mesa primero si no existe
         if (mesaId == null) {
-            // Buscar o crear una mesa para la prueba
             var mesas = mesaService.listarTodas();
             if (mesas.isEmpty()) {
-                // Crear mesa temporal para prueba
-                apf2.ChifaXinYan.Model.Mesa nuevaMesa = new apf2.ChifaXinYan.Model.Mesa();
+                Mesa nuevaMesa = new Mesa();
                 nuevaMesa.setNumero(99);
                 nuevaMesa.setCapacidad(4);
                 nuevaMesa.setUbicacion("Prueba");
@@ -63,7 +61,6 @@ public class PedidoServiceTest {
             }
         }
         
-        // Crear un mozo para asociar al pedido
         if (mozoId == null) {
             Usuario mozo = new Usuario();
             mozo.setNombre("Mozo Test");
@@ -84,19 +81,17 @@ public class PedidoServiceTest {
         
         assertNotNull(creado.getId());
         assertNotNull(creado.getFechaPedido());
-        assertEquals(EstadoPedido.PENDIENTE.name(), creado.getEstado());
+        assertEquals(EstadoPedido.PENDIENTE, creado.getEstado());
     }
 
     @Test
     @Order(2)
     @DisplayName("2. Debe agregar detalle al pedido")
     public void testAgregarDetalle() {
-        // Verificar que existan productos, si no crear uno
         var productos = productoService.listarTodos();
         Long productoId;
         
         if (productos.isEmpty()) {
-            // Crear producto temporal para prueba
             Producto nuevoProducto = new Producto();
             nuevoProducto.setNombre("Producto Test");
             nuevoProducto.setCategoria("PRUEBA");
@@ -117,7 +112,7 @@ public class PedidoServiceTest {
         
         assertNotNull(actualizado);
         assertTrue(actualizado.getDetalles().size() > 0);
-        assertEquals(50.0, actualizado.getTotal(), 0.01); // 2 x 25 = 50
+        assertEquals(50.0, actualizado.getTotal(), 0.01);
     }
 
     @Test
@@ -127,7 +122,7 @@ public class PedidoServiceTest {
         Pedido actualizado = pedidoService.actualizarEstado(pedidoId, EstadoPedido.EN_PREPARACION.name());
         
         assertNotNull(actualizado);
-        assertEquals(EstadoPedido.EN_PREPARACION.name(), actualizado.getEstado());
+        assertEquals(EstadoPedido.EN_PREPARACION, actualizado.getEstado());
     }
 
     @Test
@@ -145,14 +140,14 @@ public class PedidoServiceTest {
         Pedido actualizado = pedidoService.actualizarEstado(pedidoId, EstadoPedido.LISTO.name());
         
         assertNotNull(actualizado);
-        assertEquals(EstadoPedido.LISTO.name(), actualizado.getEstado());
+        assertEquals(EstadoPedido.LISTO, actualizado.getEstado());
     }
     
     @Test
     @Order(6)
     @DisplayName("6. Debe obtener pedido por ID de mesa")
     public void testObtenerPedidoPorMesa() {
-        var pedidos = pedidoService.listarPedidosPorMesa(mesaId);
+        var pedidos = pedidoService.listarPorMesa(mesaId);
         assertNotNull(pedidos);
     }
     
@@ -160,7 +155,6 @@ public class PedidoServiceTest {
     @Order(7)
     @DisplayName("7. Debe calcular total del pedido correctamente")
     public void testCalcularTotal() {
-        // Agregar otro detalle para verificar el total
         var productos = productoService.listarTodos();
         if (!productos.isEmpty()) {
             DetallePedido otroDetalle = new DetallePedido();

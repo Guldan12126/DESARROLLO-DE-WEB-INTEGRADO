@@ -1,4 +1,4 @@
-package apf1.ChifaXinYan.Controller;
+package apf2.ChifaXinYan.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

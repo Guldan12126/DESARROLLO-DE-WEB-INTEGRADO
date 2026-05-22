@@ -1,4 +1,4 @@
-package apf1.ChifaXinYan.Controller;
+package apf2.ChifaXinYan.Controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import apf1.ChifaXinYan.Model.Mesa;
-import apf1.ChifaXinYan.Service.MesaService;
+import apf2.ChifaXinYan.Model.Mesa;
+import apf2.ChifaXinYan.Service.MesaService;
 
 @RestController
 @RequestMapping("/api/mesas")
@@ -29,19 +29,31 @@ public class MesaController {
     @Autowired
     private MesaService mesaService;
 
-    // GET /api/mesas - Listar todas las mesas
     @GetMapping
     public ResponseEntity<List<Mesa>> listarTodas() {
         return ResponseEntity.ok(mesaService.listarTodas());
     }
 
-    // GET /api/mesas/disponibles - Listar solo mesas libres
+    @GetMapping("/activas")
+    public ResponseEntity<List<Mesa>> listarActivas() {
+        return ResponseEntity.ok(mesaService.listarActivas());
+    }
+
     @GetMapping("/disponibles")
     public ResponseEntity<List<Mesa>> listarDisponibles() {
         return ResponseEntity.ok(mesaService.listarDisponibles());
     }
 
-    // GET /api/mesas/{id} - Obtener mesa por ID
+    @GetMapping("/ocupadas")
+    public ResponseEntity<List<Mesa>> listarOcupadas() {
+        return ResponseEntity.ok(mesaService.listarOcupadas());
+    }
+
+    @GetMapping("/pendientes")
+    public ResponseEntity<List<Mesa>> listarPendientePago() {
+        return ResponseEntity.ok(mesaService.listarPendientePago());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Mesa> obtenerPorId(@PathVariable Long id) {
         Mesa mesa = mesaService.obtenerPorId(id);
@@ -51,33 +63,73 @@ public class MesaController {
         return ResponseEntity.notFound().build();
     }
 
-    // POST /api/mesas - Crear nueva mesa
-    @PostMapping
-    public ResponseEntity<Mesa> crearMesa(@RequestBody Mesa mesa) {
-        Mesa nuevaMesa = mesaService.crearMesa(mesa);
-        return new ResponseEntity<>(nuevaMesa, HttpStatus.CREATED);
-    }
-
-    // PUT /api/mesas/{id}/estado?estado=OCUPADA - Actualizar estado de mesa
-    @PutMapping("/{id}/estado")
-    public ResponseEntity<Mesa> actualizarEstado(@PathVariable Long id, @RequestParam String estado) {
-        Mesa mesa = mesaService.actualizarEstado(id, estado);
+    @GetMapping("/numero/{numero}")
+    public ResponseEntity<Mesa> obtenerPorNumero(@PathVariable Integer numero) {
+        Mesa mesa = mesaService.obtenerPorNumero(numero);
         if (mesa != null) {
             return ResponseEntity.ok(mesa);
         }
         return ResponseEntity.notFound().build();
     }
 
-    // DELETE /api/mesas/{id} - Eliminar mesa
+    @GetMapping("/contar/disponibles")
+    public ResponseEntity<Map<String, Long>> contarDisponibles() {
+        Map<String, Long> response = new HashMap<>();
+        response.put("disponibles", mesaService.contarDisponibles());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<Mesa> crearMesa(@RequestBody Mesa mesa) {
+        Mesa nueva = mesaService.crearMesa(mesa);
+        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Mesa> actualizarMesa(@PathVariable Long id, @RequestBody Mesa mesa) {
+        Mesa actualizada = mesaService.actualizarMesa(id, mesa);
+        if (actualizada != null) {
+            return ResponseEntity.ok(actualizada);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}/ocupar")
+    public ResponseEntity<Mesa> ocuparMesa(@PathVariable Long id, @RequestParam Long pedidoId) {
+        Mesa actualizada = mesaService.ocuparMesa(id, pedidoId);
+        if (actualizada != null) {
+            return ResponseEntity.ok(actualizada);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping("/{id}/pendiente-pago")
+    public ResponseEntity<Mesa> marcarPendientePago(@PathVariable Long id) {
+        Mesa actualizada = mesaService.marcarPendientePago(id);
+        if (actualizada != null) {
+            return ResponseEntity.ok(actualizada);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping("/{id}/liberar")
+    public ResponseEntity<Mesa> liberarMesa(@PathVariable Long id) {
+        Mesa actualizada = mesaService.liberarMesa(id);
+        if (actualizada != null) {
+            return ResponseEntity.ok(actualizada);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> eliminarMesa(@PathVariable Long id) {
-        boolean eliminado = mesaService.eliminarMesa(id);
+        boolean eliminada = mesaService.eliminarMesa(id);
         Map<String, String> response = new HashMap<>();
-        if (eliminado) {
+        if (eliminada) {
             response.put("message", "Mesa eliminada correctamente");
             return ResponseEntity.ok(response);
         }
         response.put("message", "Mesa no encontrada");
-        return ResponseEntity.status(404).body(response);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }
