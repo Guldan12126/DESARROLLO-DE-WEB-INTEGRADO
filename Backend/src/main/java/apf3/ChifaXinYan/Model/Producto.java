@@ -10,6 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "productos")
@@ -19,22 +24,29 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotBlank(message = "El nombre del producto es obligatorio")
+    @Size(max = 100, message = "El nombre no puede exceder los 100 caracteres")
     @Column(nullable = false, length = 100)
     private String nombre;
     
+    @NotNull(message = "La categoría es obligatoria")
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria; 
     
+    @DecimalMin(value = "0.0", inclusive = false, message = "El precio debe ser mayor a cero")
     @Column(nullable = false)
     private double precio;
     
+    @Min(value = 0, message = "El stock no puede ser negativo")
     @Column(nullable = false)
     private int stock;
     
+    @Size(max = 500, message = "La descripción no puede exceder los 500 caracteres")
     @Column(length = 500)
     private String descripcion;
     
+    @Column(name = "imagen_url")
     private String imagenUrl;
     
     @Column(nullable = false)

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,8 +23,11 @@ import apf3.ChifaXinYan.Service.CajaService;
 @CrossOrigin(origins = "*")
 public class CajaController {
 
-    @Autowired
-    private CajaService cajaService;
+    private final CajaService cajaService;
+
+    public CajaController(CajaService cajaService) {
+        this.cajaService = cajaService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Caja>> listarTodas() {

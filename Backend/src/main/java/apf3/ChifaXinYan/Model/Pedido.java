@@ -15,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -26,14 +27,20 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "id_mesa", nullable = false)
-    private Long idMesa;
+    @ManyToOne
+    @JoinColumn(name = "mesa_id", nullable = false)
+    private Mesa mesa;
     
-    @Column(name = "id_mozo")
-    private Long idMozo;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario; // Mozo que registró el pedido
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente; // Opcional para fidelización o facturación
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "pedido_id")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JoinColumn(name = "pedido_id") // Removido, ya que mappedBy se encarga de la relación
     private List<DetallePedido> detalles;
     
     @Enumerated(EnumType.STRING)
@@ -43,19 +50,16 @@ public class Pedido {
     @Column(name = "fecha_pedido")
     private LocalDateTime fechaPedido;
     
-    @Column(name = "fecha_entrega")
-    private LocalDateTime fechaEntrega;
-    
     private double total = 0.0;
     
     public Pedido() {
         this.detalles = new ArrayList<>();
         this.fechaPedido = LocalDateTime.now();
     }
-    
-    public Pedido(Long idMesa, Long idMozo) {
-        this.idMesa = idMesa;
-        this.idMozo = idMozo;
+
+    public Pedido(Mesa mesa, Usuario usuario) {
+        this.mesa = mesa;
+        this.usuario = usuario;
         this.detalles = new ArrayList<>();
         this.estado = EstadoPedido.PENDIENTE;
         this.fechaPedido = LocalDateTime.now();
@@ -66,26 +70,29 @@ public class Pedido {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
-    public Long getIdMesa() { return idMesa; }
-    public void setIdMesa(Long idMesa) { this.idMesa = idMesa; }
-    
-    public Long getIdMozo() { return idMozo; }
-    public void setIdMozo(Long idMozo) { this.idMozo = idMozo; }
+    public Mesa getMesa() { return mesa; }
+    public void setMesa(Mesa mesa) { this.mesa = mesa; }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
     
     public List<DetallePedido> getDetalles() { return detalles; }
     public void setDetalles(List<DetallePedido> detalles) { 
         this.detalles = detalles;
         calcularTotal();
     }
+
+    // Helper para obtener el ID de la mesa directamente, requerido por VentaService
+    public Long getIdMesa() { return mesa != null ? mesa.getId() : null; }
     
     public EstadoPedido getEstado() { return estado; }
     public void setEstado(EstadoPedido estado) { this.estado = estado; }
     
     public LocalDateTime getFechaPedido() { return fechaPedido; }
     public void setFechaPedido(LocalDateTime fechaPedido) { this.fechaPedido = fechaPedido; }
-    
-    public LocalDateTime getFechaEntrega() { return fechaEntrega; }
-    public void setFechaEntrega(LocalDateTime fechaEntrega) { this.fechaEntrega = fechaEntrega; }
     
     public double getTotal() { return total; }
     public void setTotal(double total) { this.total = total; }

@@ -22,8 +22,12 @@ import apf3.ChifaXinYan.Model.Venta;
 @Service
 public class ReporteService {
 
+    private final VentaService ventaService;
+
     @Autowired
-    private VentaService ventaService;
+    public ReporteService(VentaService ventaService) {
+        this.ventaService = ventaService;
+    }
 
     public ByteArrayInputStream exportarVentasExcel() {
         List<Venta> ventas = ventaService.listarTodas();

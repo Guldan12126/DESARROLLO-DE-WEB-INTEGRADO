@@ -1,0 +1,74 @@
+/* ========== COMPONENTES: BOTONES ========== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    gap: 10px;
+    font-family: inherit;
+    text-align: center;
+    user-select: none;
+
+    i {
+        font-size: 1.1rem;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        filter: grayscale(1);
+    }
+}
+
+/* Botón Primario (Rojo Chifa) */
+.btn-primary {
+    background: var(--primary-gradient);
+    color: var(--text-white);
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(211, 47, 47, 0.5);
+        filter: brightness(1.1);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+}
+
+/* Botón Secundario (Dorado Elegante) */
+.btn-gold {
+    background: var(--secondary);
+    color: var(--bg-dark);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: var(--accent);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+    }
+}
+
+/* Botón Outline (Borde Rojo) */
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+
+    &:hover:not(:disabled) {
+        background: var(--primary);
+        color: white;
+    }
+}

@@ -1,18 +1,15 @@
 package apf3.ChifaXinYan.Controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,14 +19,18 @@ import apf3.ChifaXinYan.Enum.EstadoPedido;
 import apf3.ChifaXinYan.Model.DetallePedido;
 import apf3.ChifaXinYan.Model.Pedido;
 import apf3.ChifaXinYan.Service.PedidoService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/pedidos")
 @CrossOrigin(origins = "*")
 public class PedidoController {
 
-    @Autowired
-    private PedidoService pedidoService;
+    private final PedidoService pedidoService;
+
+    public PedidoController(PedidoService pedidoService) {
+        this.pedidoService = pedidoService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Pedido>> listarTodos() {
@@ -43,7 +44,7 @@ public class PedidoController {
 
     @GetMapping("/estado/{estado}")
     public ResponseEntity<List<Pedido>> listarPorEstado(@PathVariable String estado) {
-        return ResponseEntity.ok(pedidoService.listarPorEstado(EstadoPedido.fromString(estado)));
+        return ResponseEntity.ok(pedidoService.listarPorEstado(EstadoPedido.valueOf(estado.toUpperCase())));
     }
 
     @GetMapping("/mesa/{idMesa}")
@@ -53,48 +54,42 @@ public class PedidoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Pedido> obtenerPorId(@PathVariable Long id) {
-        Pedido pedido = pedidoService.obtenerPorId(id);
-        if (pedido != null) {
-            return ResponseEntity.ok(pedido);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(pedidoService.obtenerPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<Pedido> crearPedido(@RequestBody Pedido pedido) {
+    public ResponseEntity<Pedido> crearPedido(@Valid @RequestBody Pedido pedido) {
         Pedido nuevo = pedidoService.crearPedido(pedido);
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/detalle")
-    public ResponseEntity<Pedido> agregarDetalle(@PathVariable Long id, @RequestBody DetallePedido detalle) {
-        Pedido actualizado = pedidoService.agregarDetalle(id, detalle);
-        if (actualizado != null) {
-            return ResponseEntity.ok(actualizado);
+    public ResponseEntity<Pedido> agregarDetalle(
+            @PathVariable Long id, 
+            @Valid @RequestBody DetallePedido detalle) {
+        
+        // Validar que el producto y su ID estén presentes en el detalle
+        if (detalle.getProducto() == null || detalle.getProducto().getId() == null) {
+            throw new IllegalArgumentException("Error: El detalle del pedido debe especificar un producto válido.");
         }
-        return ResponseEntity.notFound().build();
+        
+        Pedido actualizado = pedidoService.agregarDetalle(
+                id, 
+                detalle.getProducto().getId(), 
+                detalle.getCantidad()
+        );
+        return ResponseEntity.ok(actualizado);
     }
 
-    @PutMapping("/{id}/estado")
+    @PatchMapping("/{id}/estado") // Usamos PATCH para actualizaciones parciales
     public ResponseEntity<Pedido> actualizarEstado(@PathVariable Long id, @RequestParam String estado) {
-        // Convertir String a EstadoPedido y luego a String para el service
-        EstadoPedido estadoEnum = EstadoPedido.fromString(estado);
-        Pedido actualizado = pedidoService.actualizarEstado(id, estadoEnum.name()); // ← pasar .name()
-        if (actualizado != null) {
-            return ResponseEntity.ok(actualizado);
-        }
-        return ResponseEntity.notFound().build();
+        Pedido actualizado = pedidoService.actualizarEstado(id, estado);
+        return ResponseEntity.ok(actualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> eliminarPedido(@PathVariable Long id) {
-        boolean eliminado = pedidoService.eliminarPedido(id);
-        Map<String, String> response = new HashMap<>();
-        if (eliminado) {
-            response.put("message", "Pedido eliminado correctamente");
-            return ResponseEntity.ok(response);
-        }
-        response.put("message", "Pedido no encontrado");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    public ResponseEntity<Void> eliminarPedido(@PathVariable Long id) {
+        pedidoService.eliminarPedido(id);
+        return ResponseEntity.noContent().build();
     }
 }

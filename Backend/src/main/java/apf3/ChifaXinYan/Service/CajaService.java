@@ -18,14 +18,16 @@ import apf3.ChifaXinYan.Repository.UsuarioRepository;
 @Service
 public class CajaService {
 
-    @Autowired
-    private CajaRepository cajaRepository;
+    private final CajaRepository cajaRepository;
+    private final MovimientoCajaRepository movimientoCajaRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    private MovimientoCajaRepository movimientoCajaRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository; // Necesario para asociar la caja a un usuario
+    public CajaService(CajaRepository cajaRepository, MovimientoCajaRepository movimientoCajaRepository, UsuarioRepository usuarioRepository) {
+        this.cajaRepository = cajaRepository;
+        this.movimientoCajaRepository = movimientoCajaRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @Transactional
     public Caja abrirCaja(Long usuarioId, double montoApertura) {

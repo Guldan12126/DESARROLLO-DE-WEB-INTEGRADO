@@ -12,8 +12,12 @@ import apf3.ChifaXinYan.Repository.ReservaRepository;
 @Service
 public class ReservaService {
 
+    private final ReservaRepository reservaRepository;
+
     @Autowired
-    private ReservaRepository reservaRepository;
+    public ReservaService(ReservaRepository reservaRepository) {
+        this.reservaRepository = reservaRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<Reserva> listarTodas() {

@@ -19,14 +19,18 @@ import apf3.ChifaXinYan.Repository.VentaRepository;
 @Service
 public class VentaService {
 
-    @Autowired
-    private VentaRepository ventaRepository;
-    
-    @Autowired
-    private PedidoRepository pedidoRepository;
+    private final VentaRepository ventaRepository;
+    private final PedidoRepository pedidoRepository;
+    private final CajaService cajaService;
+    private final MesaService mesaService;
 
     @Autowired
-    private CajaService cajaService;
+    public VentaService(VentaRepository ventaRepository, PedidoRepository pedidoRepository, CajaService cajaService, MesaService mesaService) {
+        this.ventaRepository = ventaRepository;
+        this.pedidoRepository = pedidoRepository;
+        this.cajaService = cajaService;
+        this.mesaService = mesaService;
+    }
 
     @Transactional(readOnly = true)
     public List<Venta> listarTodas() {
@@ -92,11 +96,16 @@ public class VentaService {
                 .orElseThrow(() -> new RuntimeException("Error: Debe abrir caja antes de registrar una venta."));
         
         cajaService.registrarMovimiento(cajaAbierta.getId(), "INGRESO", nuevaVenta.getMonto(), 
-                "Venta: " + nuevaVenta.getNumeroComprobante() + " - Mesa: " + pedido.getIdMesa());
+                "Venta: " + nuevaVenta.getNumeroComprobante() + " - Mesa: " + pedido.getMesa().getId());
 
         // Actualizar estado del pedido a PAGADO
         pedido.setEstado(EstadoPedido.PAGADO);
         pedidoRepository.save(pedido);
+        
+        // Liberar la mesa automáticamente al pagar
+        if (pedido.getMesa() != null) {
+            mesaService.liberarMesa(pedido.getMesa().getId());
+        }
         
         return nuevaVenta;
     }
