@@ -1,0 +1,113 @@
+<!-- Botón hamburguesa -->
+<div class="hamburger-btn" (click)="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</div>
+
+<!-- Overlay para cerrar en móvil -->
+<div class="sidebar-overlay" [class.active]="isOpen" (click)="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<div class="sidebar" [class.open]="isOpen">
+    
+    <div class="sidebar-header">
+        <button class="close-btn" (click)="closeSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="logo-area">
+            <img src="favicon.ico" alt="Logo" class="logo-img">
+            <h2>Chifa Xin Yan</h2>
+        </div>
+        <div class="user-info">
+            <div class="avatar avatar-admin">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="user-details">
+                <span class="user-name">{{ nombreUsuario }}</span>
+                <span class="user-role admin">👑 ADMIN</span>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link" (click)="closeSidebar()">
+            <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('usuarios')">
+                <i class="fas fa-users"></i> <span>Usuarios</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.usuarios"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.usuarios">
+                <a routerLink="/admin/usuarios/lista" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Lista</a>
+                <a routerLink="/admin/usuarios/crear" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-user-plus"></i> Crear</a>
+                <a routerLink="/admin/usuarios/roles" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-tags"></i> Roles</a>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('productos')">
+                <i class="fas fa-utensils"></i> <span>Productos</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.productos"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.productos">
+                <a routerLink="/admin/productos/lista" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Lista</a>
+                <a routerLink="/admin/productos/crear" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-plus-circle"></i> Crear</a>
+                <a routerLink="/admin/productos/categorias" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-tags"></i> Categorías</a>
+                <a routerLink="/admin/productos/stock" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-boxes"></i> Stock</a>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('mesas')">
+                <i class="fas fa-table"></i> <span>Mesas</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.mesas"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.mesas">
+                <a routerLink="/admin/mesas/lista" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Lista</a>
+                <a routerLink="/admin/mesas/crear" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-plus"></i> Crear</a>
+                <a routerLink="/admin/mesas/mapa" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-map"></i> Mapa</a>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('pedidos')">
+                <i class="fas fa-clipboard-list"></i> <span>Pedidos</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.pedidos"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.pedidos">
+                <a routerLink="/admin/pedidos/lista" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Lista</a>
+                <a routerLink="/admin/pedidos/ver" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-eye"></i> Ver</a>
+                <a routerLink="/admin/pedidos/nuevo" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-plus"></i> Nuevo</a>
+                <a routerLink="/admin/pedidos/historial" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-history"></i> Historial</a>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('ventas')">
+                <i class="fas fa-chart-simple"></i> <span>Ventas</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.ventas"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.ventas">
+                <a routerLink="/admin/ventas/lista" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Lista</a>
+                <a routerLink="/admin/ventas/ver" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-eye"></i> Ver</a>
+                <a routerLink="/admin/ventas/detalle" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-file-invoice"></i> Detalle</a>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('reportes')">
+                <i class="fas fa-chart-bar"></i> <span>Reportes</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.reportes"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.reportes">
+                <a routerLink="/admin/reportes/ventas-diarias" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-calendar-day"></i> Diarias</a>
+                <a routerLink="/admin/reportes/ventas-semanales" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-calendar-week"></i> Semanales</a>
+                <a routerLink="/admin/reportes/ventas-mensuales" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-calendar-alt"></i> Mensuales</a>
+                <a routerLink="/admin/reportes/productos-vendidos" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-chart-pie"></i> Top Productos</a>
+                <a routerLink="/admin/reportes/mesas-mas-usadas" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-chart-line"></i> Mesas más Usadas</a>
+            </div>
+        </div>
+    </nav>
+
+</div>

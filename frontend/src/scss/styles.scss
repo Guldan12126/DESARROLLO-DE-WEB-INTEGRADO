@@ -1,0 +1,310 @@
+// ========== VARIABLES ==========
+$primary: #c0392b;
+$primary-dark: #a93226;
+$primary-light: #e74c3c;
+$text-dark: #2c1810;
+$text-gray: #5a3e2b;
+$bg-light: #fef9f0;
+$white: #ffffff;
+$error-bg: #fee2e2;
+$error-text: #dc2626;
+$border-color: #e8e0d5;
+$shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$border-radius: 24px;
+$border-radius-sm: 14px;
+
+// ========== MIXINS ==========
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == tablet {
+    @media (max-width: 968px) { @content; }
+  }
+  @if $breakpoint == mobile {
+    @media (max-width: 480px) { @content; }
+  }
+}
+
+// ========== RESET ==========
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  background: $bg-light;
+  min-height: 100vh;
+  @include flex-center;
+  padding: 20px;
+}
+
+// ========== CONTAINER ==========
+.login-container {
+  display: flex;
+  width: 100%;
+  max-width: 1300px;
+  height: 85vh;
+  min-height: 600px;
+  border-radius: $border-radius;
+  overflow: hidden;
+  box-shadow: $shadow;
+  background: $white;
+  
+  @include responsive(tablet) {
+    flex-direction: column;
+    height: auto;
+    max-width: 550px;
+  }
+}
+
+// ========== LEFT PANEL ==========
+.left-panel {
+  flex: 1.2;
+  background-image: url('/assets/images/local-afuera.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  @include flex-center;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+  }
+  
+  @include responsive(tablet) {
+    min-height: 280px;
+  }
+}
+
+.brand-info {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  padding: 48px;
+  animation: fadeInUp 0.8s ease;
+  
+  @include responsive(tablet) {
+    padding: 40px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.brand-logo {
+  width: 110px;
+  height: auto;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  
+  @include responsive(tablet) {
+    width: 80px;
+  }
+}
+
+.brand-name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  
+  @include responsive(tablet) {
+    font-size: 1.8rem;
+  }
+}
+
+.brand-sub {
+  font-size: 1rem;
+  opacity: 0.95;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+// ========== RIGHT PANEL ==========
+.right-panel {
+  flex: 1;
+  @include flex-center;
+  padding: 48px;
+  background: $white;
+  
+  @include responsive(tablet) {
+    padding: 40px 30px;
+  }
+  
+  @include responsive(mobile) {
+    padding: 32px 24px;
+  }
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 40px;
+  
+  i {
+    font-size: 52px;
+    color: $primary;
+    margin-bottom: 16px;
+    
+    @include responsive(mobile) {
+      font-size: 40px;
+    }
+  }
+  
+  h2 {
+    font-size: 30px;
+    color: $text-dark;
+    margin-bottom: 8px;
+    font-weight: 600;
+    
+    @include responsive(mobile) {
+      font-size: 24px;
+    }
+  }
+  
+  p {
+    color: $text-gray;
+    font-size: 14px;
+  }
+}
+
+// ========== FORMULARIO ==========
+.form-group {
+  margin-bottom: 24px;
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: $text-dark;
+    font-weight: 500;
+    font-size: 14px;
+    
+    i {
+      margin-right: 8px;
+      color: $primary;
+    }
+  }
+  
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid $border-color;
+    border-radius: $border-radius-sm;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: $bg-light;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      background: $white;
+      box-shadow: 0 0 0 4px rgba($primary, 0.1);
+    }
+    
+    &::placeholder {
+      color: #b8a99a;
+    }
+  }
+}
+
+.password-wrapper {
+  position: relative;
+  
+  input {
+    padding-right: 45px;
+  }
+}
+
+.toggle-password {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #b8a99a;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: $primary;
+  }
+}
+
+// ========== BOTÓN ==========
+.login-button {
+  width: 100%;
+  padding: 14px;
+  background: $primary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-sm;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+  
+  &:hover {
+    background: $primary-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($primary, 0.35);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+// ========== ERROR MESSAGE ==========
+.error-message {
+  margin-top: 24px;
+  padding: 14px;
+  background: $error-bg;
+  color: $error-text;
+  border-radius: $border-radius-sm;
+  font-size: 13px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  
+  i {
+    font-size: 16px;
+  }
+}
