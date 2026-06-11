@@ -15,12 +15,6 @@ export class LoginComponent {
   showPassword = false;
   isLoading = false;
   readonly loginForm;
-  readonly credencialesIniciales = [
-    { rol: 'ADMIN', email: 'admin@salonxinyan.com', password: 'Admin_xin_yan' },
-    { rol: 'MOZO', email: 'josue.mozo@salonxinyan.com', password: 'Josue_mozo' },
-    { rol: 'COCINA', email: 'elsa.cocina@salonxinyan.com', password: 'elsa_cocina' },
-    { rol: 'CAJERO', email: 'cajero@salonxinyan.com', password: 'cajero123' },
-  ];
 
   constructor(
     private formBuilder: FormBuilder,

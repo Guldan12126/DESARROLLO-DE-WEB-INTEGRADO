@@ -6,22 +6,6 @@
         <h1 class="brand-name">Chifa Xin Yan</h1>
         <p class="brand-sub">Auténtico sabor oriental en cada plato</p>
       </div>
-
-      <div class="demo-credentials">
-        <h3>Credenciales iniciales</h3>
-        <p>Usa las cuentas cargadas desde `DataInitializer.java`.</p>
-
-        <button
-          *ngFor="let credencial of credencialesIniciales"
-          type="button"
-          class="demo-account"
-          (click)="usarCredencialDemo(credencial.email, credencial.password)"
-        >
-          <strong>{{ credencial.rol }}</strong>
-          <span>{{ credencial.email }}</span>
-          <small>{{ credencial.password }}</small>
-        </button>
-      </div>
     </div>
 
     <div class="right-panel">

@@ -1,4 +1,4 @@
-<div class="usuarios-page-container">
+<div class="usuarios-container">
     <div class="page-header">
         <div class="header-icon">
             <i class="fas fa-users"></i>
@@ -14,16 +14,14 @@
         </div>
     </div>
 
-    <div class="form-card">
+    <div class="user-table-card">
         <div class="search-bar">
+            <i class="fas fa-search"></i>
             <input type="text" [(ngModel)]="searchTerm" (keyup)="buscarUsuarios()" placeholder="Buscar por nombre, email o rol..." class="search-input">
-            <button class="btn-search" (click)="buscarUsuarios()">
-                <i class="fas fa-search"></i>
-            </button>
         </div>
 
         <div class="table-responsive">
-            <table class="xin-yan-table">
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>

@@ -1,1 +1,101 @@
-<p>productos-categorias works!</p>
+<div class="productos-container">
+    <div class="page-header">
+        <div class="header-icon">
+            <i class="fas fa-tags"></i>
+        </div>
+        <div class="header-text">
+            <h2>Categorías de Productos</h2>
+            <p>Organice el menú del restaurante por secciones (Sopas, Chaufas, Bebidas, etc.)</p>
+        </div>
+        <div class="header-actions"> <!-- Agregamos (click) para abrir el modal -->
+            <button class="btn-nuevo" (click)="openCreateModal()">
+                <i class="fas fa-plus-circle"></i> Nueva Categoría
+            </button>
+        </div>
+    </div>
+
+    <div class="user-table-card">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar categoría..." class="search-input">
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre de Categoría</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="isSaving && categorias.length === 0">
+                        <td colspan="5" class="text-center">Cargando categorías...</td>
+                    </tr>
+                    <tr *ngFor="let cat of categoriasFiltradas">
+                        <td>{{ cat.id }}</td>
+                        <td><strong>{{ cat.nombre }}</strong></td>
+                        <td>{{ cat.descripcion }}</td>
+                        <td><span class="role-badge" [class.activo]="cat.activo" [class.cajero]="!cat.activo">{{ cat.activo ? 'Activo' : 'Inactivo' }}</span></td>
+                        <td class="table-actions">
+                            <button class="btn-action btn-edit" (click)="openEditModal(cat)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action btn-delete" (click)="eliminarCategoria(cat.id)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Crear/Editar Categoría -->
+<div class="categoria-modal" *ngIf="showModal">
+    <div class="modal-content">
+        <button class="close-btn" (click)="closeModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3>{{ isEditMode ? 'Editar Categoría' : 'Nueva Categoría' }}</h3>
+
+        <form (ngSubmit)="guardarCategoria()">
+            <div class="form-group">
+                <label for="nombreCategoria">Nombre de la Categoría</label>
+                <input type="text" id="nombreCategoria" [(ngModel)]="currentCategory.nombre" name="nombre" 
+                       [class.is-invalid]="formErrors.nombre"
+                       placeholder="Ej. Chaufas, Sopas, Bebidas..." required>
+                <span class="error-text" *ngIf="formErrors.nombre">
+                    <i class="fas fa-exclamation-circle"></i> {{ formErrors.nombre }}</span>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcionCategoria">Descripción</label>
+                <textarea id="descripcionCategoria" [(ngModel)]="currentCategory.descripcion" name="descripcion"
+                          placeholder="Breve descripción de la categoría"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="estadoCategoria">Estado</label>
+                <select id="estadoCategoria" [(ngModel)]="currentCategory.activo" name="activo">
+                    <option [ngValue]="true">Activo</option>
+                    <option [ngValue]="false">Inactivo</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-nuevo" style="background: #7f8c8d; margin-right: 10px;" (click)="closeModal()">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn-primary" [disabled]="isSaving">
+                    <i class="fas fa-save"></i>
+                    <span>{{ isSaving ? 'Guardando...' : 'Guardar Categoría' }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { UsuarioService } from '../../../../shared/services/usuario.service';
 
@@ -14,6 +14,7 @@ interface Usuario {
   standalone: false,
   templateUrl: './usuarios-lista.component.html',
   styleUrl: '../../../../../scss/_usuarios.scss', 
+  encapsulation: ViewEncapsulation.None
 })
 export class UsuariosListaComponent implements OnInit {
   usuarios: Usuario[] = [];
