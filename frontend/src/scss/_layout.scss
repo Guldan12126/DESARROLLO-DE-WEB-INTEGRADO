@@ -9,12 +9,11 @@ $transition-speed: 0.4s;
     width: 100%;
     background-color: var(--bg-body);
 
-    // Contenedor del contenido principal (Header + Router Outlet)
     .main-container {
         flex: 1;
         display: flex;
         flex-direction: column;
-        min-width: 0; // Evita que los flex-items se desborden
+        min-width: 0;
         transition: padding-left $transition-speed cubic-bezier(0.77, 0.2, 0.05, 1);
         
         // Padding dinámico: Si el sidebar es fijo, el contenido debe desplazarse

@@ -1,3 +1,15 @@
+/* ========== LOGIN WRAPPER (Centrado total) ========== */
+.login-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    background: radial-gradient(circle at center, #ffffff 0%, #f0f2f5 100%);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
 /* ========== LOGIN CONTAINER ========== */
 .login-container {
     display: flex;
@@ -9,12 +21,11 @@
     /* Sombra profunda y elegante */
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3);
     background: var(--bg-card);
-    transform: translateY(0);
-    animation: floatIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: floatIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes floatIn {
-    0% { opacity: 0; transform: translateY(40px) scale(0.98); }
+    0% { opacity: 0; transform: translateY(60px) scale(0.95); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -131,6 +142,11 @@
 .form-group {
     margin-bottom: 24px;
     position: relative;
+    opacity: 0;
+    animation: slideUpFade 0.6s ease-out forwards;
+
+    &:nth-child(1) { animation-delay: 0.7s; }
+    &:nth-child(2) { animation-delay: 0.8s; }
 }
 
 .form-group label {
@@ -206,6 +222,9 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+    opacity: 0;
+    animation: slideUpFade 0.6s ease-out forwards;
+    animation-delay: 0.9s;
 }
 
 .login-button:hover {
@@ -241,6 +260,11 @@
   20%, 80% { transform: translate3d(2px, 0, 0); }
   30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
   40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ========== RESPONSIVO ========== */

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-sidebar-admin',
@@ -16,8 +18,14 @@ export class SidebarAdminComponent {
     mesas: false,
     pedidos: false,
     ventas: false,
+    caja: false,
     reportes: false
   };
+
+  constructor(
+    private router: Router,
+    private toastService: ToastService
+  ) {}
 
   toggleSection(section: keyof typeof this.sections) {
     this.sections[section] = !this.sections[section];
@@ -29,5 +37,12 @@ export class SidebarAdminComponent {
 
   closeSidebar() {
     this.isOpen = false;
+  }
+
+  onLogout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    this.router.navigate(['/login']);
+    this.toastService.info('Sesión cerrada correctamente');
   }
 }

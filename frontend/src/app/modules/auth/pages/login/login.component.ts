@@ -14,6 +14,7 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
   showPassword = false;
+  isLoading = false;
 
   constructor(
     private router: Router,
@@ -22,21 +23,36 @@ export class LoginComponent {
   ) {}
 
   onSubmit() {
+    this.errorMessage = '';
+
     if (!this.email || !this.password) {
       this.errorMessage = 'Complete todos los campos';
+      this.toastService.error('Por favor, rellene los campos obligatorios');
       return;
     }
 
     const loginData = { email: this.email, password: this.password };
+    this.isLoading = true;
 
     this.http.post<any>('http://localhost:8080/api/auth/login', loginData).subscribe({
       next: (res) => {
+        console.log('Respuesta del servidor:', res); // 👈 Añade esto para depurar
+        this.isLoading = false;
         localStorage.setItem('token', res.token);
-        localStorage.setItem('role', res.rol); // Guardamos el rol (ADMIN, MOZO, etc)
+        const userRole = res.rol || res.role; // 👈 Soporta ambos nombres de campo
+        localStorage.setItem('role', userRole); 
         this.toastService.success(`¡Bienvenido, ${res.nombre}!`);
-        this.router.navigate(['/admin']);
+        
+        if (userRole === 'ADMIN' || userRole === 'CAJERO') {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          this.router.navigate(['/dashboard-mozo']);
+        }
       },
-      error: () => {
+      error: (err) => {
+        this.isLoading = false;
+        this.password = ''; // Limpiar contraseña por seguridad
+        this.errorMessage = 'Credenciales inválidas. Intente nuevamente.';
       }
     });
   }

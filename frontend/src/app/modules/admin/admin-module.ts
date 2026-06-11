@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // <--- 1. Importar esto
+import { FormsModule } from '@angular/forms'; 
+import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 @NgModule({
@@ -10,7 +11,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
   ],
   imports: [
     CommonModule,
-    FormsModule, 
+    FormsModule,
+    AdminRoutingModule
   ]
 })
 export class AdminModule { }

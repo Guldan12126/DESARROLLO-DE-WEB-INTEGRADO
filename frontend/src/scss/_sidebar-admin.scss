@@ -6,7 +6,7 @@ $gold-hover: #ffec8b;
 $sidebar-width: 300px;
 $transition-speed: 0.4s;
 
-// Botón Hamburguesa (Suele ir en el Navbar o ser flotante)
+// Botón Hamburguesa
 .hamburger-btn {
     position: fixed;
     top: 20px;
@@ -213,6 +213,27 @@ $transition-speed: 0.4s;
         padding: 20px;
         border-top: 1px solid rgba($gold-accent, 0.2);
         background: rgba(0, 0, 0, 0.1);
+
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #ff4d4d; // Rojo para indicar salida/peligro
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: rgba(255, 77, 77, 0.15);
+                border-color: #ff4d4d;
+                transform: translateY(-2px);
+            }
+        }
     }
 }
 
