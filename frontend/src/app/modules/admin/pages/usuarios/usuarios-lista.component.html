@@ -1,0 +1,65 @@
+<div class="usuarios-page-container">
+    <div class="page-header">
+        <div class="header-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="header-text">
+            <h2>Gestión de Personal</h2>
+            <p>Administre la lista de usuarios y sus roles en el sistema</p>
+        </div>
+        <div class="header-actions">
+            <a routerLink="/admin/usuarios/crear" class="btn-primary">
+                <i class="fas fa-user-plus"></i> Nuevo Usuario
+            </a>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <div class="search-bar">
+            <input type="text" [(ngModel)]="searchTerm" (keyup)="buscarUsuarios()" placeholder="Buscar por nombre, email o rol..." class="search-input">
+            <button class="btn-search" (click)="buscarUsuarios()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="xin-yan-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="isLoading">
+                        <td colspan="5" class="text-center">Cargando usuarios...</td>
+                    </tr>
+                    <tr *ngIf="!isLoading && usuarios.length === 0">
+                        <td colspan="5" class="text-center">No hay usuarios registrados.</td>
+                    </tr>
+                    <tr *ngFor="let usuario of usuarios">
+                        <td>{{ usuario.id }}</td>
+                        <td>{{ usuario.nombre }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>
+                            <span class="role-badge" [class.admin]="usuario.rol === 'ADMIN'" [class.mozo]="usuario.rol === 'MOZO'" [class.cajero]="usuario.rol === 'CAJERO'" [class.cocina]="usuario.rol === 'COCINA'">
+                                {{ usuario.rol }}
+                            </span>
+                        </td>
+                        <td class="table-actions">
+                            <button class="btn-action btn-edit" (click)="editarUsuario(usuario.id)">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action btn-delete" (click)="eliminarUsuario(usuario.id)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

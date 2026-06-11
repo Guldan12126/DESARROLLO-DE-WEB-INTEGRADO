@@ -1,0 +1,29 @@
+[33m8e258a2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m HEAD@{0}: checkout: moving from Administrador to master
+[33m6800fff[m[33m ([m[1;31morigin/Administrador[m[33m, [m[1;32mAdministrador[m[33m)[m HEAD@{1}: reset: moving to HEAD
+[33m6800fff[m[33m ([m[1;31morigin/Administrador[m[33m, [m[1;32mAdministrador[m[33m)[m HEAD@{2}: checkout: moving from master to Administrador
+[33m8e258a2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m HEAD@{3}: reset: moving to HEAD
+[33m8e258a2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m HEAD@{4}: commit: Actualización de application.properties y otros archivos
+[33mbfa52ba[m HEAD@{5}: checkout: moving from master to master
+[33mbfa52ba[m HEAD@{6}: commit: Actualización del backend
+[33m0c0c350[m HEAD@{7}: checkout: moving from Administrador to master
+[33m6800fff[m[33m ([m[1;31morigin/Administrador[m[33m, [m[1;32mAdministrador[m[33m)[m HEAD@{8}: checkout: moving from master to Administrador
+[33m0c0c350[m HEAD@{9}: reset: moving to HEAD
+[33m0c0c350[m HEAD@{10}: commit: actualización de dependencias de Angular e implementación de la funcionalidad de inicio de sesión con notificaciones emergentes.
+[33m85e850c[m HEAD@{11}: checkout: moving from main to master
+[33m6627748[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/Victor[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m, [m[1;32mVictor[m[33m)[m HEAD@{12}: checkout: moving from master to main
+[33m85e850c[m HEAD@{13}: reset: moving to HEAD
+[33m85e850c[m HEAD@{14}: checkout: moving from Administrador to master
+[33m6800fff[m[33m ([m[1;31morigin/Administrador[m[33m, [m[1;32mAdministrador[m[33m)[m HEAD@{15}: checkout: moving from main to Administrador
+[33m6627748[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/Victor[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m, [m[1;32mVictor[m[33m)[m HEAD@{16}: reset: moving to HEAD
+[33m6627748[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/Victor[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m, [m[1;32mVictor[m[33m)[m HEAD@{17}: checkout: moving from Administrador to main
+[33m6800fff[m[33m ([m[1;31morigin/Administrador[m[33m, [m[1;32mAdministrador[m[33m)[m HEAD@{18}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m0a71042[m HEAD@{19}: checkout: moving from main to Administrador
+[33m6627748[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/Victor[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m, [m[1;32mVictor[m[33m)[m HEAD@{20}: checkout: moving from Administrador to main
+[33m0a71042[m HEAD@{21}: checkout: moving from Victor to Administrador
+[33m6627748[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/Victor[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m, [m[1;32mVictor[m[33m)[m HEAD@{22}: reset: moving to HEAD
+[33m6627748[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/Victor[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m, [m[1;32mVictor[m[33m)[m HEAD@{23}: checkout: moving from Administrador to Victor
+[33m0a71042[m HEAD@{24}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mec8f065[m HEAD@{25}: checkout: moving from main to Administrador
+[33m1674814[m HEAD@{26}: checkout: moving from Administrador to main
+[33mec8f065[m HEAD@{27}: checkout: moving from main to Administrador
+[33m1674814[m HEAD@{28}: clone: from https://github.com/Guldan12126/DESARROLLO-DE-WEB-INTEGRADO.git

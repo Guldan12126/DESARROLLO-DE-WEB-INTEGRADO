@@ -18,8 +18,11 @@
             <h2>Chifa Xin Yan</h2>
         </div>
         <div class="user-info">
-            <div class="avatar avatar-admin">
-                <i class="fas fa-user-shield"></i>
+            <div class="avatar avatar-admin"> 
+                <img [src]="avatarUrl" 
+                     (error)="handleImageError($event)" 
+                     [alt]="nombreUsuario" 
+                     class="sidebar-profile-img">
             </div>
             <div class="user-details">
                 <span class="user-name">{{ nombreUsuario }}</span>

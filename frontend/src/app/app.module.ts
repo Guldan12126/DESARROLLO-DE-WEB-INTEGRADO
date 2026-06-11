@@ -5,14 +5,12 @@ import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SidebarAdminComponent } from './shared/components/sidebar-admin/sidebar-admin.component';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
-import { errorInterceptor } from './interceptors/error.interceptor';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    SidebarAdminComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +20,7 @@ import { errorInterceptor } from './interceptors/error.interceptor';
   ],
   providers: [
     // Proporcionar los interceptores
-    provideHttpClient(withInterceptors([jwtInterceptor, errorInterceptor]))
+  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
