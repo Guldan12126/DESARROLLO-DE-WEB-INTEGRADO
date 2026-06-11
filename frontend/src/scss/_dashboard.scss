@@ -4,21 +4,9 @@ $dark-red: #4a0000;
 $gold-accent: #ffd700;
 $dark-gray: #2c3e50;
 
-.dashboard-viewport {
-  width: 100%;
-  min-height: calc(100vh - 75px);
-  background-color: #f8f9fa;
-  display: flex;
-  justify-content: center; 
-  padding: 20px 0;
-}
-
 .dashboard-container {
-  width: 95%;
-  max-width: 1300px;
-  margin: 0 auto; // Centrado absoluto
-  padding: 10px;
-  box-sizing: border-box;
+  padding: 30px;
+  background: #f8f9fa;
 
   .dashboard-header {
     display: flex;
@@ -28,14 +16,14 @@ $dark-gray: #2c3e50;
     flex-wrap: wrap;
     gap: 20px;
 
-    .subtitle { color: #666; margin-top: 5px; font-size: 0.95rem; }
-
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: #333;
-      margin: 0;
-      font-family: 'Playfair Display', serif;
+    .title-area {
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #333;
+        margin: 0;
+      }
+      .subtitle { color: #666; margin-top: 5px; font-size: 0.95rem; }
     }
 
     @media (max-width: 768px) {
@@ -47,19 +35,17 @@ $dark-gray: #2c3e50;
   .filter-bar {
     display: flex;
     background: white;
-    padding: 12px 25px;
-    border-radius: 100px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    padding: 15px 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     align-items: center;
-    gap: 30px;
+    gap: 20px;
     border: 1px solid rgba($gold-accent, 0.2);
-    flex-wrap: wrap; // Permite que los elementos bajen en móviles
+    flex-wrap: wrap;
 
     @media (max-width: 992px) {
       border-radius: 20px;
-      padding: 20px;
       justify-content: center;
-      gap: 15px;
     }
 
     .filter-label { font-weight: 700; color: $dark-gray; font-size: 0.9rem; text-transform: uppercase; }
@@ -76,7 +62,7 @@ $dark-gray: #2c3e50;
         border-radius: 50px;
         font-size: 0.85rem;
         width: 100%;
-        max-width: 200px;
+        max-width: 180px;
         &:focus { border-color: $primary-red; outline: none; }
       }
     }
@@ -147,7 +133,7 @@ $dark-gray: #2c3e50;
       }
 
       .info {
-        .label { font-size: 0.8rem; color: #888; text-transform: uppercase; font-weight: 700; }
+        .label { font-size: 0.85rem; color: #888; text-transform: uppercase; font-weight: 600; }
         .value { margin: 0; font-size: 1.4rem; color: #333; }
 
         .trend {
@@ -164,7 +150,7 @@ $dark-gray: #2c3e50;
     .stat-card.sales { border-left-color: $primary-red; }
     .stat-card.orders { border-left-color: $gold-accent; }
     .stat-card.stock { border-left-color: #ff9800; }
-    .stat-card.tables { border-left-color: #2ecc71; }
+    .stat-card.tables { border-left-color: $primary-red; }
   }
 
   .charts-grid {

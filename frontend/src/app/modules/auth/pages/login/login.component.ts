@@ -39,14 +39,21 @@ export class LoginComponent {
         console.log('Respuesta del servidor:', res); // 👈 Añade esto para depurar
         this.isLoading = false;
         localStorage.setItem('token', res.token);
-        const userRole = res.rol || res.role; // 👈 Soporta ambos nombres de campo
+        const userRole = res.rol || res.role; 
         localStorage.setItem('role', userRole); 
+        localStorage.setItem('nombreUsuario', res.nombre || 'Usuario');
         this.toastService.success(`¡Bienvenido, ${res.nombre}!`);
         
-        if (userRole === 'ADMIN' || userRole === 'CAJERO') {
+        if (userRole === 'ADMIN') {
           this.router.navigate(['/admin/dashboard']);
+        } else if (userRole === 'CAJERO') {
+          this.router.navigate(['/cajero/dashboard']);
+        } else if (userRole === 'COCINA') {
+          this.router.navigate(['/cocina/dashboard']);
+        } else if (userRole === 'MOZO') {
+          this.router.navigate(['/mozo/dashboard']);
         } else {
-          this.router.navigate(['/dashboard-mozo']);
+          this.router.navigate(['/admin/dashboard']);
         }
       },
       error: (err) => {

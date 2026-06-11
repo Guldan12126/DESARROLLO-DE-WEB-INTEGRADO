@@ -1,1 +1,70 @@
-<p>sidebar-mozo works!</p>
+<!-- Botón hamburguesa -->
+<div class="hamburger-btn" (click)="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</div>
+
+<!-- Overlay para cerrar en móvil -->
+<div class="sidebar-overlay" [class.active]="isOpen" (click)="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<div class="sidebar" [class.open]="isOpen">
+    
+    <div class="sidebar-header">
+        <button class="close-btn" (click)="closeSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="logo-area">
+            <img src="favicon.ico" alt="Logo" class="logo-img">
+            <h2>Chifa Xin Yan</h2>
+        </div>
+        <div class="user-info">
+            <div class="avatar avatar-mozo"> 
+                <img [src]="avatarUrl" 
+                     (error)="handleImageError($event)" 
+                     [alt]="nombreUsuario" 
+                     class="sidebar-profile-img">
+            </div>
+            <div class="user-details">
+                <span class="user-name">{{ nombreUsuario }}</span>
+                <span class="user-role mozo">🤵 {{ rolUsuario }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <a routerLink="/mozo/dashboard" routerLinkActive="active" class="nav-link" (click)="closeSidebar()">
+            <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('mesas')">
+                <i class="fas fa-table"></i> <span>Mesas</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.mesas"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.mesas">
+                <a routerLink="/mozo/mesas/mapa" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-map"></i> Mapa Mesas</a>
+                <a routerLink="/mozo/mesas/lista" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Lista Mesas</a>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('pedidos')">
+                <i class="fas fa-clipboard-list"></i> <span>Pedidos</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.pedidos"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.pedidos">
+                <a routerLink="/mozo/pedidos/nuevo" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-plus"></i> Nuevo Pedido</a>
+                <a routerLink="/mozo/pedidos/lista" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Mis Pedidos</a>
+                <a routerLink="/mozo/pedidos/historial" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-history"></i> Historial</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <button class="logout-btn" (click)="onLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+        </button>
+    </div>
+
+</div>

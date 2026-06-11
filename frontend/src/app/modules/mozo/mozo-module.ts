@@ -1,17 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-// 1. Asegúrate de importar el componente aquí (ajusta la ruta según tu carpetas)
+import { MozoComponent } from './mozo.component';
 import { DashboardMozoComponent } from './pages/dashboard-mozo/dashboard-mozo.component';
+import { SidebarMozo } from '../../shared/components/sidebar-mozo/sidebar-mozo.component';
 import { MozoRoutingModule } from './mozo-routing-module';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
-    DashboardMozoComponent 
+    MozoComponent,
+    DashboardMozoComponent,
+    SidebarMozo
   ],
   imports: [
     CommonModule,   
-    MozoRoutingModule
+    FormsModule,
+    MozoRoutingModule,
+    SharedModule
   ]
 })
 export class MozoModule { }

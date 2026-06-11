@@ -9,8 +9,19 @@ const routes: Routes = [
     path: 'admin', 
     loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule)
   },
+  {
+    path: 'mozo',
+    loadChildren: () => import('./modules/mozo/mozo-module').then(m => m.MozoModule)
+  },
+  {
+    path: 'cocina',
+    loadChildren: () => import('./modules/cocina/cocina-module').then(m => m.CocinaModule)
+  },
+  {
+    path: 'cajero',
+    loadChildren: () => import('./modules/cajero/cajero-module').then(m => m.CajeroModule)
+  },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({

@@ -17,18 +17,17 @@ export class DashboardComponent implements OnInit {
 
   stats: any = {};
   
-  // Almacenamos las instancias de los gráficos
   salesChartInstRef?: Chart;
   categoryChartInstRef?: Chart;
 
   // Fechas del filtro
   fechaInicio: string = '';
   fechaFin: string = '';
-  isLoading: boolean = false; // Añadimos la propiedad isLoading
+  isLoading: boolean = false; 
 
   constructor(
     private dashboardService: DashboardService,
-    private toastService: ToastService // Inyectar ToastService
+    private toastService: ToastService 
   ) {}
 
   ngOnInit(): void {
@@ -52,14 +51,14 @@ export class DashboardComponent implements OnInit {
           this.stats.totalMesas = 15; 
           this.initCharts(data);
         } else {
-          this.cargarDatosPrueba(); // Si viene vacío, muestra algo para no verse feo
+          this.cargarDatosPrueba(); 
         }
-        this.isLoading = false; // 2. Terminamos la carga con éxito
+        this.isLoading = false; 
       },
       error: (err) => {
         console.error('Error al actualizar Dashboard:', err);
         this.toastService.error('Conectando con servidor local...');
-        this.cargarDatosPrueba(); // Fallback para que veas el diseño profesional
+        this.cargarDatosPrueba(); 
         this.isLoading = false;
       }
     });

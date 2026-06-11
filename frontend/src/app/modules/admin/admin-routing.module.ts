@@ -7,7 +7,7 @@ import { UsuariosListaComponent } from './pages/usuarios/usuarios-lista.componen
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent, // Define el layout con Sidebar y Header para todos los hijos
+    component: AdminComponent, 
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'usuarios', component: UsuariosListaComponent },
