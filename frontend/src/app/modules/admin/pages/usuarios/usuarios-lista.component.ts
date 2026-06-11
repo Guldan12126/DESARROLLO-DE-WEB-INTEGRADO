@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { UsuarioService } from '../../../../shared/services/usuario.service';
 
@@ -19,9 +19,13 @@ export class UsuariosListaComponent implements OnInit {
   usuarios: Usuario[] = [];
   searchTerm: string = '';
   isLoading: boolean = false;
+  
+  // Variables para el modal de confirmación
+  showDeleteModal: boolean = false;
+  userIdToDelete: number | null = null;
 
   constructor(
-    private usuarioService: UsuarioService,
+    @Inject(UsuarioService) private usuarioService: UsuarioService,
     private toastService: ToastService
   ) { }
 
@@ -64,17 +68,30 @@ export class UsuariosListaComponent implements OnInit {
   }
 
   eliminarUsuario(id: number): void {
-    if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
-      this.usuarioService.eliminarUsuario(id).subscribe({
-        next: () => {
-          this.toastService.success('Usuario eliminado exitosamente.');
-          this.cargarUsuarios(); // Recargar la lista
-        },
-        error: (err) => {
-          console.error('Error al eliminar usuario:', err);
-          this.toastService.error('Error al eliminar el usuario.');
-        }
-      });
-    }
+    // En lugar de eliminar directamente, preparamos el modal
+    this.userIdToDelete = id;
+    this.showDeleteModal = true;
+  }
+
+  confirmarEliminacion(): void {
+    if (this.userIdToDelete === null) return;
+
+    this.usuarioService.eliminarUsuario(this.userIdToDelete).subscribe({
+      next: () => {
+        this.toastService.success('Usuario eliminado exitosamente.');
+        this.cargarUsuarios();
+        this.cerrarModal();
+      },
+      error: (err) => {
+        console.error('Error al eliminar usuario:', err);
+        this.toastService.error('Error al eliminar el usuario.');
+        this.cerrarModal();
+      }
+    });
+  }
+
+  cerrarModal(): void {
+    this.showDeleteModal = false;
+    this.userIdToDelete = null;
   }
 }

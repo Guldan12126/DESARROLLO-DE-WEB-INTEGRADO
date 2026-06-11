@@ -1,5 +1,7 @@
 // 1. Base: Carga variables de CSS, Reset y Tipografía.
 @use 'base';
+@use 'modal';
+
 
 // 2. Páginas y Componentes:
 @use 'login';

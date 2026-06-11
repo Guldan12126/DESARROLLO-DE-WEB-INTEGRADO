@@ -1,17 +1,87 @@
+@use 'sass:color';
 $primary-red: #8b0000;
+$dark-red: #4a0000;
 $gold-accent: #ffd700;
+$dark-gray: #2c3e50;
 
 .dashboard-container {
   padding: 30px;
   background: #f8f9fa;
 
   .dashboard-header {
-    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .subtitle { color: #666; margin-top: 5px; font-size: 0.95rem; }
+
     h1 {
-      font-size: 1.8rem;
+      font-size: 2rem;
+      font-weight: 800;
       color: #333;
-      small { display: block; font-size: 0.9rem; color: #777; font-weight: 400; }
     }
+  }
+
+  .filter-bar {
+    display: flex;
+    background: white;
+    padding: 12px 25px;
+    border-radius: 100px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    align-items: center;
+    gap: 30px;
+    border: 1px solid rgba($gold-accent, 0.2);
+
+    .filter-label { font-weight: 700; color: $dark-gray; font-size: 0.9rem; text-transform: uppercase; }
+    .filter-inputs { display: flex; align-items: center; gap: 15px; }
+    .input-group { display: flex; align-items: center; gap: 10px; }
+    .to-text { color: #aaa; font-style: italic; }
+
+    .input-with-icon {
+      position: relative;
+      i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: $primary-red; font-size: 0.8rem; }
+      input { 
+        padding: 8px 15px 8px 35px; 
+        border: 1px solid #ddd; 
+        border-radius: 50px;
+        font-size: 0.85rem;
+        &:focus { border-color: $primary-red; outline: none; }
+      }
+    }
+
+    .btn-refresh {
+        background: $primary-red;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s;
+        &:hover { background: $dark-red; transform: scale(1.05); box-shadow: 0 5px 15px rgba($primary-red, 0.3); }
+    }
+  }
+  
+  // Barra de carga estilo profesional (tipo YouTube/GitHub)
+  .loading-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $primary-red, $gold-accent);
+    z-index: 2000;
+    animation: loadWidth 2s infinite ease-in-out;
+  }
+
+  @keyframes loadWidth {
+    0% { width: 0; left: 0; }
+    50% { width: 70%; left: 15%; }
+    100% { width: 0; left: 100%; }
   }
 
   .stats-grid {
@@ -21,6 +91,10 @@ $gold-accent: #ffd700;
     margin-bottom: 35px;
 
     .stat-card {
+      border: 1px solid rgba(0,0,0,0.03);
+      transition: transform 0.3s ease;
+      &:hover { transform: translateY(-5px); }
+
       background: white;
       padding: 25px;
       border-radius: 15px;
@@ -45,8 +119,22 @@ $gold-accent: #ffd700;
       .info {
         .label { font-size: 0.85rem; color: #888; text-transform: uppercase; font-weight: 600; }
         .value { margin: 0; font-size: 1.4rem; color: #333; }
+
+        .trend {
+          font-size: 0.75rem;
+          margin-top: 4px;
+          display: block;
+          &.up { color: #2ecc71; }
+          &.danger { color: #e74c3c; font-weight: bold; }
+        }
       }
     }
+
+    // Bordes decorativos por tipo de KPI
+    .stat-card.sales { border-left: 5px solid $primary-red; }
+    .stat-card.orders { border-left: 5px solid $gold-accent; }
+    .stat-card.stock { border-left: 5px solid #ff9800; }
+    .stat-card.tables { border-left: 5px solid $primary-red; }
   }
 
   .charts-grid {

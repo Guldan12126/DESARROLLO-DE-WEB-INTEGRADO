@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { UsuarioService } from '../../../../shared/services/usuario.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 
@@ -21,7 +21,7 @@ export class UsuariosRolesComponent implements OnInit {
   isSaving: boolean = false; // Para el estado de guardado
 
   constructor(
-    private usuarioService: UsuarioService,
+    @Inject(UsuarioService) private usuarioService: UsuarioService,
     private toastService: ToastService
   ) {}
 

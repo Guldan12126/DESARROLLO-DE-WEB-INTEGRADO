@@ -1,64 +1,95 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
-    <h1>Panel de Control <small>Salón Xin Yang</small></h1>
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="header-titles">
+        <h1>Panel de Control</h1>
+        <p class="subtitle">Salón Xin Yan - Gestión en tiempo real</p>
+      </div>
+    </div>
     
-    <!-- Barra de Filtros -->
     <div class="filter-bar">
-      <div class="filter-group">
-        <label>Desde:</label>
-        <input type="date" [(ngModel)]="fechaInicio" class="form-control">
+      <div class="filter-inputs">
+        <span class="filter-label">Rango de análisis:</span>
+        <div class="input-group">
+            <div class="input-with-icon">
+              <i class="fas fa-calendar-day"></i>
+              <input type="date" id="fechaInicio" [(ngModel)]="fechaInicio" class="form-control">
+            </div>
+            <span class="to-text">al</span>
+            <div class="input-with-icon">
+              <i class="fas fa-calendar-check"></i>
+              <input type="date" id="fechaFin" [(ngModel)]="fechaFin" class="form-control">
+            </div>
+        </div>
       </div>
-      <div class="filter-group">
-        <label>Hasta:</label>
-        <input type="date" [(ngModel)]="fechaFin" class="form-control">
-      </div>
-      <button class="btn btn-primary" (click)="aplicarFiltro()">
-        <i class="fas fa-filter"></i> Filtrar
+      <button class="btn-refresh" (click)="aplicarFiltro()" [disabled]="isLoading">
+        <i class="fas" [class.fa-sync-alt]="!isLoading" [class.fa-spinner]="isLoading" [class.fa-spin]="isLoading"></i>
+        <span>{{ isLoading ? 'Procesando...' : 'Actualizar' }}</span>
       </button>
     </div>
   </header>
 
-  <!-- KPIs Section -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="icon-box red"><i class="fas fa-coins"></i></div>
-      <div class="info">
-        <span class="label">Ventas del Día</span>
-        <h2 class="value">S/ {{ stats.totalVentasHoy || 0 | number:'1.2-2' }}</h2>
+  <!-- Barra de progreso sutil -->
+  <div class="loading-bar" *ngIf="isLoading"></div>
+
+  <div *ngIf="!isLoading" class="dashboard-content">
+    <!-- KPIs Section -->
+    <div class="stats-grid">
+      <div class="stat-card sales">
+        <div class="icon-box red"><i class="fas fa-coins"></i></div>
+        <div class="info">
+          <span class="label">Ingresos Totales</span>
+          <h2 class="value">S/ {{ stats.totalVentas || 0 | number:'1.2-2' }}</h2>
+          <span class="trend up"><i class="fas fa-arrow-up"></i> +12% vs periodo ant.</span>
+        </div>
+      </div>
+  
+      <div class="stat-card orders">
+        <div class="icon-box gold"><i class="fas fa-utensils"></i></div>
+        <div class="info">
+          <span class="label">Total Pedidos</span>
+          <h2 class="value">{{ stats.totalPedidos || 0 }}</h2>
+          <span class="trend up"><i class="fas fa-arrow-up"></i> +5% vs periodo ant.</span>
+        </div>
+      </div>
+  
+      <div class="stat-card stock">
+        <div class="icon-box warning"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="info">
+          <span class="label">Insumos Críticos</span>
+          <h2 class="value">{{ stats.insumosCriticos || 0 }}</h2>
+          <span class="trend danger">Revisión necesaria</span>
+        </div>
+      </div>
+  
+      <div class="stat-card tables">
+        <div class="icon-box red"><i class="fas fa-chair"></i></div>
+        <div class="info">
+          <span class="label">Mesas Ocupadas</span>
+          <h2 class="value">{{ stats.mesasOcupadas || 0 }}</h2>
+          <span class="trend">Capacidad: {{ stats.mesasOcupadas && stats.totalMesas ? (stats.mesasOcupadas / stats.totalMesas * 100).toFixed(0) : 0 }}%</span>
+        </div>
       </div>
     </div>
-
-    <div class="stat-card">
-      <div class="icon-box gold"><i class="fas fa-utensils"></i></div>
-      <div class="info">
-        <span class="label">Pedidos Activos</span>
-        <h2 class="value">{{ stats.pedidosActivos || 0 }}</h2>
+  
+    <!-- Charts Section -->
+    <div class="charts-grid">
+      <div class="chart-card main-chart">
+        <div class="chart-header">
+          <h3>Rendimiento de Ventas (Periodo Seleccionado)</h3>
+        </div>
+        <div class="chart-body"><canvas #salesChart></canvas></div>
       </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="icon-box warning"><i class="fas fa-exclamation-triangle"></i></div>
-      <div class="info">
-        <span class="label">Stock Bajo</span>
-        <h2 class="value">{{ stats.productosStockBajo || 0 }}</h2>
+  
+      <div class="chart-card side-chart">
+        <div class="chart-header">
+          <h3>Ventas por Categoría</h3>
+        </div>
+        <div class="chart-body"><canvas #categoryChart></canvas></div>
       </div>
-    </div>
-  </div>
-
-  <!-- Charts Section -->
-  <div class="charts-grid">
-    <div class="chart-card main-chart">
-      <div class="chart-header">
-        <h3>Rendimiento de Ventas (Últimos 7 días)</h3>
-      </div>
-      <div class="chart-body"><canvas #salesChart></canvas></div>
-    </div>
-
-    <div class="chart-card side-chart">
-      <div class="chart-header">
-        <h3>Ventas por Categoría</h3>
-      </div>
-      <div class="chart-body"><canvas #categoryChart></canvas></div>
     </div>
   </div>
 </div>

@@ -1,0 +1,220 @@
+@use 'sass:color';
+
+// Paleta Chifa Xin Yan
+$primary-red: #8b0000;
+$dark-red: #4a0000;
+$gold-accent: #ffd700;
+$gold-hover: #ffec8b;
+$text-dark: #2c3e50;
+$text-light: #7f8c8d;
+$white: #ffffff;
+$bg-gray: #f4f7f6;
+
+// Mixins Reutilizables
+@mixin card-style {
+  background: $white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba($gold-accent, 0.1);
+  transition: all 0.3s ease;
+}
+
+.usuarios-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    h1 {
+      font-size: 2.2rem;
+      color: $text-dark;
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+
+      i { color: $primary-red; }
+    }
+
+    .btn-nuevo {
+      background: linear-gradient(45deg, $primary-red, $dark-red);
+      color: $white;
+      padding: 12px 25px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      @include card-style;
+      border: none;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba($primary-red, 0.4);
+        background: linear-gradient(45deg, $dark-red, $primary-red);
+      }
+    }
+  }
+
+  // Barra de Búsqueda
+  .search-bar {
+    margin-bottom: 2rem;
+    position: relative;
+    max-width: 500px;
+
+    i {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $primary-red;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 20px 12px 50px;
+      border-radius: 100px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+
+      &:focus {
+        border-color: $primary-red;
+        box-shadow: 0 0 0 3px rgba($primary-red, 0.1);
+      }
+    }
+  }
+
+  // Tabla de Usuarios (o Grid de Cards)
+  .user-table-card {
+    @include card-style;
+    overflow: hidden;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th {
+        background: rgba($primary-red, 0.03);
+        padding: 15px 20px;
+        text-align: left;
+        color: $primary-red;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        border-bottom: 2px solid rgba($gold-accent, 0.2);
+      }
+
+      td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+        color: $text-dark;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  // Badges de Roles
+  .role-badge {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+
+    &.admin { background: rgba($gold-accent, 0.2); color: #b8860b; border: 1px solid $gold-accent; }
+    &.mozo { background: rgba(52, 152, 219, 0.1); color: #2980b9; border: 1px solid #3498db; }
+    &.cocina { background: rgba(46, 204, 113, 0.1); color: #27ae60; border: 1px solid #2ecc71; }
+    &.cajero { background: rgba(155, 89, 182, 0.1); color: #8e44ad; border: 1px solid #9b59b6; }
+  }
+
+  // Sección de Roles (Cards para UsuariosRolesComponent)
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+
+    .role-card {
+      @include card-style;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 5px; height: 100%;
+      }
+
+      &.admin::before { background: $gold-accent; }
+      &.mozo::before { background: #3498db; }
+      &.cocina::before { background: #2ecc71; }
+      &.cajero::before { background: #9b59b6; }
+
+      .role-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        h3 { margin: 0; color: $text-dark; font-size: 1.3rem; }
+        .btn-edit { color: $text-light; cursor: pointer; &:hover { color: $primary-red; } }
+      }
+
+      .permisos-list {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0;
+        
+        li {
+          font-size: 0.9rem;
+          color: $text-light;
+          margin-bottom: 5px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          i { color: #27ae60; font-size: 0.8rem; }
+        }
+      }
+    }
+  }
+
+  // Formulario (UsuariosComponent)
+  .form-card {
+    @include card-style;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2.5rem;
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label { display: block; margin-bottom: 8px; font-weight: 600; color: $text-dark; }
+      input, select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        &:focus { border-color: $primary-red; outline: none; box-shadow: 0 0 0 3px rgba($primary-red, 0.1); }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
