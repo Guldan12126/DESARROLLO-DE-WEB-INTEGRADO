@@ -1,32 +1,71 @@
-<section class="dashboard-container">
-  <header class="dashboard-header">
+<section class="caja-container">
+  <header class="caja-header">
     <div class="header-left">
       <div class="header-icon">
         <i class="fas fa-cash-register"></i>
       </div>
       <div class="header-titles">
-        <h1>Gestión de Caja</h1>
-        <p class="subtitle">Sección preparada para apertura, cierre y movimientos de caja.</p>
+        <h1>Módulo de Caja y Facturación</h1>
+        <p class="subtitle">Gestión de Cobros, Cálculo de Vuelto y Cierre de Caja</p>
       </div>
+    </div>
+    <div class="header-right">
+      <button class="btn-danger" (click)="cierreCaja()">
+        <i class="fas fa-lock"></i> Cierre de Caja
+      </button>
     </div>
   </header>
 
-  <div class="stats-grid">
-    <div class="stat-card sales">
-      <div class="icon-box gold"><i class="fas fa-lock-open"></i></div>
-      <div class="info">
-        <span class="label">Apertura / Cierre</span>
-        <h2 class="value">Disponible</h2>
-        <span class="trend">Ruta conectada al sistema de navegación</span>
+  <div class="caja-grid">
+    <!-- Panel de Cobro -->
+    <div class="caja-card">
+      <h3><i class="fas fa-money-bill-wave"></i> Procesar Pago</h3>
+      
+      <div class="form-group">
+        <label>Total a Cobrar (S/)</label>
+        <input type="number" class="form-control amount-display" [value]="montoCobrar" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Método de Pago</label>
+        <select class="form-control" [(ngModel)]="metodoPago">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta (POS)</option>
+          <option value="Yape">Yape / Plin</option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="metodoPago === 'Efectivo'">
+        <label>Monto Recibido (S/)</label>
+        <input type="number" class="form-control" [(ngModel)]="montoRecibido" placeholder="0.00">
+      </div>
+
+      <div class="vuelto-display" *ngIf="metodoPago === 'Efectivo'">
+        <span>Vuelto a entregar:</span>
+        <h2 [class.text-danger]="montoRecibido > 0 && montoRecibido < montoCobrar">
+          S/ {{ vuelto | number:'1.2-2' }}
+        </h2>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-primary btn-block" (click)="procesarPago()">
+          <i class="fas fa-check-circle"></i> Confirmar Pago
+        </button>
       </div>
     </div>
 
-    <div class="stat-card orders">
-      <div class="icon-box red"><i class="fas fa-exchange-alt"></i></div>
-      <div class="info">
-        <span class="label">Movimientos</span>
-        <h2 class="value">Disponible</h2>
-        <span class="trend">Lista para integrarse con endpoints del backend</span>
+    <!-- Panel de Comprobantes -->
+    <div class="caja-card">
+      <h3><i class="fas fa-file-invoice"></i> Generación de Comprobantes</h3>
+      <p class="text-muted">Última transacción procesada lista para facturación.</p>
+      
+      <div class="invoice-actions mt-4">
+        <button class="btn-secondary btn-block mb-3" (click)="generarComprobante()">
+          <i class="fas fa-print"></i> Imprimir Ticket / Boleta
+        </button>
+        <button class="btn-secondary btn-block" (click)="generarComprobante()">
+          <i class="fas fa-file-pdf"></i> Generar PDF
+        </button>
       </div>
     </div>
   </div>

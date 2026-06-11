@@ -7,11 +7,25 @@ import { UsuariosListaComponent } from './pages/usuarios/usuarios-lista.componen
 import { UsuariosRolesComponent } from './pages/usuarios/usuarios-roles.component';
 import { ProductosListaComponent } from './pages/productos/productos-lista.component';
 import { Productos } from './pages/productos/productos';
+import { ProductosCategorias } from './pages/productos/productos-categorias/productos-categorias';
+import { ProductosStock } from './pages/productos/productos-stock/productos-stock';
 import { Mesas } from './pages/mesas/mesas';
+import { MesasCrear } from './pages/mesas/mesas-crear/mesas-crear';
+import { MesasMapa } from './pages/mesas/mesas-mapa/mesas-mapa';
 import { Pedidos } from './pages/pedidos/pedidos';
+import { PedidosVer } from './pages/pedidos/pedidos-ver/pedidos-ver';
+import { PedidosNuevo } from './pages/pedidos/pedidos-nuevo/pedidos-nuevo';
+import { PedidosHistorial } from './pages/pedidos/pedidos-historial/pedidos-historial';
 import { Ventas } from './pages/ventas/ventas';
+import { VentasVer } from './pages/ventas/ventas-ver/ventas-ver';
+import { VentasDetalle } from './pages/ventas/ventas-detalle/ventas-detalle';
 import { Reportes } from './pages/reportes/reportes';
+import { ReportesSemanales } from './pages/reportes/reportes-semanales/reportes-semanales';
+import { ReportesMensuales } from './pages/reportes/reportes-mensuales/reportes-mensuales';
+import { ReportesProductos } from './pages/reportes/reportes-productos/reportes-productos';
+import { ReportesMesas } from './pages/reportes/reportes-mesas/reportes-mesas';
 import { CajaComponent } from './pages/caja/caja';
+import { CajaMovimientos } from './pages/caja/caja-movimientos/caja-movimientos';
 
 const routes: Routes = [
   {
@@ -34,8 +48,8 @@ const routes: Routes = [
           { path: '', redirectTo: 'lista', pathMatch: 'full' },
           { path: 'lista', component: ProductosListaComponent },
           { path: 'crear', component: Productos },
-          { path: 'categorias', component: Productos },
-          { path: 'stock', component: Productos },
+          { path: 'categorias', component: ProductosCategorias },
+          { path: 'stock', component: ProductosStock },
         ],
       },
       {
@@ -43,8 +57,8 @@ const routes: Routes = [
         children: [
           { path: '', redirectTo: 'lista', pathMatch: 'full' },
           { path: 'lista', component: Mesas },
-          { path: 'crear', component: Mesas },
-          { path: 'mapa', component: Mesas },
+          { path: 'crear', component: MesasCrear },
+          { path: 'mapa', component: MesasMapa },
         ],
       },
       {
@@ -52,9 +66,9 @@ const routes: Routes = [
         children: [
           { path: '', redirectTo: 'lista', pathMatch: 'full' },
           { path: 'lista', component: Pedidos },
-          { path: 'ver', component: Pedidos },
-          { path: 'nuevo', component: Pedidos },
-          { path: 'historial', component: Pedidos },
+          { path: 'ver', component: PedidosVer },
+          { path: 'nuevo', component: PedidosNuevo },
+          { path: 'historial', component: PedidosHistorial },
         ],
       },
       {
@@ -62,8 +76,8 @@ const routes: Routes = [
         children: [
           { path: '', redirectTo: 'lista', pathMatch: 'full' },
           { path: 'lista', component: Ventas },
-          { path: 'ver', component: Ventas },
-          { path: 'detalle', component: Ventas },
+          { path: 'ver', component: VentasVer },
+          { path: 'detalle', component: VentasDetalle },
         ],
       },
       {
@@ -71,7 +85,7 @@ const routes: Routes = [
         children: [
           { path: '', redirectTo: 'gestion', pathMatch: 'full' },
           { path: 'gestion', component: CajaComponent },
-          { path: 'movimientos', component: CajaComponent },
+          { path: 'movimientos', component: CajaMovimientos },
         ],
       },
       {
@@ -79,10 +93,10 @@ const routes: Routes = [
         children: [
           { path: '', redirectTo: 'ventas-diarias', pathMatch: 'full' },
           { path: 'ventas-diarias', component: Reportes },
-          { path: 'ventas-semanales', component: Reportes },
-          { path: 'ventas-mensuales', component: Reportes },
-          { path: 'productos-vendidos', component: Reportes },
-          { path: 'mesas-mas-usadas', component: Reportes },
+          { path: 'ventas-semanales', component: ReportesSemanales },
+          { path: 'ventas-mensuales', component: ReportesMensuales },
+          { path: 'productos-vendidos', component: ReportesProductos },
+          { path: 'mesas-mas-usadas', component: ReportesMesas },
         ],
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

@@ -18,6 +18,20 @@ import { CajaComponent } from './pages/caja/caja';
 import { ToastService } from '../../shared/services/toast.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../../shared/shared.module';
+import { ProductosCategorias } from './pages/productos/productos-categorias/productos-categorias';
+import { ProductosStock } from './pages/productos/productos-stock/productos-stock';
+import { MesasCrear } from './pages/mesas/mesas-crear/mesas-crear';
+import { MesasMapa } from './pages/mesas/mesas-mapa/mesas-mapa';
+import { PedidosVer } from './pages/pedidos/pedidos-ver/pedidos-ver';
+import { PedidosNuevo } from './pages/pedidos/pedidos-nuevo/pedidos-nuevo';
+import { PedidosHistorial } from './pages/pedidos/pedidos-historial/pedidos-historial';
+import { VentasVer } from './pages/ventas/ventas-ver/ventas-ver';
+import { VentasDetalle } from './pages/ventas/ventas-detalle/ventas-detalle';
+import { CajaMovimientos } from './pages/caja/caja-movimientos/caja-movimientos';
+import { ReportesSemanales } from './pages/reportes/reportes-semanales/reportes-semanales';
+import { ReportesMensuales } from './pages/reportes/reportes-mensuales/reportes-mensuales';
+import { ReportesProductos } from './pages/reportes/reportes-productos/reportes-productos';
+import { ReportesMesas } from './pages/reportes/reportes-mesas/reportes-mesas';
 
 @NgModule({
   declarations: [
@@ -34,6 +48,20 @@ import { SharedModule } from '../../shared/shared.module';
     Ventas,
     Reportes,
     CajaComponent,
+    ProductosCategorias,
+    ProductosStock,
+    MesasCrear,
+    MesasMapa,
+    PedidosVer,
+    PedidosNuevo,
+    PedidosHistorial,
+    VentasVer,
+    VentasDetalle,
+    CajaMovimientos,
+    ReportesSemanales,
+    ReportesMensuales,
+    ReportesProductos,
+    ReportesMesas,
   ],
   imports: [
     CommonModule,
