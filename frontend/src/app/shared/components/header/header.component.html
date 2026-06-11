@@ -1,13 +1,10 @@
 <header class="main-header">
   <div class="header-actions">
-    
-    <!-- Botón de Notificaciones -->
-    <button class="notifications-btn" title="Notificaciones">
+    <button class="notifications-btn" title="Rol actual">
       <i class="fas fa-bell"></i>
-      <span class="badge">3</span>
+      <span class="badge">{{ rolUsuario }}</span>
     </button>
 
-    <!-- Perfil de Usuario -->
     <div class="user-profile-container">
       <div class="user-profile" (click)="toggleDropdown()">
         <div class="avatar-wrapper">
@@ -20,7 +17,6 @@
         <i class="fas fa-chevron-down chevron-icon" [class.rotated]="isDropdownOpen"></i>
       </div>
 
-      <!-- Dropdown Menu -->
       @if (isDropdownOpen) {
         <div class="dropdown-menu">
           <a class="dropdown-item"><i class="fas fa-user-circle"></i> Mi Perfil</a>

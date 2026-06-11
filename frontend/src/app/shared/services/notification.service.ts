@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private apiUrl = 'http://localhost:8080/api/notificaciones';
+  private apiUrl = `${environment.apiUrl}/notificaciones`;
   
   // Usamos BehaviorSubject para que cualquier componente se entere cuando cambien las notificaciones
   private unreadCountSubject = new BehaviorSubject<number>(0);

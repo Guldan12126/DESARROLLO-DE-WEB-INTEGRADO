@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { LoginComponent } from './pages/login/login.component';
@@ -9,10 +9,10 @@ import { LoginComponent } from './pages/login/login.component';
   declarations: [LoginComponent],
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild([
-      { path: '', component: LoginComponent }
-    ])
-  ]
+      { path: '', component: LoginComponent },
+    ]),
+  ],
 })
-export class AuthModule { }  
+export class AuthModule {}

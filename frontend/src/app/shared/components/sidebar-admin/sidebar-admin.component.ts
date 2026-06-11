@@ -1,19 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+
 import { ToastService } from '../../services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-sidebar-admin',
   templateUrl: './sidebar-admin.component.html',
   styleUrl: '../../../../scss/_sidebar-admin.scss',
-  standalone: false
+  standalone: false,
 })
-export class SidebarAdminComponent implements OnInit {
+export class SidebarAdminComponent implements OnInit, OnDestroy {
   nombreUsuario: string = 'Administrador';
   rolUsuario: string = 'ADMIN';
   isOpen: boolean = false;
-  avatarUrl: string = 'assets/Images/default-avatar.png'; 
-  
+  avatarUrl: string = 'assets/Images/default-avatar.png';
+  private readonly destroy$ = new Subject<void>();
+
   sections = {
     usuarios: false,
     productos: false,
@@ -26,23 +30,27 @@ export class SidebarAdminComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
-    const nombre = localStorage.getItem('nombreUsuario');
-    if (nombre) {
-      this.nombreUsuario = nombre;
-    }
-    const rol = localStorage.getItem('role');
-    if (rol) {
-      this.rolUsuario = rol;
-    }
+    this.authService.session$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((session) => {
+        this.nombreUsuario = session?.nombre ?? 'Administrador';
+        this.rolUsuario = session?.rol ?? 'ADMIN';
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   handleImageError(event: any): void {
     const target = event.target as HTMLImageElement;
-    const defaultImg = 'assets/Images/default-avatar.png'; // Ruta corregida: 'Images' con 'I' mayúscula
+    const defaultImg = 'assets/Images/default-avatar.png';
     if (target.src !== window.location.origin + '/' + defaultImg) {
       target.src = defaultImg;
     }
@@ -61,8 +69,7 @@ export class SidebarAdminComponent implements OnInit {
   }
 
   onLogout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    this.authService.logout();
     this.router.navigate(['/login']);
     this.toastService.info('Sesión cerrada correctamente');
   }
