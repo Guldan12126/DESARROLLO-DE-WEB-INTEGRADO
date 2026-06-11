@@ -2,7 +2,6 @@ package apf3.ChifaXinYan.Service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +12,11 @@ import apf3.ChifaXinYan.Repository.MesaRepository;
 @Service
 public class MesaService {
 
-    @Autowired
-    private MesaRepository mesaRepository;
+    private final MesaRepository mesaRepository;
+
+    public MesaService(MesaRepository mesaRepository) {
+        this.mesaRepository = mesaRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<Mesa> listarTodas() {
@@ -73,7 +75,7 @@ public class MesaService {
 
     @Transactional(rollbackFor = Exception.class)
     public Mesa crearMesa(Mesa mesa) {
-        if (mesaRepository.findByNumero(mesa.getNumero()) != null) {
+        if (mesaRepository.findByNumero(mesa.getNumero()).isPresent()) {
             throw new RuntimeException("Ya existe una mesa con el número: " + mesa.getNumero());
         }
         mesa.setEstado(EstadoMesa.DISPONIBLE);

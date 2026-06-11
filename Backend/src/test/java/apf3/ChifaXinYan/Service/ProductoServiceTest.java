@@ -1,5 +1,6 @@
 package apf3.ChifaXinYan.Service;
 
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -13,8 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import apf3.ChifaXinYan.Model.Categoria;
 import apf3.ChifaXinYan.Model.Producto;
-import apf3.ChifaXinYan.Service.ProductoService;
+import apf3.ChifaXinYan.Repository.CategoriaRepository;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -24,13 +26,16 @@ public class ProductoServiceTest {
     @Autowired
     private ProductoService productoService;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
     private static Long productoId;
 
     @Test
     @Order(1)
     @DisplayName("1. Debe listar todos los productos")
     public void testListarTodos() {
-        var productos = productoService.listarTodos();
+        List<Producto> productos = productoService.listarTodos();
         assertNotNull(productos);
         assertTrue(productos.size() >= 16, "Debe haber al menos 16 productos iniciales");
         System.out.println("✅ Total productos: " + productos.size());
@@ -40,12 +45,12 @@ public class ProductoServiceTest {
     @Order(2)
     @DisplayName("2. Debe listar productos por categoría CHAUFA")
     public void testListarPorCategoria() {
-        var productos = productoService.listarPorCategoria("CHAUFA");
+        List<Producto> productos = productoService.listarPorCategoria("CHAUFA");
         assertNotNull(productos);
         assertTrue(productos.size() >= 3, "Debe haber al menos 3 productos en categoría CHAUFA");
         
         for (Producto p : productos) {
-            assertEquals("CHAUFA", p.getCategoria());
+            assertEquals("CHAUFA", p.getCategoria().getNombre());
         }
         System.out.println("✅ Productos en categoría CHAUFA: " + productos.size());
     }
@@ -56,7 +61,11 @@ public class ProductoServiceTest {
     public void testCrearProducto() {
         Producto nuevo = new Producto();
         nuevo.setNombre("Tallarin Saltado");
-        nuevo.setCategoria("FIDEOS");
+        
+        Categoria cat = categoriaRepository.findByNombre("FIDEOS")
+                .orElseGet(() -> categoriaRepository.save(new Categoria(null, "FIDEOS")));
+        
+        nuevo.setCategoria(cat);
         nuevo.setPrecio(29.00);
         nuevo.setStock(50);
         nuevo.setImagenUrl("/images/tallarin.jpg");
@@ -88,7 +97,11 @@ public class ProductoServiceTest {
     public void testActualizarProducto() {
         Producto productoActualizado = new Producto();
         productoActualizado.setNombre("Tallarin Saltado Especial");
-        productoActualizado.setCategoria("FIDEOS");
+        
+        Categoria cat = categoriaRepository.findByNombre("FIDEOS")
+                .orElseGet(() -> categoriaRepository.save(new Categoria(null, "FIDEOS")));
+        
+        productoActualizado.setCategoria(cat);
         productoActualizado.setPrecio(32.00);
         productoActualizado.setStock(45);
         productoActualizado.setImagenUrl("/images/tallarin-especial.jpg");
@@ -116,7 +129,7 @@ public class ProductoServiceTest {
     @Order(7)
     @DisplayName("7. Debe listar productos activos")
     public void testListarActivos() {
-        var activos = productoService.listarActivos();
+        List<Producto> activos = productoService.listarActivos();
         assertNotNull(activos);
         assertTrue(!activos.isEmpty());  // ← Cambiado para evitar warning
         System.out.println("✅ Productos activos: " + activos.size());
@@ -126,7 +139,7 @@ public class ProductoServiceTest {
     @Order(8)
     @DisplayName("8. Debe listar productos con stock bajo (menor a 20)")
     public void testListarStockBajo() {
-        var stockBajo = productoService.listarStockBajo(20);
+        List<Producto> stockBajo = productoService.listarStockBajo(20);
         assertNotNull(stockBajo);
         System.out.println("✅ Productos con stock bajo (<20): " + stockBajo.size());
     }
@@ -135,11 +148,11 @@ public class ProductoServiceTest {
     @Order(9)
     @DisplayName("9. Debe buscar productos por categoría BEBIDAS")
     public void testListarBebidas() {
-        var bebidas = productoService.listarPorCategoria("BEBIDAS");
+        List<Producto> bebidas = productoService.listarPorCategoria("BEBIDAS"); // Ahora llama al método actualizado
         assertNotNull(bebidas);
         
         for (Producto p : bebidas) {
-            assertEquals("BEBIDAS", p.getCategoria());
+            assertEquals("BEBIDAS", p.getCategoria().getNombre());
             assertTrue(p.getPrecio() > 0);
         }
         System.out.println("✅ Bebidas disponibles: " + bebidas.size());
@@ -147,11 +160,36 @@ public class ProductoServiceTest {
 
     @Test
     @Order(10)
+    @DisplayName("10. Debe buscar productos por nombre y categoría")
+    public void testBuscarPorNombreYCategoria() {
+        // 1. Asegurar que existe un producto para la prueba
+        Categoria cat = categoriaRepository.findByNombre("CHAUFA")
+                .orElseGet(() -> categoriaRepository.save(new Categoria(null, "CHAUFA")));
+        
+        // 2. Realizar la búsqueda (ejemplo: buscar 'arroz' en 'CHAUFA')
+        List<Producto> resultados = productoService.buscarPorNombreYCategoria("arroz", "CHAUFA");
+        
+        assertNotNull(resultados);
+        for (Producto p : resultados) {
+            // Verificar que el nombre contiene la palabra (sin importar mayúsculas)
+            assertTrue(p.getNombre().toLowerCase().contains("arroz"));
+            // Verificar que la categoría es la correcta
+            assertEquals("CHAUFA", p.getCategoria().getNombre());
+        }
+        System.out.println("✅ Búsqueda combinada exitosa, encontrados: " + resultados.size());
+    }
+
+    @Test
+    @Order(11)
     @DisplayName("10. Debe eliminar producto correctamente")
     public void testEliminarProducto() {
         Producto temporal = new Producto();
         temporal.setNombre("Producto Temporal");
-        temporal.setCategoria("TEST");
+        
+        Categoria cat = categoriaRepository.findByNombre("TEST")
+                .orElseGet(() -> categoriaRepository.save(new Categoria(null, "TEST")));
+        
+        temporal.setCategoria(cat);
         temporal.setPrecio(10.00);
         temporal.setStock(5);
         

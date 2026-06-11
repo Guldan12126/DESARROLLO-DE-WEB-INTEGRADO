@@ -36,9 +36,20 @@ public class DetalleCompra {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+    public Compra getCompra() { return compra; }
     public void setCompra(Compra compra) { this.compra = compra; }
+    public Ingrediente getIngrediente() { return ingrediente; }
     public void setIngrediente(Ingrediente ingrediente) { this.ingrediente = ingrediente; }
-    public void setCantidad(double cantidad) { this.cantidad = cantidad; }
-    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
+    public double getCantidad() { return cantidad; }
+    public void setCantidad(double cantidad) { 
+        this.cantidad = cantidad; 
+        this.subtotal = this.cantidad * this.precioUnitario;
+    }
+    public double getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(double precioUnitario) { 
+        this.precioUnitario = precioUnitario; 
+        this.subtotal = this.cantidad * this.precioUnitario;
+    }
+    public double getSubtotal() { return subtotal; }
     public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
 }

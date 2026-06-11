@@ -2,7 +2,7 @@
 .login-container {
     display: flex;
     width: 100%;
-    max-width: 1100px; /* Tamaño elegante */
+    max-width: 1100px; 
     height: 650px;
     border-radius: 24px;
     overflow: hidden;
@@ -21,7 +21,7 @@
 /* ========== LEFT PANEL ========== */
 .left-panel {
     flex: 1.2;
-    background-image: url('../../../../../assets/Images/Local/local-afuera.png');
+    background-image: url('../assets/Images/Local/local-afuera.png');
     background-size: cover;
     background-position: center;
     position: relative;

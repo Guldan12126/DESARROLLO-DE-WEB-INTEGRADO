@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-sidebar-cajero',
   standalone: false,
   templateUrl: './sidebar-cajero.html',
-  styleUrl: './sidebar-cajero.scss',
+  styleUrl: '../../../../scss/_sidebar-admin.scss',
 })
 export class SidebarCajero {
 

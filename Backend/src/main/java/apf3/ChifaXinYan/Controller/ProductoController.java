@@ -47,6 +47,14 @@ public class ProductoController {
         return ResponseEntity.ok(productoService.listarPorCategoria(categoria));
     }
 
+    // GET /api/productos/buscar?nombre=chaufa&categoria=CHAUFA
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Producto>> buscarPorNombreYCategoria(
+            @RequestParam String nombre, 
+            @RequestParam String categoria) {
+        return ResponseEntity.ok(productoService.buscarPorNombreYCategoria(nombre, categoria));
+    }
+
     // GET /api/productos/stock-bajo?limite=20 - Productos con stock bajo
     @GetMapping("/stock-bajo")
     public ResponseEntity<List<Producto>> listarStockBajo(@RequestParam(defaultValue = "20") int limite) {

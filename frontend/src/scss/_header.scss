@@ -1,0 +1,166 @@
+// Variables específicas del Header
+$header-height: 75px;
+$gold-accent: #d4af37;
+
+.main-header {
+    height: $header-height;
+    background: var(--bg-card);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; // Alinea todo a la derecha
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+
+        // Botón de Notificaciones (Campanita)
+        .notifications-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+
+            &:hover {
+                background: rgba($gold-accent, 0.1);
+                color: $gold-accent;
+                transform: scale(1.1);
+            }
+
+            .badge {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                background: var(--primary);
+                color: white;
+                font-size: 0.65rem;
+                padding: 2px 5px;
+                border-radius: 10px;
+                font-weight: bold;
+                border: 2px solid var(--bg-card);
+            }
+        }
+
+        // Perfil de Usuario
+        .user-profile-container {
+            position: relative;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            user-select: none;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 30px;
+            transition: background 0.3s ease;
+
+            &:hover {
+                background: #f9fafb;
+            }
+
+            .avatar-wrapper {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                overflow: hidden;
+                border: 2px solid $gold-accent;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .user-avatar {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            .user-name {
+                font-weight: 600;
+                color: var(--text-dark);
+                font-size: 0.95rem;
+            }
+
+            .chevron-icon {
+                font-size: 0.8rem;
+                color: var(--text-light);
+                transition: transform 0.3s ease;
+            }
+
+            &:hover .chevron-icon {
+                color: $gold-accent;
+            }
+
+            .chevron-icon.rotated {
+                transform: rotate(180deg);
+            }
+        }
+
+        // Dropdown Menu Styles
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: white;
+            min-width: 200px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 8px 0;
+            display: flex;
+            flex-direction: column;
+            animation: dropdownFade 0.2s ease-out;
+
+            .dropdown-item {
+                padding: 12px 20px;
+                color: var(--text-dark);
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                text-decoration: none;
+                transition: all 0.2s;
+
+                i {
+                    color: var(--text-light);
+                    width: 20px;
+                }
+
+                &:hover {
+                    background: rgba($gold-accent, 0.05);
+                    color: $gold-accent;
+                    i { color: $gold-accent; }
+                }
+
+                &.logout {
+                    color: var(--primary);
+                    &:hover { background: #fff1f1; }
+                }
+            }
+
+            .dropdown-divider {
+                height: 1px;
+                background: rgba(0,0,0,0.05);
+                margin: 8px 0;
+            }
+        }
+    }
+}
+
+@keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

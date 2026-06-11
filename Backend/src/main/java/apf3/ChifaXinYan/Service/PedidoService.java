@@ -8,20 +8,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import apf3.ChifaXinYan.Enum.EstadoPedido;
 import apf3.ChifaXinYan.Model.DetallePedido;
+import apf3.ChifaXinYan.Model.Ingrediente;
 import apf3.ChifaXinYan.Model.Pedido;
 import apf3.ChifaXinYan.Model.Producto;
+import apf3.ChifaXinYan.Model.Receta;
+import apf3.ChifaXinYan.Repository.IngredienteRepository;
 import apf3.ChifaXinYan.Repository.PedidoRepository;
 import apf3.ChifaXinYan.Repository.ProductoRepository;
+import apf3.ChifaXinYan.Repository.RecetaRepository;
 
 @Service
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
     private final ProductoRepository productoRepository;
+    private final RecetaRepository recetaRepository;
+    private final IngredienteRepository ingredienteRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository, ProductoRepository productoRepository) {
+    public PedidoService(PedidoRepository pedidoRepository, ProductoRepository productoRepository, RecetaRepository recetaRepository, IngredienteRepository ingredienteRepository) {
         this.pedidoRepository = pedidoRepository;
         this.productoRepository = productoRepository;
+        this.recetaRepository = recetaRepository;
+        this.ingredienteRepository = ingredienteRepository;
     }
 
     @Transactional(readOnly = true)
@@ -70,18 +78,35 @@ public class PedidoService {
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new RuntimeException("Error: El producto no existe."));
 
-        // VALIDACIÓN: Verificar disponibilidad de stock
-        if (producto.getStock() < cantidad) {
-            throw new RuntimeException("Error: Stock insuficiente para '" + producto.getNombre() + 
-                                     "'. Disponible: " + producto.getStock());
+        // Obtener la receta del producto
+        List<Receta> componentes = recetaRepository.findByProductoId(productoId);
+
+        if (!componentes.isEmpty()) {
+            // Lógica de negocio: Descontar ingredientes según la receta
+            for (Receta receta : componentes) {
+                Ingrediente ingrediente = receta.getIngrediente();
+                double cantidadNecesaria = receta.getCantidad() * cantidad;
+
+                if (ingrediente.getStock() < cantidadNecesaria) {
+                    throw new RuntimeException("Error: Stock insuficiente de ingrediente '" + ingrediente.getNombre() + 
+                                             "'. Requerido: " + cantidadNecesaria + ", Disponible: " + ingrediente.getStock());
+                }
+                
+                ingrediente.setStock(ingrediente.getStock() - cantidadNecesaria);
+                ingredienteRepository.save(ingrediente);
+            }
+        } else {
+            // Fallback: Si no tiene receta (ej. Gaseosa), se descuenta el stock del producto directamente
+            if (producto.getStock() < cantidad) {
+                throw new RuntimeException("Error: Stock insuficiente para '" + producto.getNombre() + 
+                                         "'. Disponible: " + producto.getStock());
+            }
+            producto.setStock(producto.getStock() - cantidad);
+            productoRepository.save(producto);
         }
 
         // Crear y configurar el detalle
         DetallePedido detalle = new DetallePedido(pedido, producto, cantidad, producto.getPrecio());
-        
-        // Lógica de negocio: Reducir stock del producto
-        producto.setStock(producto.getStock() - cantidad);
-        productoRepository.save(producto);
         
         pedido.getDetalles().add(detalle);
         pedido.calcularTotal();

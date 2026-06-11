@@ -82,6 +82,11 @@ public class VentaService {
             throw new RuntimeException("El pedido no está listo para pagar. Estado actual: " + pedido.getEstado());
         }
         
+        // Validar que el monto recibido sea suficiente para cubrir el total del pedido
+        if (montoRecibido < pedido.getTotal()) {
+            throw new RuntimeException("Error: El monto recibido (S/ " + montoRecibido + ") es insuficiente. El total a pagar es S/ " + pedido.getTotal());
+        }
+        
         // Crear la venta
         Venta venta = new Venta(pedido, metodoPago, montoRecibido, cajeroId);
         

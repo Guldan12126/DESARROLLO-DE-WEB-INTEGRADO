@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-sidebar-cocina',
   standalone: false,
   templateUrl: './sidebar-cocina.html',
-  styleUrl: './sidebar-cocina.scss',
+  styleUrl: '../../../../scss/_sidebar-admin.scss',
 })
 export class SidebarCocina {
 

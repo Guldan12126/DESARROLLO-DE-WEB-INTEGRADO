@@ -1,4 +1,4 @@
-package apf2.ChifaXinYan;
+package apf3.ChifaXinYan;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

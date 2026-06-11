@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { ToastService, Toast } from '../../services/toast.service';
+import { ToastService, Toast } from './app/shared/services/toast.service';
 import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-toast',
@@ -28,7 +29,8 @@ import { Observable } from 'rxjs';
       pointer-events: auto;
       cursor: pointer;
     }
-  `]
+  `],
+  imports: [AsyncPipe] // Añadir AsyncPipe aquí
 })
 export class ToastComponent {
   toasts$: Observable<Toast[]>;

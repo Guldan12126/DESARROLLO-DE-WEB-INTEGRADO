@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-sidebar-mozo',
   standalone: false,
   templateUrl: './sidebar-mozo.html',
-  styleUrl: './sidebar-mozo.scss',
+  styleUrl: '../../../../scss/_sidebar-admin.scss',
 })
 export class SidebarMozo {
 

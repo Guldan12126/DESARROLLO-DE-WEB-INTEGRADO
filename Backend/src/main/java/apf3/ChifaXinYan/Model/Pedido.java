@@ -10,7 +10,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,14 +32,13 @@ public class Pedido {
     
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario; // Mozo que registró el pedido
+    private Usuario usuario; 
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
-    private Cliente cliente; // Opcional para fidelización o facturación
+    private Cliente cliente; 
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JoinColumn(name = "pedido_id") // Removido, ya que mappedBy se encarga de la relación
     private List<DetallePedido> detalles;
     
     @Enumerated(EnumType.STRING)

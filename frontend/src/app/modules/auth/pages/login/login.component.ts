@@ -7,7 +7,7 @@ import { ToastService } from '../../../../shared/services/toast.service';
   selector: 'app-login',
   standalone: false,
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrl: '../../../../../scss/_login.scss'
 })
 export class LoginComponent {
   email: string = '';
@@ -32,11 +32,11 @@ export class LoginComponent {
     this.http.post<any>('http://localhost:8080/api/auth/login', loginData).subscribe({
       next: (res) => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('role', res.rol); // Guardamos el rol (ADMIN, MOZO, etc)
         this.toastService.success(`¡Bienvenido, ${res.nombre}!`);
         this.router.navigate(['/admin']);
       },
       error: () => {
-        // El error ya es manejado por el ErrorInterceptor mostrando Toasts
       }
     });
   }
