@@ -10,6 +10,7 @@ import { ToastService } from '../../services/toast.service';
 })
 export class SidebarAdminComponent implements OnInit {
   nombreUsuario: string = 'Administrador';
+  rolUsuario: string = 'ADMIN';
   isOpen: boolean = false;
   avatarUrl: string = 'assets/Images/default-avatar.png'; 
   
@@ -32,6 +33,10 @@ export class SidebarAdminComponent implements OnInit {
     const nombre = localStorage.getItem('nombreUsuario');
     if (nombre) {
       this.nombreUsuario = nombre;
+    }
+    const rol = localStorage.getItem('role');
+    if (rol) {
+      this.rolUsuario = rol;
     }
   }
 

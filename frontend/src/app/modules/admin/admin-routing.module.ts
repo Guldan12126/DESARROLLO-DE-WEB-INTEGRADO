@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { AdminComponent } from './admin.component';
+import { UsuariosListaComponent } from './pages/usuarios/usuarios-lista.component';
 
 const routes: Routes = [
   {
-    path: '', // Esto representa la base /admin
+    path: '',
+    component: AdminComponent, // Define el layout con Sidebar y Header para todos los hijos
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'usuarios', component: UsuariosListaComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }

@@ -9,16 +9,21 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   nombreUsuario: string = 'Usuario';
+  rolUsuario: string = 'Rol';
   isDropdownOpen: boolean = false;
-  avatarUrl: string = 'assets/images/default-avatar.png'; // Ruta por defecto para el avatar
+  avatarUrl: string = 'assets/Images/default-avatar.png';
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // Intentar obtener el nombre del usuario desde el localStorage
     const nombre = localStorage.getItem('nombreUsuario');
+    const rol = localStorage.getItem('role');
+    
     if (nombre) {
       this.nombreUsuario = nombre;
+    }
+    if (rol) {
+      this.rolUsuario = rol;
     }
   }
 

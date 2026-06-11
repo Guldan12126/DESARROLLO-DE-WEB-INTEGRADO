@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
-import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { errorInterceptor } from './interceptors/error.interceptor'; 
 
 @NgModule({
   declarations: [
@@ -16,11 +16,11 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
   ],
   providers: [
-    // Proporcionar los interceptores
-  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    provideHttpClient(
+      withInterceptors([jwtInterceptor, errorInterceptor])
+    )
   ],
   bootstrap: [AppComponent]
 })

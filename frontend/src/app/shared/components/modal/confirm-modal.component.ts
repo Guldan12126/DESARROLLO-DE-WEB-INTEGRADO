@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './confirm-modal.component.html',
-  styleUrl: './modal.scss'
+  styleUrl: '../../../../scss/_modal.scss' 
 })
 export class ConfirmModalComponent {
   @Input() title: string = 'Confirmar acción';

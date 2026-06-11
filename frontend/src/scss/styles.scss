@@ -6,6 +6,8 @@
 // 2. Páginas y Componentes:
 @use 'login';
 @use 'sidebar-admin';
+@use 'admin.component';
+@use 'usuarios';
 @use 'header';
 @use 'dashboard';
 @use 'layout';

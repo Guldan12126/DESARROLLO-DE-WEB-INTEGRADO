@@ -1,0 +1,56 @@
+.admin-layout-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden; /* Evita scroll doble en la página entera */
+}
+
+app-sidebar-admin {
+  width: 260px; /* Ancho de tu sidebar */
+  flex-shrink: 0;
+  height: 100vh;
+}
+
+.main-content-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto; /* El scroll ahora sucede solo en el contenido */
+}
+
+app-header {
+  width: 100%;
+}
+
+.dashboard-viewport {
+  padding: 20px;
+}
+.admin-layout-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden; /* Evita scroll doble en la página entera */
+}
+
+app-sidebar-admin {
+  width: 260px; /* Ancho de tu sidebar */
+  flex-shrink: 0;
+  height: 100vh;
+}
+
+.main-content-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto; /* El scroll ahora sucede solo en el contenido */
+}
+
+app-header {
+  width: 100%;
+}
+
+.dashboard-viewport {
+  padding: 20px;
+}

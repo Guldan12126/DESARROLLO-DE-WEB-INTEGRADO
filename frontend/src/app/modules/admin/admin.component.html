@@ -1,6 +1,13 @@
-<div class="admin-layout">
-  <header><h1>Panel de Administración - Salón Xin Yan</h1></header>
-  <main>
-    <router-outlet></router-outlet>
-  </main>
+<div class="admin-layout-container">
+  <!-- Sidebar Component -->
+  <app-sidebar-admin></app-sidebar-admin>
+
+  <div class="main-content-wrapper">
+    <app-header></app-header>
+
+    <main class="dashboard-viewport">
+      <!-- Aquí es donde se inyecta el Dashboard o cualquier otra página de admin -->
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>
