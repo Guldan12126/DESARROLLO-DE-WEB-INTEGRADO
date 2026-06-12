@@ -5,7 +5,7 @@ import { AdminComponent } from './admin.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios';
 import { UsuariosListaComponent } from './pages/usuarios/usuarios-lista.component';
 import { UsuariosRolesComponent } from './pages/usuarios/usuarios-roles.component';
-import { ProductosListaComponent } from './pages/productos/productos-lista.component';
+import { ProductosListaComponent } from './pages/productos/productos-lista/productos-lista.component';
 import { Productos } from './pages/productos/productos';
 import { ProductosCategorias } from './pages/productos/productos-categorias/productos-categorias';
 import { ProductosStock } from './pages/productos/productos-stock/productos-stock';

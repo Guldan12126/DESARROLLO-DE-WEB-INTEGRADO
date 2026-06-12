@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductoService } from '../../../../shared/services/producto.service';
-import { ToastService } from '../../../../shared/services/toast.service';
+import { ProductoService } from '../../../../../shared/services/producto.service';
+import { ToastService } from '../../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-productos-lista',
   standalone: false,
   templateUrl: './productos-lista.html',
-  styleUrl: '../../../../../scss/_productos.scss'
+  styleUrl: '../../../../../../scss/_productos-lista.scss'
 })
 export class ProductosListaComponent implements OnInit {
   productos: any[] = [];
@@ -46,12 +46,12 @@ export class ProductosListaComponent implements OnInit {
   cargarProductos(): void {
     this.isLoading = true;
     this.productoService.listarTodos().subscribe({
-      next: (data) => {
+      next: (data: any[]) => {
         this.productos = data;
         this.aplicarFiltros();
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al cargar productos:', err);
         this.toastService.error('Error al cargar la lista de productos.');
         this.isLoading = false;
@@ -124,7 +124,7 @@ export class ProductosListaComponent implements OnInit {
         this.cerrarEditModal();
         this.cargarProductos();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al actualizar producto:', err);
         if (err.status === 409) {
           this.editErrors['nombre'] = 'Ya existe un producto con este nombre.';
@@ -156,7 +156,7 @@ export class ProductosListaComponent implements OnInit {
         this.cerrarDeleteModal();
         this.cargarProductos();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al eliminar producto:', err);
         this.toastService.error('No se pudo eliminar el producto. Puede estar en uso en algún pedido.');
         this.cerrarDeleteModal();

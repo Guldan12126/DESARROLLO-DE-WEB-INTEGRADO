@@ -8,7 +8,7 @@ import { SidebarAdminComponent } from '../../shared/components/sidebar-admin/sid
 import { UsuariosComponent } from './pages/usuarios/usuarios';
 import { UsuariosListaComponent } from './pages/usuarios/usuarios-lista.component';
 import { UsuariosRolesComponent } from './pages/usuarios/usuarios-roles.component';
-import { ProductosListaComponent } from './pages/productos/productos-lista.component';
+import { ProductosListaComponent } from './pages/productos/productos-lista/productos-lista.component';
 import { Productos } from './pages/productos/productos';
 import { Mesas } from './pages/mesas/mesas';
 import { Pedidos } from './pages/pedidos/pedidos';

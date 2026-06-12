@@ -43,6 +43,9 @@ public class Usuario {
     @Column(nullable = false)
     private String rol;
 
+    @Column(nullable = false)
+    private Boolean activo = true;
+
     public Usuario() {
     }
 
@@ -52,6 +55,7 @@ public class Usuario {
         this.email = email;
         this.password = password;
         this.rol = rol;
+        this.activo = true;
     }
 
     // Getters y Setters
@@ -93,5 +97,13 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 }

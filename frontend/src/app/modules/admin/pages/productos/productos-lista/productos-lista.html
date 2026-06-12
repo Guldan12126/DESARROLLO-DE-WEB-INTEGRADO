@@ -1,4 +1,4 @@
-<div class="usuarios-page-container">
+<div class="usuarios-container">
   <!-- Cabecera -->
   <div class="page-header">
     <div class="header-icon"><i class="fas fa-utensils"></i></div>
@@ -14,7 +14,7 @@
   </div>
 
   <!-- Barra de búsqueda y filtros -->
-  <div class="form-card" style="padding: 20px; margin-bottom: 20px;">
+  <div class="user-table-card" style="padding: 20px; margin-bottom: 20px; border-bottom: none;">
     <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
       <div class="search-bar" style="flex: 1; min-width: 200px;">
         <input type="text" [(ngModel)]="searchTerm" (input)="aplicarFiltros()"
@@ -35,9 +35,9 @@
   </div>
 
   <!-- Tabla -->
-  <div class="form-card">
+  <div class="user-table-card">
     <div class="table-responsive">
-      <table class="xin-yan-table">
+      <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -95,8 +95,8 @@
   </div>
 
   <!-- Modal: Confirmar Eliminación -->
-  <div class="modal-overlay" *ngIf="showDeleteModal">
-    <div class="modal-container" style="max-width: 420px; border-radius: 16px; padding: 30px; text-align: center;">
+  <div class="categoria-modal" *ngIf="showDeleteModal">
+    <div class="modal-content" style="max-width: 420px; text-align: center;">
       <div style="font-size: 3rem; color: #e74c3c; margin-bottom: 15px;"><i class="fas fa-circle-exclamation"></i></div>
       <h3 style="margin: 0 0 10px; color: #333;">¿Eliminar Producto?</h3>
       <p style="color: #666; margin-bottom: 25px;">
@@ -112,9 +112,9 @@
   </div>
 
   <!-- Modal: Editar Producto -->
-  <div class="modal-overlay" *ngIf="showEditModal">
-    <div class="modal-container" style="max-width: 550px; border-radius: 16px; padding: 30px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+  <div class="categoria-modal" *ngIf="showEditModal">
+    <div class="modal-content" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px;">
         <h3 style="margin: 0; font-family: 'Playfair Display', serif;"><i class="fas fa-edit" style="color: var(--primary); margin-right: 8px;"></i>Editar Producto</h3>
         <button (click)="cerrarEditModal()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #aaa;"><i class="fas fa-times"></i></button>
       </div>
@@ -124,7 +124,7 @@
         <div class="form-group" style="grid-column: 1 / -1;">
           <label><i class="fas fa-tag"></i> Nombre del Producto</label>
           <input type="text" [(ngModel)]="editNombre" [class.is-invalid]="editErrors['nombre']"
-                 placeholder="Ej. Arroz Chaufa Especial" style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+                 placeholder="Ej. Arroz Chaufa Especial">
           <span class="error-text" *ngIf="editErrors['nombre']">
             <i class="fas fa-exclamation-circle"></i> {{ editErrors['nombre'] }}
           </span>
@@ -134,7 +134,7 @@
         <div class="form-group">
           <label><i class="fas fa-money-bill"></i> Precio (S/)</label>
           <input type="number" [(ngModel)]="editPrecio" [class.is-invalid]="editErrors['precio']"
-                 placeholder="0.00" step="0.50" min="0" style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+                 placeholder="0.00" step="0.50" min="0">
           <span class="error-text" *ngIf="editErrors['precio']">
             <i class="fas fa-exclamation-circle"></i> {{ editErrors['precio'] }}
           </span>
@@ -142,8 +142,7 @@
 
         <div class="form-group">
           <label><i class="fas fa-layer-group"></i> Categoría</label>
-          <select [(ngModel)]="editCategoria" [class.is-invalid]="editErrors['categoria']"
-                  style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+          <select [(ngModel)]="editCategoria" [class.is-invalid]="editErrors['categoria']">
             <option value="">Seleccione categoría...</option>
             <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
           </select>
@@ -156,7 +155,7 @@
         <div class="form-group">
           <label><i class="fas fa-boxes-stacked"></i> Stock Disponible</label>
           <input type="number" [(ngModel)]="editStock" [class.is-invalid]="editErrors['stock']"
-                 placeholder="0" min="0" style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+                 placeholder="0" min="0">
           <span class="error-text" *ngIf="editErrors['stock']">
             <i class="fas fa-exclamation-circle"></i> {{ editErrors['stock'] }}
           </span>
@@ -164,7 +163,7 @@
 
         <div class="form-group">
           <label><i class="fas fa-toggle-on"></i> Estado</label>
-          <select [(ngModel)]="editActivo" style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px;">
+          <select [(ngModel)]="editActivo">
             <option [ngValue]="true">Activo (en carta)</option>
             <option [ngValue]="false">Inactivo (oculto)</option>
           </select>
@@ -174,14 +173,13 @@
         <div class="form-group" style="grid-column: 1 / -1;">
           <label><i class="fas fa-align-left"></i> Descripción (opcional)</label>
           <textarea [(ngModel)]="editDescripcion" rows="3"
-                    placeholder="Descripción del plato, ingredientes principales..."
-                    style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-family: inherit; resize: vertical;"></textarea>
+                    placeholder="Descripción del plato, ingredientes principales..."></textarea>
         </div>
       </div>
 
-      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
-        <button (click)="cerrarEditModal()" style="padding: 10px 20px; border-radius: 8px; background: #f5f5f5; border: 1px solid #ddd; font-weight: 600; cursor: pointer;">Cancelar</button>
-        <button (click)="guardarEdicion()" [disabled]="isSaving"
+      <div class="form-actions">
+        <button type="button" class="btn-nuevo" style="background: #7f8c8d;" (click)="cerrarEditModal()">Cancelar</button>
+        <button type="button" class="btn-primary" (click)="guardarEdicion()" [disabled]="isSaving"
                 style="padding: 10px 25px; border-radius: 8px; background: var(--primary-gradient); color: white; border: none; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
           <i class="fas" [class.fa-save]="!isSaving" [class.fa-spinner]="isSaving" [class.fa-spin]="isSaving"></i>
           {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}

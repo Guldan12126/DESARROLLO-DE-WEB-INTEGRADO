@@ -1,0 +1,78 @@
+@use 'global-vars-mixins' as g;
+@use 'shared-modal';
+
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.producto-card {
+    @include g.card-style;
+    padding: 0;
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(g.$primary-red, 0.15);
+    }
+
+    .producto-img-wrapper {
+        height: 180px;
+        position: relative;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .categoria-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(g.$primary-red, 0.85);
+            color: g.$gold-accent;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+    }
+
+    .producto-info {
+        padding: 1.2rem;
+        h3 {
+            margin: 0;
+            color: g.$text-dark;
+            font-size: 1.1rem;
+        }
+        .stock {
+            font-size: 0.85rem;
+            color: g.$text-light;
+            margin: 5px 0;
+            &.low-stock {
+                color: #e67e22;
+                font-weight: bold;
+            }
+        }
+        .precio {
+            color: g.$primary-red;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin: 10px 0;
+        }
+    }
+}
+
+.search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 2rem;
+    .filter-select {
+        padding: 10px;
+        border-radius: 50px;
+        border: 1px solid #ddd;
+        color: g.$text-dark;
+        outline: none;
+    }
+}

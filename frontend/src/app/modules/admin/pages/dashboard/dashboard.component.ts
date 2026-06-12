@@ -1,8 +1,7 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { DashboardService } from '../../../../shared/services/dashboard.service';
 import { Chart, registerables } from 'chart.js';
-import { ToastService } from '../../../../shared/services/toast.service'; // Importar ToastService
-
+import { ToastService } from '../../../../shared/services/toast.service'; 
 Chart.register(...registerables);
 
 @Component({
@@ -31,18 +30,16 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Cargar con valores por defecto al inicio
     this.fechaInicio = this.getFormattedDate(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)); // Hace 7 días
-    this.fechaFin = this.getFormattedDate(new Date()); // Hoy
+    this.fechaFin = this.getFormattedDate(new Date()); 
     this.aplicarFiltro();
   }
   
   aplicarFiltro() {
-    // Convertimos las fechas a formato ISO para el backend si el usuario las seleccionó
     const inicioStr = this.fechaInicio ? `${this.fechaInicio}T00:00:00` : undefined;
     const finStr = this.fechaFin ? `${this.fechaFin}T23:59:59` : undefined;
 
-    this.isLoading = true; // 1. Empezamos la carga
+    this.isLoading = true; 
 
     this.dashboardService.getStats(inicioStr, finStr).subscribe({
       next: (data) => {
