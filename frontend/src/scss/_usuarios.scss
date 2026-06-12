@@ -1,23 +1,7 @@
 @use 'sass:color';
 
-// Paleta Chifa Xin Yan
-$primary-red: #8b0000;
-$dark-red: #4a0000;
-$gold-accent: #ffd700;
-$gold-hover: #ffec8b;
-$text-dark: #2c3e50;
-$text-light: #7f8c8d;
-$white: #ffffff;
-$bg-gray: #f4f7f6;
-
-// Mixins Reutilizables
-@mixin card-style {
-  background: $white;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba($gold-accent, 0.1);
-  transition: all 0.3s ease;
-}
+@use 'global-vars-mixins' as g; // Importamos las variables y mixins globales con el alias 'g'
+@use 'shared-modal'; // Importamos los estilos del modal compartido
 
 .usuarios-container,
 .productos-container {
@@ -47,16 +31,16 @@ $bg-gray: #f4f7f6;
 
     h2 { // Changed from h1 to h2 based on HTML
       font-size: 2.2rem;
-      color: $text-dark;
+      color: g.$text-dark;
       font-family: 'Playfair Display', serif;
       margin: 0;
       display: flex;
       align-items: center;
       gap: 15px;
-      i { color: $primary-red; }
+      i { color: g.$primary-red; }
     }
     p {
-      color: $text-light;
+      color: g.$text-light;
       margin: 0;
       font-size: 0.9rem;
     }
@@ -68,8 +52,8 @@ $bg-gray: #f4f7f6;
     }
 
     .btn-nuevo {
-      background: linear-gradient(45deg, $primary-red, $dark-red);
-      color: $white;
+      background: linear-gradient(45deg, g.$primary-red, g.$dark-red);
+      color: g.$white;
       padding: 12px 25px;
       border-radius: 50px;
       text-decoration: none;
@@ -81,8 +65,8 @@ $bg-gray: #f4f7f6;
       transition: all 0.3s ease;
       &:hover {
         transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba($primary-red, 0.4);
-        background: linear-gradient(45deg, $dark-red, $primary-red);
+        box-shadow: 0 5px 15px rgba(g.$primary-red, 0.4);
+        background: linear-gradient(45deg, g.$dark-red, g.$primary-red);
       }
     }
   }
@@ -92,14 +76,14 @@ $bg-gray: #f4f7f6;
     margin-bottom: 2rem;
     position: relative;
     max-width: 500px;
-    width: 100%; // Ensure it takes full width on small screens
+    width: 100%;
 
     i {
       position: absolute;
       left: 20px;
       top: 50%;
       transform: translateY(-50%);
-      color: $primary-red;
+      color: g.$primary-red;
     }
 
     input {
@@ -112,53 +96,53 @@ $bg-gray: #f4f7f6;
       transition: border-color 0.3s;
 
       &:focus {
-        border-color: $primary-red;
-        box-shadow: 0 0 0 3px rgba($primary-red, 0.1);
+        border-color: g.$primary-red;
+        box-shadow: 0 0 0 3px rgba(g.$primary-red, 0.1);
       }
     }
   }
 
   // Contenedor para hacer la tabla responsive
   .table-responsive {
-    overflow-x: auto; // This is the key for responsive tables
-    -webkit-overflow-scrolling: touch; // For smooth scrolling on iOS
-    margin-top: 1rem; // Add some top margin for spacing
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
   }
 
   // Tabla de Usuarios (o Grid de Cards)
   .user-table-card {
-    @include card-style;
+    @include g.card-style;
     overflow: hidden;
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 600px; // Ensure table doesn't shrink too much on small screens
+      min-width: 600px;
       th {
-        background: rgba($primary-red, 0.03);
+        background: rgba(g.$primary-red, 0.03);
         padding: 15px 20px;
         text-align: left;
-        color: $primary-red;
+        color: g.$primary-red;
         font-weight: 700;
         text-transform: uppercase;
         font-size: 0.85rem;
-        border-bottom: 2px solid rgba($gold-accent, 0.2);
+        border-bottom: 2px solid rgba(g.$gold-accent, 0.2);
       }
-
+    
       td {
         padding: 15px 20px;
         border-bottom: 1px solid #eee;
-        color: $text-dark;
+        color: g.$text-dark;
         vertical-align: middle;
       }
 
       tr:last-child td {
-        border-bottom: none; // No border for the last row
+        border-bottom: none;
       }
 
       .table-actions {
         display: flex;
         gap: 10px;
-        justify-content: center; // Center action buttons
+        justify-content: center;
         align-items: center;
 
         .btn-action {
@@ -174,7 +158,7 @@ $bg-gray: #f4f7f6;
           &.btn-delete { color: #e74c3c; }
 
           &:hover {
-            background: rgba($gold-accent, 0.1);
+            background: rgba(g.$gold-accent, 0.1);
             transform: scale(1.1);
           }
         }
@@ -192,7 +176,7 @@ $bg-gray: #f4f7f6;
     display: inline-block;
     white-space: nowrap; // Prevent wrapping for badges
 
-    &.admin { background: rgba($gold-accent, 0.2); color: #b8860b; border: 1px solid $gold-accent; }
+    &.admin { background: rgba(g.$gold-accent, 0.2); color: #b8860b; border: 1px solid g.$gold-accent; }
     &.mozo { background: rgba(52, 152, 219, 0.1); color: #2980b9; border: 1px solid #3498db; }
     &.cocina { background: rgba(46, 204, 113, 0.1); color: #27ae60; border: 1px solid #2ecc71; }
     &.cajero { background: rgba(155, 89, 182, 0.1); color: #8e44ad; border: 1px solid #9b59b6; }
@@ -205,7 +189,7 @@ $bg-gray: #f4f7f6;
     gap: 2rem;
 
     .role-card {
-      @include card-style;
+      @include g.card-style;
       padding: 1.5rem;
       position: relative;
       overflow: hidden;
@@ -216,7 +200,7 @@ $bg-gray: #f4f7f6;
         top: 0; left: 0; width: 5px; height: 100%;
       }
 
-      &.admin::before { background: $gold-accent; }
+      &.admin::before { background: g.$gold-accent; }
       &.mozo::before { background: #3498db; }
       &.cocina::before { background: #2ecc71; }
       &.cajero::before { background: #9b59b6; }
@@ -226,9 +210,8 @@ $bg-gray: #f4f7f6;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1rem;
-
-        h3 { margin: 0; color: $text-dark; font-size: 1.3rem; }
-        .btn-edit { color: $text-light; cursor: pointer; transition: color 0.2s ease; &:hover { color: $primary-red; } }
+        h3 { margin: 0; color: g.$text-dark; font-size: 1.3rem; }
+        .btn-edit { color: g.$text-light; cursor: pointer; transition: color 0.2s ease; &:hover { color: g.$primary-red; } }
       }
 
       .permisos-list {
@@ -238,7 +221,7 @@ $bg-gray: #f4f7f6;
         
         li {
           font-size: 0.9rem;
-          color: $text-light;
+          color: g.$text-light;
           margin-bottom: 5px;
           display: flex;
           align-items: center;
@@ -251,7 +234,7 @@ $bg-gray: #f4f7f6;
 
   // Formulario (UsuariosComponent)
   .form-card {
-    @include card-style;
+    @include g.card-style;
     max-width: 600px;
     margin: 0 auto;
     padding: 2.5rem;
@@ -269,7 +252,7 @@ $bg-gray: #f4f7f6;
     .form-group {
       margin-bottom: 1.5rem;
 
-      label { display: block; margin-bottom: 8px; font-weight: 600; color: $text-dark; }
+      label { display: block; margin-bottom: 8px; font-weight: 600; color: g.$text-dark; }
       input, select {
         width: 100%;
         padding: 12px 15px;
@@ -277,7 +260,7 @@ $bg-gray: #f4f7f6;
         border-radius: 8px;
         font-size: 1rem;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        &:focus { border-color: $primary-red; outline: none; box-shadow: 0 0 0 3px rgba($primary-red, 0.1); }
+        &:focus { border-color: g.$primary-red; outline: none; box-shadow: 0 0 0 3px rgba(g.$primary-red, 0.1); }
       }
       .error-text {
         color: #e74c3c;
@@ -299,7 +282,7 @@ $bg-gray: #f4f7f6;
 
       .btn-nuevo { // Specific style for the "Cancelar" button in forms
         background: #7f8c8d; // Gray color
-        color: $white;
+        color: g.$white;
         padding: 12px 25px;
         border-radius: 50px;
         text-decoration: none;
@@ -318,8 +301,8 @@ $bg-gray: #f4f7f6;
       }
 
       .btn-primary { // Reusing the primary button style
-        background: linear-gradient(45deg, $primary-red, $dark-red);
-        color: $white;
+        background: linear-gradient(45deg, g.$primary-red, g.$dark-red);
+        color: g.$white;
         padding: 12px 25px;
         border-radius: 50px;
         text-decoration: none;
@@ -331,8 +314,8 @@ $bg-gray: #f4f7f6;
 
         &:hover {
           transform: translateY(-3px);
-          box-shadow: 0 5px 15px rgba($primary-red, 0.4);
-          background: linear-gradient(45deg, $dark-red, $primary-red);
+          box-shadow: 0 5px 15px rgba(g.$primary-red, 0.4);
+          background: linear-gradient(45deg, g.$dark-red, g.$primary-red);
         }
         &:disabled {
           opacity: 0.6;

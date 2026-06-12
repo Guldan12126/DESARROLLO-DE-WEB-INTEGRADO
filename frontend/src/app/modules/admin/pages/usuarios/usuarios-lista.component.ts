@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { Router } from '@angular/router'; // Importar Router
 import { UsuarioService } from '../../../../shared/services/usuario.service';
 
 interface Usuario {
@@ -27,7 +28,8 @@ export class UsuariosListaComponent implements OnInit {
 
   constructor(
     @Inject(UsuarioService) private usuarioService: UsuarioService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private router: Router // Inyectar Router
   ) { }
 
   ngOnInit(): void {
@@ -64,8 +66,7 @@ export class UsuariosListaComponent implements OnInit {
   }
 
   editarUsuario(id: number): void {
-    this.toastService.info(`Editar usuario con ID: ${id}`);
-    // Lógica para navegar a la página de edición
+    this.router.navigate(['/admin/usuarios/editar', id]); // Navegar a la ruta de edición
   }
 
   eliminarUsuario(id: number): void {

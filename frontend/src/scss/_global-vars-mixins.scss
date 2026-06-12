@@ -1,0 +1,20 @@
+@use 'sass:color';
+
+// Paleta Chifa Xin Yan
+$primary-red: #8b0000;
+$dark-red: #4a0000;
+$gold-accent: #ffd700;
+$gold-hover: #ffec8b;
+$text-dark: #2c3e50;
+$text-light: #7f8c8d;
+$white: #ffffff;
+$bg-gray: #f4f7f6;
+
+// Mixins Reutilizables
+@mixin card-style {
+  background: $white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba($gold-accent, 0.1);
+  transition: all 0.3s ease;
+}

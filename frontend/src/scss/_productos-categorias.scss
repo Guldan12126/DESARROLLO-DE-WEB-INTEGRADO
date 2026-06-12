@@ -1,121 +1,20 @@
 @use 'sass:color';
+@use 'global-vars-mixins' as g;
 
-// Reutilizamos los estilos globales definidos en usuarios para mantener la consistencia
-// Esto incluye la paleta de colores roja y dorada, y los mixins de tarjetas.
-@use 'usuarios';
-
-.productos-container { // Este bloque ahora solo añade estilos específicos o sobrescribe
-    // Estilos específicos para la gestión de categorías
-    .role-badge.activo {
-        background: rgba(46, 204, 113, 0.1);
-        color: #27ae60;
-        border: 1px solid #2ecc71;
-    }
-}
-
-// Estilos para el modal (Fuera de productos-container porque es un hermano en el HTML)
-.categoria-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1100;
-    animation: fadeIn 0.3s ease-out;
-
-    .modal-content {
-        @include usuarios.card-style;
-        padding: 2.5rem;
-        width: 95%;
-        max-width: 500px;
-        position: relative;
-        animation: slideIn 0.3s ease-out;
-
-        h3 {
-            margin-top: 0;
-            color: usuarios.$text-dark;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid rgba(usuarios.$gold-accent, 0.3);
-            padding-bottom: 10px;
+.productos-container { 
+    .role-badge {
+        &.activo {
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            border: 1px solid #2ecc71;
         }
 
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: usuarios.$text-light;
-            cursor: pointer;
-            transition: all 0.2s ease;
 
-            &:hover {
-                color: usuarios.$primary-red;
-                transform: rotate(90deg);
-            }
-        }
-
-        .form-group {
-            margin-bottom: 1.2rem;
-
-            label {
-                display: block;
-                margin-bottom: 8px;
-                font-weight: 600;
-                color: usuarios.$text-dark;
-            }
-
-            input, textarea, select {
-                width: 100%;
-                padding: 12px 15px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                font-size: 1rem;
-                transition: all 0.3s ease;
-
-                &:focus {
-                    border-color: usuarios.$primary-red;
-                    outline: none;
-                    box-shadow: 0 0 0 3px rgba(usuarios.$primary-red, 0.1);
-                }
-
-                &.is-invalid {
-                    border-color: #e74c3c;
-                    background-color: rgba(231, 76, 60, 0.02);
-                }
-            }
-
-            textarea {
-                min-height: 80px;
-                resize: vertical;
-            }
-
-            .error-text {
-                color: #e74c3c;
-                font-size: 0.85rem;
-                margin-top: 5px;
-                display: block;
-                i { margin-right: 5px; }
-            }
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-top: 2rem;
+        &.cajero {
+            background: rgba(g.$text-light, 0.1);
+            color: g.$text-light;
+            border: 1px solid g.$text-light;
+            font-style: italic;
         }
     }
-}
-
-@keyframes slideIn {
-    from { transform: translateY(-30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
 }
