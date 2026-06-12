@@ -1,7 +1,7 @@
 // 1. Base: Carga variables de CSS, Reset y Tipografía.
 @use 'base';
 @use 'shared-modal';
-@use 'global-vars-mixins'; // Importar primero para que las variables globales estén disponibles
+@use 'global-vars-mixins'; 
 
 
 // 2. Páginas y Componentes:
