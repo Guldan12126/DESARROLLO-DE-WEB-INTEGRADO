@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import apf3.ChifaXinYan.Model.Usuario;     
 import apf3.ChifaXinYan.Service.UsuarioService; 
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -52,14 +53,14 @@ public class UsuarioController {
 
     // POST /api/usuarios - Crear nuevo usuario
     @PostMapping
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
     // PUT /api/usuarios/{id} - Actualizar usuario
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
         Usuario actualizado = usuarioService.actualizarUsuario(id, usuario);
         if (actualizado != null) {
             return ResponseEntity.ok(actualizado);

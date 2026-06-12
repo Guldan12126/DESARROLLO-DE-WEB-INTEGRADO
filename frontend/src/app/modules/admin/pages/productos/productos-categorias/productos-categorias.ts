@@ -100,8 +100,7 @@ export class ProductosCategorias implements OnInit {
       },
       error: (err) => {
         // Verificamos si el backend indica que el nombre ya existe
-        if (err.status === 409 || (err.error && err.error.message && err.error.message.includes('existe'))) {
-          this.formErrors.nombre = 'Este nombre de categoría ya está registrado.';
+        if (err.message && err.message.includes('existe')) {          this.formErrors.nombre = 'Este nombre de categoría ya está registrado.';
         } else {
           console.error('Error al guardar:', err);
           this.toastService.error('No se pudo procesar la solicitud.');

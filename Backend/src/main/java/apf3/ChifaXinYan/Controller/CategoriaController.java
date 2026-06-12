@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import apf3.ChifaXinYan.Model.Categoria;
 import apf3.ChifaXinYan.Service.CategoriaService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/categorias")
@@ -41,12 +42,12 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Categoria> crear(@RequestBody Categoria categoria) {
+    public ResponseEntity<Categoria> crear(@Valid @RequestBody Categoria categoria) {
         return new ResponseEntity<>(categoriaService.crearCategoria(categoria), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> actualizar(@PathVariable Long id, @RequestBody Categoria categoria) {
+    public ResponseEntity<Categoria> actualizar(@PathVariable Long id, @Valid @RequestBody Categoria categoria) {
         return ResponseEntity.ok(categoriaService.actualizarCategoria(id, categoria));
     }
 

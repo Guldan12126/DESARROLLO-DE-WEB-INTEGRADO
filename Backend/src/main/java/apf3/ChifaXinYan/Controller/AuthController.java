@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import apf3.ChifaXinYan.Config.JwtService;
+import apf3.ChifaXinYan.Dto.LoginRequest;
 import apf3.ChifaXinYan.Model.Usuario;
 import apf3.ChifaXinYan.Repository.UsuarioRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,9 +36,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
-        String password = credentials.get("password");
+    public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequest credentials) {
+        String email = credentials.getEmail();
+        String password = credentials.getPassword();
 
         // Intentar autenticar (si falla, GlobalExceptionHandler captura la excepción)
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));

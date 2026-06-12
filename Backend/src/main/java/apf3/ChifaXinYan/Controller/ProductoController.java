@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import apf3.ChifaXinYan.Model.Producto; 
 import apf3.ChifaXinYan.Service.ProductoService;  
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -73,14 +74,14 @@ public class ProductoController {
 
     // POST /api/productos - Crear nuevo producto
     @PostMapping
-    public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
+    public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto producto) {
         Producto nuevoProducto = productoService.crearProducto(producto);
         return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
     }
 
     // PUT /api/productos/{id} - Actualizar producto
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @Valid @RequestBody Producto producto) {
         Producto actualizado = productoService.actualizarProducto(id, producto);
         if (actualizado != null) {
             return ResponseEntity.ok(actualizado);

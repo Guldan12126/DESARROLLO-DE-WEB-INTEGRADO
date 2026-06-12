@@ -6,10 +6,10 @@
 }
 
 app-sidebar-admin, app-sidebar-mozo, app-sidebar-cocina, app-sidebar-cajero {
-  display: block; 
-  width: 260px; 
-  flex-shrink: 0;
-  height: 100vh;
+  display: block;
+  width: 0;
+  flex: 0 0 0;
+  height: 0;
 }
 
 .main-content-wrapper {

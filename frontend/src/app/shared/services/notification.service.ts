@@ -1,33 +1,73 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 
+export interface NotificationItem {
+  id: string;
+  titulo: string;
+  mensaje: string;
+  tipo: 'info' | 'success' | 'warning' | 'danger' | string;
+  rolDestino: string;
+  entidad?: string;
+  entidadId?: number;
+  fecha: string;
+  leida: boolean;
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
-  private apiUrl = `${environment.apiUrl}/notificaciones`;
-  
-  // Usamos BehaviorSubject para que cualquier componente se entere cuando cambien las notificaciones
-  private unreadCountSubject = new BehaviorSubject<number>(0);
-  unreadCount$ = this.unreadCountSubject.asObservable();
+  private readonly apiUrl = `${environment.apiUrl}/notificaciones`;
+  private readonly notificationsSubject = new BehaviorSubject<NotificationItem[]>([]);
+  private readonly unreadCountSubject = new BehaviorSubject<number>(0);
 
-  constructor(private http: HttpClient) {} // No llamar actualizarConteo aquí, se llama desde el componente con el rol
+  readonly notifications$ = this.notificationsSubject.asObservable();
+  readonly unreadCount$ = this.unreadCountSubject.asObservable();
 
-  getNotificaciones(rolDestino: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}?rol=${rolDestino}`);
+  constructor(private http: HttpClient) {}
+
+  loadNotifications(rolDestino: string): Observable<NotificationItem[]> {
+    return this.http.get<NotificationItem[]>(`${this.apiUrl}?rol=${rolDestino}`).pipe(
+      map((notifications) =>
+        [...notifications].sort(
+          (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime(),
+        ),
+      ),
+      tap((notifications) => this.updateState(notifications)),
+      catchError(() => {
+        this.updateState([]);
+        return of([]);
+      }),
+    );
   }
 
-  actualizarConteo(rolDestino: string): void {
-    this.http.get<any[]>(`${this.apiUrl}/no-leidas?rol=${rolDestino}`).subscribe({
-      next: (notifs) => this.unreadCountSubject.next(notifs.length),
-      error: (err) => console.error('Error al obtener notificaciones', err)
-    });
+  getNotificaciones(rolDestino: string): Observable<NotificationItem[]> {
+    return this.loadNotifications(rolDestino);
   }
 
-  marcarComoLeidas(): Observable<any> {
-    return this.http.put(`${this.apiUrl}/marcar-leidas`, {});
+  actualizarConteo(rolDestino: string): Observable<number> {
+    return this.http
+      .get<NotificationItem[]>(`${this.apiUrl}/no-leidas?rol=${rolDestino}`)
+      .pipe(
+        map((notifications) => notifications.length),
+        tap((count) => this.unreadCountSubject.next(count)),
+        catchError(() => {
+          this.unreadCountSubject.next(0);
+          return of(0);
+        }),
+      );
+  }
+
+  marcarComoLeidas(rolDestino: string): Observable<void> {
+    return this.http
+      .put<void>(`${this.apiUrl}/marcar-leidas?rol=${encodeURIComponent(rolDestino)}`, {});
+  }
+
+  private updateState(notifications: NotificationItem[]): void {
+    this.notificationsSubject.next(notifications);
+    this.unreadCountSubject.next(notifications.filter((item) => !item.leida).length);
   }
 }
