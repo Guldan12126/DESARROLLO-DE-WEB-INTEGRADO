@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ProductoService } from '../../../../../shared/services/producto.service';
+import { CategoriaService } from '../../../../../shared/services/categoria.service';
 import { ToastService } from '../../../../../shared/services/toast.service';
 
 @Component({
@@ -12,10 +13,10 @@ export class ProductosListaComponent implements OnInit {
   productos: any[] = [];
   productosFiltrados: any[] = [];
   searchTerm: string = '';
-  filtroCategoria: string = '';
-  isLoading: boolean = false;
+  filtroCategoria: string = ''; // Mantener para el filtro de categoría
+  isLoading: boolean = false; // Mantener para el estado de carga de la tabla
 
-  // Estado Modal Eliminar
+  // Estado Modal Eliminar (Mantener)
   showDeleteModal: boolean = false;
   productoIdToDelete: number | null = null;
   productoNombreToDelete: string = '';
@@ -32,15 +33,17 @@ export class ProductosListaComponent implements OnInit {
   editErrors: { [key: string]: string } = {};
   isSaving: boolean = false;
 
-  categorias = ['CHAUFA', 'SOPAS', 'TALLARINES', 'CARNES', 'MARISCOS', 'BEBIDAS', 'POSTRES', 'ENTRADAS', 'OTROS'];
+  categorias: any[] = []; // Mantener para el filtro y el selector de categoría en el modal
 
   constructor(
-    private productoService: ProductoService,
+    @Inject(ProductoService) private productoService: ProductoService,
+    @Inject(CategoriaService) private categoriaService: CategoriaService,
     private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
     this.cargarProductos();
+    this.cargarCategorias();
   }
 
   cargarProductos(): void {
@@ -59,17 +62,28 @@ export class ProductosListaComponent implements OnInit {
     });
   }
 
+  cargarCategorias(): void {
+    this.categoriaService.obtenerCategorias().subscribe({
+      next: (data: any[]) => {
+        this.categorias = data;
+      },
+      error: (err: any) => {
+        console.error('Error al cargar categorías:', err);
+      }
+    });
+  }
+
   aplicarFiltros(): void {
     let resultado = [...this.productos];
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       resultado = resultado.filter(p =>
         p.nombre?.toLowerCase().includes(term) ||
-        p.categoria?.toLowerCase().includes(term)
+        p.categoria?.nombre?.toLowerCase().includes(term)
       );
     }
     if (this.filtroCategoria) {
-      resultado = resultado.filter(p => p.categoria === this.filtroCategoria);
+      resultado = resultado.filter(p => p.categoria?.nombre === this.filtroCategoria);
     }
     this.productosFiltrados = resultado;
   }
@@ -78,7 +92,7 @@ export class ProductosListaComponent implements OnInit {
     this.productoEditando = { ...producto };
     this.editNombre = producto.nombre || '';
     this.editPrecio = producto.precio || 0;
-    this.editCategoria = producto.categoria || '';
+    this.editCategoria = producto.categoria?.nombre || '';
     this.editStock = producto.stock || 0;
     this.editDescripcion = producto.descripcion || '';
     this.editActivo = producto.activo !== false;
@@ -90,17 +104,12 @@ export class ProductosListaComponent implements OnInit {
     this.editErrors = {};
     if (!this.editNombre.trim()) {
       this.editErrors['nombre'] = 'El nombre es obligatorio.';
-    } else if (this.editNombre.trim().length < 3) {
-      this.editErrors['nombre'] = 'El nombre debe tener al menos 3 caracteres.';
     }
     if (!this.editPrecio || this.editPrecio <= 0) {
-      this.editErrors['precio'] = 'El precio debe ser mayor a S/ 0.00.';
+      this.editErrors['precio'] = 'El precio debe ser mayor a 0.';
     }
     if (!this.editCategoria) {
       this.editErrors['categoria'] = 'Debe seleccionar una categoría.';
-    }
-    if (this.editStock < 0) {
-      this.editErrors['stock'] = 'El stock no puede ser negativo.';
     }
     return Object.keys(this.editErrors).length === 0;
   }
@@ -112,7 +121,7 @@ export class ProductosListaComponent implements OnInit {
     const datos = {
       nombre: this.editNombre.trim(),
       precio: this.editPrecio,
-      categoria: this.editCategoria,
+      categoria: { nombre: this.editCategoria },
       stock: this.editStock,
       descripcion: this.editDescripcion.trim(),
       activo: this.editActivo
@@ -126,12 +135,8 @@ export class ProductosListaComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Error al actualizar producto:', err);
-        if (err.status === 409) {
-          this.editErrors['nombre'] = 'Ya existe un producto con este nombre.';
-        } else {
-          this.toastService.error('Error al guardar los cambios. Intente de nuevo.');
-        }
         this.isSaving = false;
+        this.toastService.error('Error al guardar los cambios.');
       }
     });
   }
@@ -152,13 +157,12 @@ export class ProductosListaComponent implements OnInit {
     if (!this.productoIdToDelete) return;
     this.productoService.eliminarProducto(this.productoIdToDelete).subscribe({
       next: () => {
-        this.toastService.success(`"${this.productoNombreToDelete}" eliminado correctamente.`);
+        this.toastService.success('Producto eliminado.');
         this.cerrarDeleteModal();
         this.cargarProductos();
       },
       error: (err: any) => {
-        console.error('Error al eliminar producto:', err);
-        this.toastService.error('No se pudo eliminar el producto. Puede estar en uso en algún pedido.');
+        this.toastService.error('No se pudo eliminar el producto.');
         this.cerrarDeleteModal();
       }
     });

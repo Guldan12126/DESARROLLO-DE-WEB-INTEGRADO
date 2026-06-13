@@ -1,1 +1,30 @@
-<p>mesas-mapa works!</p>
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-map-location-dot"></i></div>
+    <div class="header-text">
+      <h2>Mapa de Salón</h2>
+      <p>Estado de las mesas en tiempo real</p>
+    </div>
+  </div>
+
+  <div class="leyenda-mapa">
+    <div class="item"><span class="color disponible"></span> Disponible</div>
+    <div class="item"><span class="color ocupada"></span> Ocupada</div>
+    <div class="item"><span class="color pago"></span> Esperando Pago</div>
+  </div>
+
+  <div class="mapa-grid">
+    <div *ngFor="let mesa of mesas" 
+         class="mesa-item" 
+         [ngClass]="mesa.estado.toLowerCase()"
+         (click)="verDetalleMesa(mesa)">
+      <div class="mesa-circle">
+        <span class="num">{{ mesa.numero }}</span>
+        <i class="fas fa-chair"></i>
+      </div>
+      <div class="mesa-info">
+        <small>{{ mesa.capacidad }} pers.</small>
+      </div>
+    </div>
+  </div>
+</div>

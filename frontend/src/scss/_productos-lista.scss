@@ -1,67 +1,11 @@
 @use 'global-vars-mixins' as g;
 @use 'shared-modal';
 
-.productos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-    padding: 1rem 0;
-}
-
-.producto-card {
-    @include g.card-style;
-    padding: 0;
-    overflow: hidden;
-
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(g.$primary-red, 0.15);
-    }
-
-    .producto-img-wrapper {
-        height: 180px;
-        position: relative;
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .categoria-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(g.$primary-red, 0.85);
-            color: g.$gold-accent;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-    }
-
-    .producto-info {
-        padding: 1.2rem;
-        h3 {
-            margin: 0;
-            color: g.$text-dark;
-            font-size: 1.1rem;
-        }
-        .stock {
-            font-size: 0.85rem;
-            color: g.$text-light;
-            margin: 5px 0;
-            &.low-stock {
-                color: #e67e22;
-                font-weight: bold;
-            }
-        }
-        .precio {
-            color: g.$primary-red;
-            font-weight: bold;
-            font-size: 1.3rem;
-            margin: 10px 0;
-        }
-    }
+// Estilos para la tarjeta de búsqueda y filtro
+.search-filter-card {
+    padding: 20px;
+    margin-bottom: 20px;
+    border-bottom: none;
 }
 
 .search-bar {
@@ -74,5 +18,238 @@
         border: 1px solid #ddd;
         color: g.$text-dark;
         outline: none;
+    }
+}
+
+.search-filter-container {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .search-bar {
+        flex: 1;
+        min-width: 200px;
+        margin-bottom: 0; // Sobrescribe el margin-bottom de .search-bar global
+    }
+
+    .filter-select-styled {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 0.9rem;
+        color: #555;
+        outline: none;
+    }
+
+    .btn-refresh-styled {
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+// Estilos para la tabla de productos
+.xin-yan-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; // Asegura que la tabla no se encoja demasiado
+
+    th {
+        background: rgba(g.$primary-red, 0.03);
+        padding: 15px 20px;
+        text-align: left;
+        color: g.$primary-red;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        border-bottom: 2px solid rgba(g.$gold-accent, 0.2);
+    }
+
+    td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+        color: g.$text-dark;
+        vertical-align: middle;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .category-badge-table {
+        background: #fef3c7;
+        color: #92400e;
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .product-price-table {
+        font-weight: 700;
+        color: g.$primary-red; // Usar la variable global para el color primario
+    }
+
+    .product-stock-value {
+        font-weight: 700;
+        color: #2ecc71; // Color por defecto para stock suficiente
+
+        &.low-stock-warning {
+            color: #e74c3c; // Color para stock bajo
+        }
+    }
+
+    .low-stock-icon {
+        color: #e74c3c;
+        margin-left: 5px;
+        font-size: 0.8rem;
+    }
+
+    .product-status-badge {
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        font-weight: 700;
+
+        &.activo {
+            background-color: #e8f8f5;
+            color: #27ae60;
+        }
+
+        &.inactivo {
+            background-color: #fee2e2;
+            color: #e74c3c;
+        }
+    }
+}
+
+// Estilos para el Modal de Eliminación
+.delete-modal-content {
+    max-width: 420px;
+    text-align: center;
+
+    .delete-modal-icon {
+        font-size: 3rem;
+        color: #e74c3c;
+        margin-bottom: 15px;
+    }
+
+    .delete-modal-title {
+        margin: 0 0 10px;
+        color: g.$text-dark;
+    }
+
+    .delete-modal-message {
+        color: g.$text-light;
+        margin-bottom: 25px;
+    }
+
+    .delete-modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .btn-cancel-delete {
+        padding: 10px 25px;
+        border-radius: 8px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-confirm-delete {
+        padding: 10px 25px;
+        border-radius: 8px;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+    }
+}
+
+// Estilos para el Modal de Edición
+.edit-modal-content {
+    max-width: 600px;
+
+    .edit-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid rgba(g.$gold-accent, 0.3);
+        padding-bottom: 15px;
+
+        .edit-modal-title {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .edit-modal-icon {
+            color: g.$primary-red; // Usar la variable global para el color primario
+            margin-right: 8px;
+        }
+
+        .edit-modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+    }
+
+    .form-group-full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group-half-width {
+        // No necesita estilos específicos si el form-grid ya maneja 2 columnas
+    }
+
+    .form-input-styled,
+    .form-textarea-styled {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-family: inherit;
+    }
+
+    .form-textarea-styled {
+        resize: vertical;
+    }
+
+    .edit-modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
+
+    .btn-cancel-edit {
+        background: #7f8c8d; // Color gris para cancelar
+    }
+
+    .btn-save-edit {
+        background: linear-gradient(45deg, g.$primary-red, g.$dark-red); // Usar el gradiente primario
+        color: white;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
 }

@@ -1,1 +1,40 @@
-<p>caja-movimientos works!</p>
+<div class="movimientos-container">
+  <div class="page-header">
+    <h2><i class="fas fa-exchange-alt"></i> Historial de Movimientos</h2>
+    <button class="btn-primary" (click)="cargarMovimientos()" [disabled]="isLoading">
+      <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i> Actualizar
+    </button>
+  </div>
+
+  <div class="movimientos-card">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th><i class="far fa-clock"></i> Fecha y Hora</th>
+            <th><i class="fas fa-filter"></i> Tipo</th>
+            <th><i class="fas fa-info-circle"></i> Descripción / Detalle</th>
+            <th><i class="fas fa-truck"></i> Proveedor</th>
+            <th><i class="fas fa-coins"></i> Monto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mov of movimientos">
+            <td>{{ mov.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <span class="tipo-badge" [ngClass]="mov.tipo.toLowerCase()">{{ mov.tipo }}</span>
+            </td>
+            <td>{{ mov.descripcion }}</td>
+            <td>
+              <span class="proveedor-info" *ngIf="mov.proveedor">{{ mov.proveedor.nombre }}</span>
+              <span class="text-muted" *ngIf="!mov.proveedor">-</span>
+            </td>
+            <td class="monto" [ngClass]="getMontoClase(mov.tipo)">
+              {{ (mov.tipo === 'EGRESO' ? '-' : '+') }} {{ mov.monto | currency:'PEN':'S/ ' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

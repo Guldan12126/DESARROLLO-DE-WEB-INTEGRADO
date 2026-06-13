@@ -1,36 +1,33 @@
-import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { UsuarioService } from '../../../../shared/services/usuario.service'; // Asegura esta ruta
 import { ToastService } from '../../../../shared/services/toast.service';
-import { Router } from '@angular/router'; // Importar Router
-import { UsuarioService } from '../../../../shared/services/usuario.service';
-
-interface Usuario {
-  id: number;
-  nombre: string;
-  email: string;
-  rol: string;
-}
+import { ConfirmModalComponent } from '../../../../shared/components/modal/confirm-modal.component';
 
 @Component({
   selector: 'app-usuarios-lista',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule, ConfirmModalComponent],
   templateUrl: './usuarios-lista.component.html',
   styleUrl: '../../../../../scss/_usuarios.scss', 
-  encapsulation: ViewEncapsulation.None
 })
 export class UsuariosListaComponent implements OnInit {
-  usuarios: Usuario[] = [];
+  usuarios: any[] = [];
+  usuariosFiltrados: any[] = []; 
   searchTerm: string = '';
   isLoading: boolean = false;
   
-  // Variables para el modal de confirmación
+  // Estado para el modal de eliminación
   showDeleteModal: boolean = false;
-  userIdToDelete: number | null = null;
+  usuarioParaEliminar: number | null = null;
 
   constructor(
-    @Inject(UsuarioService) private usuarioService: UsuarioService,
+    private usuarioService: UsuarioService,
     private toastService: ToastService,
-    private router: Router // Inyectar Router
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -43,57 +40,42 @@ export class UsuariosListaComponent implements OnInit {
         this.usuarios = data;
         this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Error al cargar usuarios:', err);
-        this.toastService.error('Error al cargar la lista de usuarios.');
+      error: () => {
+        this.toastService.error('Error al cargar la lista de personal.');
         this.isLoading = false;
       }
     });
   }
 
   buscarUsuarios(): void {
-    // Implementar lógica de búsqueda aquí, o filtrar la lista actual
-    // Por ahora, solo recargamos si el término de búsqueda está vacío
-    if (this.searchTerm.trim() === '') {
-      this.cargarUsuarios();
-    } else {
-      this.usuarios = this.usuarios.filter(user =>
-        user.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        user.rol.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-    }
+    console.log('Buscando:', this.searchTerm);
   }
 
   editarUsuario(id: number): void {
-    this.router.navigate(['/admin/usuarios/editar', id]); // Navegar a la ruta de edición
+    this.router.navigate(['/admin/usuarios/editar', id]);
   }
 
+  // Métodos para el Modal
   eliminarUsuario(id: number): void {
-    // En lugar de eliminar directamente, preparamos el modal
-    this.userIdToDelete = id;
+    this.usuarioParaEliminar = id;
     this.showDeleteModal = true;
   }
 
   confirmarEliminacion(): void {
-    if (this.userIdToDelete === null) return;
-
-    this.usuarioService.eliminarUsuario(this.userIdToDelete).subscribe({
-      next: () => {
-        this.toastService.success('Usuario eliminado exitosamente.');
-        this.cargarUsuarios();
-        this.cerrarModal();
-      },
-      error: (err) => {
-        console.error('Error al eliminar usuario:', err);
-        this.toastService.error('Error al eliminar el usuario.');
-        this.cerrarModal();
-      }
-    });
+    if (this.usuarioParaEliminar) {
+      this.usuarioService.eliminarUsuario(this.usuarioParaEliminar).subscribe({
+        next: () => {
+          this.toastService.success('Usuario eliminado correctamente.');
+          this.cargarUsuarios();
+          this.cerrarModal();
+        },
+        error: () => this.toastService.error('No se pudo eliminar el usuario.')
+      });
+    }
   }
 
   cerrarModal(): void {
     this.showDeleteModal = false;
-    this.userIdToDelete = null;
+    this.usuarioParaEliminar = null;
   }
 }

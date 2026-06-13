@@ -15,9 +15,9 @@ export class ConfirmModalComponent {
   @Input() cancelText: string = 'Cancelar';
   @Input() isOpen: boolean = false;
 
-  @Output() confirmed = new EventEmitter<void>();
-  @Output() cancelled = new EventEmitter<void>();
+  @Output() confirm = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
 
-  onConfirm() { this.confirmed.emit(); }
-  onCancel() { this.cancelled.emit(); }
+  onConfirm() { this.confirm.emit(); }
+  onCancel() { this.cancel.emit(); }
 }

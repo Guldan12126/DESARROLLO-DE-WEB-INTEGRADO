@@ -63,22 +63,12 @@
 </div>
 
 <!-- Modal: Confirmar Eliminación de Usuario -->
-<div class="categoria-modal" *ngIf="showDeleteModal">
-    <div class="modal-content">
-        <button class="close-btn" (click)="cerrarModal()">
-            <i class="fas fa-times"></i>
-        </button>
-        <h3>Confirmar Eliminación</h3>
-        <p style="margin-bottom: 20px; text-align: center; color: #666;">
-            ¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.
-        </p>
-        <div class="form-actions" style="justify-content: center;">
-            <button type="button" class="btn-nuevo" style="background: #7f8c8d;" (click)="cerrarModal()">
-                Cancelar
-            </button>
-            <button type="button" class="btn-primary" style="background: #e74c3c;" (click)="confirmarEliminacion()">
-                <i class="fas fa-trash-alt"></i> Eliminar
-            </button>
-        </div>
-    </div>
-</div>
+<app-confirm-modal
+    [isOpen]="showDeleteModal"
+    title="Confirmar Eliminación"
+    message="¿Está seguro de que desea eliminar a este usuario? Esta acción no se puede deshacer."
+    confirmText="Eliminar Usuario"
+    cancelText="Volver"
+    (confirm)="confirmarEliminacion()"
+    (cancel)="cerrarModal()">
+</app-confirm-modal>

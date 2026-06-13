@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastService } from '../../../../../shared/services/toast.service';
-import { CategoriaService } from '../../../../../core/services/categoria.service';
+import { CategoriaService } from '../../../../../shared/services/categoria.service';
 
 @Component({
   selector: 'app-productos-categorias',

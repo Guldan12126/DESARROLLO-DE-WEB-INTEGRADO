@@ -325,6 +325,73 @@
         }
       }
     }
+
+    .file-input-hidden {
+      display: none;
+    }
+
+    .btn-upload-file {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px dashed #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      color: g.$text-dark;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      font-weight: 500;
+
+      &:hover {
+        border-color: g.$primary-red;
+        background-color: #f0f0f0;
+        color: g.$primary-red;
+      }
+
+      i {
+        color: g.$primary-red;
+        font-size: 1.2rem;
+      }
+    }
+
+    .image-preview-container {
+      margin-top: 15px;
+      position: relative;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 200px;
+
+      .image-preview {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .remove-image-btn {
+        position: absolute;
+        top: 5px; right: 5px;
+        background: rgba(g.$primary-red, 0.8);
+        color: g.$white;
+        border: none;
+        border-radius: 50%;
+        width: 25px; height: 25px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        font-size: 0.8rem;
+        &:hover { background: g.$dark-red; }
+      }
+    }
+
+    .info-text {
+      font-size: 0.85rem;
+      color: g.$text-light;
+      margin-top: 5px;
+      display: block;
+    }
   }
 }
 

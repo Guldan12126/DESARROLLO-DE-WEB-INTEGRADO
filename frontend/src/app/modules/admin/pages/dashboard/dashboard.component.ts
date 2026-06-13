@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   // Fechas del filtro
   fechaInicio: string = '';
   fechaFin: string = '';
+  rangoActivo: string = '7dias';
   isLoading: boolean = false; 
 
   constructor(
@@ -34,6 +35,36 @@ export class DashboardComponent implements OnInit {
     this.fechaFin = this.getFormattedDate(new Date()); 
     this.aplicarFiltro();
   }
+
+  seleccionarRango(rango: string) {
+    if (this.isLoading) return; 
+
+    this.rangoActivo = rango;
+    const hoy = new Date();
+    let inicio = new Date();
+
+    switch (rango) {
+      case 'hoy':
+        inicio = new Date(hoy);
+        break;
+      case '7dias':
+        inicio.setDate(hoy.getDate() - 7);
+        break;
+      case '30dias':
+        inicio.setDate(hoy.getDate() - 30);
+        break;
+      case 'mes':
+        inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        break;
+      case 'anio':
+        inicio = new Date(hoy.getFullYear(), 0, 1);
+        break;
+    }
+
+    this.fechaInicio = this.getFormattedDate(inicio);
+    this.fechaFin = this.getFormattedDate(hoy);
+    this.aplicarFiltro();
+  }
   
   aplicarFiltro() {
     const inicioStr = this.fechaInicio ? `${this.fechaInicio}T00:00:00` : undefined;
@@ -43,14 +74,17 @@ export class DashboardComponent implements OnInit {
 
     this.dashboardService.getStats(inicioStr, finStr).subscribe({
       next: (data) => {
+        // Primero quitamos el cargando para que el HTML renderice los canvas
+        this.isLoading = false; 
+
         if (data) {
           this.stats = data;
           this.stats.totalMesas = 15; 
-          this.initCharts(data);
+          // Usamos un timeout de 0ms para esperar al siguiente ciclo de renderizado
+          setTimeout(() => this.initCharts(data), 0);
         } else {
           this.cargarDatosPrueba(); 
         }
-        this.isLoading = false; 
       },
       error: (err) => {
         console.error('Error al actualizar Dashboard:', err);
@@ -61,7 +95,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Esto es para que puedas ver el dashboard bonito mientras terminas el Java
+  // Si en caso que si la base de datos falla se hace prueba de datos para demostrar
   private cargarDatosPrueba() {
     this.stats = {
       totalVentas: 1250.50,
@@ -85,7 +119,6 @@ export class DashboardComponent implements OnInit {
   }
 
   initCharts(data: any) {
-    // Asegurarse de que los elementos canvas existan antes de intentar usarlos
     if (!this.salesChartCanvas || !this.categoryChartCanvas) {
       console.warn('Canvas elements not yet available for chart initialization.');
       return;
@@ -99,19 +132,19 @@ export class DashboardComponent implements OnInit {
     if (this.salesChartCanvas && this.salesChartCanvas.nativeElement) {
       const salesCtx = this.salesChartCanvas.nativeElement.getContext('2d');
       this.salesChartInstRef = new Chart(salesCtx, {
-        type: 'line',
+        type: 'bar', 
         data: {
           labels: data.ventasSemanalLabels,
           datasets: [{
             label: 'Ventas Diarias (S/)',
             data: data.ventasSemanalData,
-            borderColor: '#8b0000',
-            backgroundColor: 'rgba(139, 0, 0, 0.1)',
-            fill: true,
-            tension: 0.4
+            // Personalización de colores
+            backgroundColor: 'rgba(139, 0, 0, 0.7)', // Color de las barras con transparencia
+            borderColor: '#8b0000',                 // Color del borde de las barras
+            borderWidth: 1                          // Grosor del borde
           }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
       });
     }
 

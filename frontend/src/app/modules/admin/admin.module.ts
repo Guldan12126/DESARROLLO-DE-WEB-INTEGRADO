@@ -39,7 +39,6 @@ import { ReportesMesas } from './pages/reportes/reportes-mesas/reportes-mesas';
     DashboardComponent,
     SidebarAdminComponent,
     UsuariosComponent,
-    UsuariosListaComponent,
     UsuariosRolesComponent,
     ProductosListaComponent,
     Productos,
@@ -65,6 +64,7 @@ import { ReportesMesas } from './pages/reportes/reportes-mesas/reportes-mesas';
   ],
   imports: [
     CommonModule,
+    UsuariosListaComponent,
     FormsModule,
     HttpClientModule,
     AdminRoutingModule,

@@ -21,6 +21,7 @@ export class SidebarAdminComponent implements OnInit, OnDestroy {
   sections = {
     usuarios: false,
     productos: false,
+    proveedores: false,
     mesas: false,
     pedidos: false,
     ventas: false,

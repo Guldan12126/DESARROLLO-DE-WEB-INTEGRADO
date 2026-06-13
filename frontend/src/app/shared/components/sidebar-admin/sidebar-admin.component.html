@@ -61,6 +61,20 @@
             </div>
         </div>
 
+        <!-- Proveedores -->
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('proveedores')">
+                <i class="fas fa-truck"></i> <span>Proveedores</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.proveedores"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.proveedores">
+                <a routerLink="/admin/proveedores/lista" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Lista</a>
+                <a routerLink="/admin/proveedores/crear" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-plus"></i> Registrar</a>
+            </div>
+        </div>
+
+
+
         <div class="nav-section">
             <div class="section-title" (click)="toggleSection('mesas')">
                 <i class="fas fa-table"></i> <span>Mesas</span>

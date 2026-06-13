@@ -1,0 +1,131 @@
+@use 'global-vars-mixins' as g;
+
+.movimientos-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid rgba(g.$gold-accent, 0.3);
+    padding-bottom: 1.5rem;
+    gap: 20px;
+
+    h2 {
+      font-size: 2rem;
+      color: g.$text-dark;
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      i { color: g.$primary-red; }
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, g.$primary-red, g.$dark-red);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(g.$primary-red, 0.2);
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(g.$primary-red, 0.4);
+        filter: brightness(1.1);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: #ccc;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .movimientos-card {
+    @include g.card-style;
+    padding: 0;
+    overflow: hidden;
+    border-top: 4px solid g.$primary-red;
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th {
+        background: #fdfdfd;
+        padding: 15px 20px;
+        text-align: left;
+        color: g.$primary-red;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        font-weight: 700;
+      }
+
+      td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+        font-size: 0.95rem;
+        color: g.$text-dark;
+      }
+
+      tr:hover td {
+        background-color: rgba(g.$gold-accent, 0.05);
+      }
+
+      .tipo-badge {
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        
+        &.ingreso { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        &.egreso { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+      }
+
+      .monto {
+        font-weight: 800;
+        font-family: 'Courier New', Courier, monospace; // Toque financiero
+        font-size: 1.1rem;
+        white-space: nowrap;
+
+        &.pos { color: #28a745; }
+        &.neg { color: #d32f2f; }
+      }
+
+      .proveedor-info {
+        color: g.$text-light;
+        font-size: 0.85rem;
+        display: block;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
