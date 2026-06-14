@@ -1,9 +1,10 @@
 package apf3.ChifaXinYan.Service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import apf3.ChifaXinYan.Model.Cliente;
 import apf3.ChifaXinYan.Repository.ClienteRepository;
 
@@ -12,7 +13,6 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
 
-    @Autowired
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }

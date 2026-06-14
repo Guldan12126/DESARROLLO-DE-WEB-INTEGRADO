@@ -2,6 +2,7 @@ package apf3.ChifaXinYan.Service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +13,11 @@ import apf3.ChifaXinYan.Repository.UsuarioRepository;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -38,7 +41,9 @@ public class UsuarioService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Usuario crearUsuario(Usuario usuario) {
+    public Usuario registrarUsuario(Usuario usuario) {
+        // Encriptamos la contraseña antes de guardar el nuevo usuario
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 
@@ -49,8 +54,9 @@ public class UsuarioService {
             existente.setNombre(usuarioActualizado.getNombre());
             existente.setEmail(usuarioActualizado.getEmail());
             existente.setRol(usuarioActualizado.getRol());
-            if (usuarioActualizado.getPassword() != null) {
-                existente.setPassword(usuarioActualizado.getPassword());
+            // Si se envía una nueva contraseña en la edición, también la encriptamos
+            if (usuarioActualizado.getPassword() != null && !usuarioActualizado.getPassword().isEmpty()) {
+                existente.setPassword(passwordEncoder.encode(usuarioActualizado.getPassword()));
             }
             return usuarioRepository.save(existente);
         }
@@ -67,16 +73,15 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-public Usuario login(String identifier, String password) {
-    // Primero intentamos por email
-    Usuario usuario = usuarioRepository.findByEmail(identifier).orElse(null);
-    // Si no existe, intentamos por nombre (porque no hay columna username)
-    if (usuario == null) {
-        usuario = usuarioRepository.findByNombre(identifier).orElse(null);
+    public Usuario login(String identifier, String password) {
+        Usuario usuario = usuarioRepository.findByEmail(identifier).orElse(null);
+        if (usuario == null) {
+            usuario = usuarioRepository.findByNombre(identifier).orElse(null);
+        }
+        // Usamos matches para comparar la clave ingresada contra el hash de la DB
+        if (usuario != null && passwordEncoder.matches(password, usuario.getPassword())) {
+            return usuario;
+        }
+        return null;
     }
-    if (usuario != null && usuario.getPassword().equals(password)) {
-        return usuario;
-    }
-    return null;
-}
 }

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import apf3.ChifaXinYan.Model.Usuario;     
-import apf3.ChifaXinYan.Service.UsuarioService; 
+import apf3.ChifaXinYan.Model.Usuario;
+import apf3.ChifaXinYan.Service.UsuarioService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -26,8 +25,11 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     // GET /api/usuarios - Listar todos
     @GetMapping
@@ -54,7 +56,8 @@ public class UsuarioController {
     // POST /api/usuarios - Crear nuevo usuario
     @PostMapping
     public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario) {
-        Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
+        // Cambiado de crearUsuario a registrarUsuario para usar el método con encriptación
+        Usuario nuevoUsuario = usuarioService.registrarUsuario(usuario);
         return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 

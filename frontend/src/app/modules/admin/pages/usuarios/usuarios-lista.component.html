@@ -48,7 +48,7 @@
                             </span>
                         </td>
                         <td class="table-actions">
-                            <button class="btn-action btn-edit" (click)="editarUsuario(usuario.id)">
+                            <button class="btn-action btn-edit" (click)="abrirEditar(usuario)">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button class="btn-action btn-delete" (click)="eliminarUsuario(usuario.id)">
@@ -60,15 +60,57 @@
             </table>
         </div>
     </div>
-</div>
 
-<!-- Modal: Confirmar Eliminación de Usuario -->
-<app-confirm-modal
-    [isOpen]="showDeleteModal"
-    title="Confirmar Eliminación"
-    message="¿Está seguro de que desea eliminar a este usuario? Esta acción no se puede deshacer."
-    confirmText="Eliminar Usuario"
-    cancelText="Volver"
-    (confirm)="confirmarEliminacion()"
-    (cancel)="cerrarModal()">
-</app-confirm-modal>
+    <!-- Modal: Editar Usuario -->
+    <div class="categoria-modal" *ngIf="showEditModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="edit-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                <h3 style="margin: 0; color: #8b0000;"><i class="fas fa-user-edit"></i> Editar Personal</h3>
+                <button class="close-btn" (click)="cerrarEditModal()" style="border: none; background: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            
+            <div class="xin-yan-form">
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> Nombre Completo</label>
+                    <input type="text" [(ngModel)]="usuarioEditando.nombre" name="nombre" placeholder="Nombre del trabajador">
+                </div>
+    
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" [(ngModel)]="usuarioEditando.email" name="email" placeholder="usuario@salonxinyan.com">
+                </div>
+    
+                <div class="form-group">
+                    <label><i class="fas fa-user-tag"></i> Cargo / Rol</label>
+                    <select [(ngModel)]="usuarioEditando.rol" name="rol">
+                        <option value="ADMIN">ADMINISTRADOR</option>
+                        <option value="MOZO">MOZO / ATENCIÓN</option>
+                        <option value="COCINA">COCINA</option>
+                        <option value="CAJERO">CAJERO</option>
+                    </select>
+                </div>
+    
+                <div class="form-actions">
+                    <button type="button" class="btn-nuevo" (click)="cerrarEditModal()">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn-primary" (click)="guardarEdicion()" [disabled]="isLoading">
+                        <i class="fas" [class.fa-save]="!isLoading" [class.fa-spinner]="isLoading" [class.fa-spin]="isLoading"></i>
+                        <span>{{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmar Eliminación de Usuario -->
+    <app-confirm-modal
+        [isOpen]="showDeleteModal"
+        title="Confirmar Eliminación"
+        message="¿Está seguro de que desea eliminar a este usuario? Esta acción no se puede deshacer."
+        confirmText="Eliminar Usuario"
+        cancelText="Volver"
+        (confirm)="confirmarEliminacion()"
+        (cancel)="cerrarModal()">
+    </app-confirm-modal>
+</div>

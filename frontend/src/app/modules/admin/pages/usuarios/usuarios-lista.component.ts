@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { UsuarioService } from '../../../../shared/services/usuario.service'; // Asegura esta ruta
+import { UsuarioService } from '../../../../shared/services/usuario.service'; 
 import { ToastService } from '../../../../shared/services/toast.service';
 import { ConfirmModalComponent } from '../../../../shared/components/modal/confirm-modal.component';
+import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-usuarios-lista',
@@ -23,10 +24,15 @@ export class UsuariosListaComponent implements OnInit {
   showDeleteModal: boolean = false;
   usuarioParaEliminar: number | null = null;
 
+  // Estado para el modal de edición
+  showEditModal: boolean = false;
+  usuarioEditando: any = { nombre: '', email: '', rol: '' };
+
   constructor(
     private usuarioService: UsuarioService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -51,8 +57,36 @@ export class UsuariosListaComponent implements OnInit {
     console.log('Buscando:', this.searchTerm);
   }
 
-  editarUsuario(id: number): void {
-    this.router.navigate(['/admin/usuarios/editar', id]);
+  abrirEditar(usuario: any): void {
+    // Clonamos el usuario para no modificar la lista original hasta que se guarde en la DB
+    this.usuarioEditando = { ...usuario };
+    this.showEditModal = true;
+  }
+
+  cerrarEditModal(): void {
+    this.showEditModal = false;
+    this.usuarioEditando = { nombre: '', email: '', rol: '' };
+  }
+
+  guardarEdicion(): void {
+    if (!this.usuarioEditando.nombre || !this.usuarioEditando.email) {
+      this.toastService.error('Nombre y Email son obligatorios.');
+      return;
+    }
+
+    this.isLoading = true;
+    this.usuarioService.actualizarUsuario(this.usuarioEditando.id, this.usuarioEditando).subscribe({
+      next: () => {
+        this.toastService.success('Usuario actualizado correctamente.');
+        this.cargarUsuarios();
+        this.notificationService.actualizarConteo('ADMIN').subscribe();
+        this.cerrarEditModal();
+      },
+      error: () => {
+        this.toastService.error('Error al guardar los cambios.');
+        this.isLoading = false;
+      }
+    });
   }
 
   // Métodos para el Modal
@@ -67,6 +101,7 @@ export class UsuariosListaComponent implements OnInit {
         next: () => {
           this.toastService.success('Usuario eliminado correctamente.');
           this.cargarUsuarios();
+          this.notificationService.actualizarConteo('ADMIN').subscribe();
           this.cerrarModal();
         },
         error: () => this.toastService.error('No se pudo eliminar el usuario.')

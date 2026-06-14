@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root' // Esto hace que el servicio sea un singleton y esté disponible en toda la aplicación
+  providedIn: 'root' 
 })
 export class UsuarioService {
   private apiUrl = `${environment.apiUrl}/usuarios`;
@@ -32,6 +32,19 @@ export class UsuarioService {
   eliminarUsuario(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  // Agrega este método dentro de la clase UsuarioService en usuario.service.ts
+
+/**
+ * Actualiza los datos de un usuario existente en la base de datos.
+ * @param id ID del usuario a actualizar
+ * @param usuario Objeto con los nuevos datos (nombre, email, rol)
+ * @returns Observable con la respuesta del servidor
+ */
+actualizarUsuario(id: number, usuario: any): Observable<any> {
+  // Ajusta la ruta si tu API usa algo distinto a /usuarios
+  return this.http.put(`${this.apiUrl}/${id}`, usuario);
+}
 
   /**
    * Obtiene la lista de roles desde el backend.

@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { UsuarioService } from '../../../../shared/services/usuario.service'; 
+import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -16,7 +17,8 @@ export class UsuariosComponent implements OnInit {
 
   constructor(
     private usuarioService: UsuarioService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void { }
@@ -32,6 +34,7 @@ export class UsuariosComponent implements OnInit {
     this.usuarioService.registrarUsuario(usuarioData).subscribe({ 
       next: (res) => {
         this.toastService.success('Personal registrado exitosamente');
+        this.notificationService.actualizarConteo('ADMIN').subscribe();
         this.limpiarFormulario();
       },
       error: (err) => {

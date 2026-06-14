@@ -33,11 +33,15 @@ export class UsuariosRolesComponent implements OnInit {
     this.isLoading = true;
     this.usuarioService.obtenerRoles().subscribe({
       next: (data) => {
-        // Mapeamos los datos del backend y asignamos la clase de color según el nombre
-        this.roles = data.map(rol => ({
-          ...rol,
-          colorClass: this.getRoleColorClass(rol.nombre)
-        }));
+        if (data && data.length > 0) {
+          this.roles = data.map(rol => ({
+            ...rol,
+            colorClass: this.getRoleColorClass(rol.nombre)
+          }));
+        } else {
+          // Si el backend está vacío, cargamos los roles base del sistema
+          this.cargarRolesPorDefecto();
+        }
         this.isLoading = false;
       },
       error: (err) => {
@@ -46,6 +50,17 @@ export class UsuariosRolesComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  private cargarRolesPorDefecto(): void {
+    const rolesBase = [
+      { nombre: 'ADMIN', descripcion: 'Gestión total del sistema, personal, inventario y reportes gerenciales.', permisos: ['Usuarios', 'Productos', 'Ventas', 'Caja', 'Reportes'], colorClass: 'admin' },
+      { nombre: 'MOZO', descripcion: 'Atención de mesas, toma de pedidos y seguimiento de estados.', permisos: ['Mesas', 'Pedidos'], colorClass: 'mozo' },
+      { nombre: 'CAJERO', descripcion: 'Control de ingresos, cobros presenciales y cierre de caja diario.', permisos: ['Caja', 'Ventas', 'Pedidos'], colorClass: 'cajero' },
+      { nombre: 'COCINA', descripcion: 'Visualización de comandas en tiempo real y despacho de platos.', permisos: ['Tablero Cocina', 'Insumos'], colorClass: 'cocina' }
+    ];
+    
+    this.roles = rolesBase;
   }
 
   onEditarDescripcion(rol: Rol): void {

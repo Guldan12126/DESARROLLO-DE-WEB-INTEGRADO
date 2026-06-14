@@ -74,8 +74,7 @@ public class PedidoServiceTest {
             mozo.setEmail("mozotest@test.com");
             mozo.setPassword("test123");
             mozo.setRol(RolUsuario.MOZO.name());
-            Usuario mozoCreado = usuarioService.crearUsuario(mozo);
-            mozoId = mozoCreado.getId();
+            mozoId = usuarioService.registrarUsuario(mozo).getId();           
         }
         
         Mesa mesa = mesaService.obtenerPorId(mesaId);

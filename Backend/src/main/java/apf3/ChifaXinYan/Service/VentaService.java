@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,6 @@ public class VentaService {
     private final CajaService cajaService;
     private final MesaService mesaService;
 
-    @Autowired
     public VentaService(VentaRepository ventaRepository, PedidoRepository pedidoRepository, CajaService cajaService, MesaService mesaService) {
         this.ventaRepository = ventaRepository;
         this.pedidoRepository = pedidoRepository;

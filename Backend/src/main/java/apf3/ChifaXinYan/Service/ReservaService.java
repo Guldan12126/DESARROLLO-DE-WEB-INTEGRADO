@@ -2,7 +2,6 @@ package apf3.ChifaXinYan.Service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,6 @@ public class ReservaService {
 
     private final ReservaRepository reservaRepository;
 
-    @Autowired
     public ReservaService(ReservaRepository reservaRepository) {
         this.reservaRepository = reservaRepository;
     }
