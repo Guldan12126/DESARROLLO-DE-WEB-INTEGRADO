@@ -10,7 +10,6 @@ import apf3.ChifaXinYan.Service.ClienteService;
 
 @RestController
 @RequestMapping("/api/clientes")
-@CrossOrigin(origins = "*")
 public class ClienteController {
 
     @Autowired

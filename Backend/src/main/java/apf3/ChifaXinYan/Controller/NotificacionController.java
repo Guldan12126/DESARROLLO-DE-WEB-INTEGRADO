@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,6 @@ import apf3.ChifaXinYan.Service.NotificacionService;
 
 @RestController
 @RequestMapping("/api/notificaciones")
-@CrossOrigin(origins = "*")
 public class NotificacionController {
 
     private final NotificacionService notificacionService;

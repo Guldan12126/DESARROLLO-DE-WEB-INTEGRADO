@@ -9,7 +9,6 @@ import apf3.ChifaXinYan.Service.CompraService;
 
 @RestController
 @RequestMapping("/api/compras")
-@CrossOrigin(origins = "*")
 public class CompraController {
 
     private final CompraService compraService;

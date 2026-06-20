@@ -9,7 +9,6 @@ import apf3.ChifaXinYan.Service.ProveedorService;
 
 @RestController
 @RequestMapping("/api/proveedores")
-@CrossOrigin(origins = "*")
 public class ProveedorController {
 
     private final ProveedorService proveedorService;

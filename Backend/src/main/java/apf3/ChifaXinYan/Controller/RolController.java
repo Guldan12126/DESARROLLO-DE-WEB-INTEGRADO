@@ -7,7 +7,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/roles")
-@CrossOrigin(origins = "*")
 public class RolController {
 
     // Usamos un mapa en memoria para simular la persistencia de descripciones 

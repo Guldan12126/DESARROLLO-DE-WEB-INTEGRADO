@@ -7,7 +7,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +15,6 @@ import apf3.ChifaXinYan.Service.ReporteService;
 
 @RestController
 @RequestMapping("/api/reportes")
-@CrossOrigin(origins = "*")
 public class ReporteController {
 
     @Autowired
