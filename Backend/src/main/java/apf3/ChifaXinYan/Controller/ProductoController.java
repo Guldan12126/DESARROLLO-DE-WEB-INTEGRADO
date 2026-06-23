@@ -1,24 +1,31 @@
 package apf3.ChifaXinYan.Controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import apf3.ChifaXinYan.Model.Producto; 
-import apf3.ChifaXinYan.Service.ProductoService;  
+import apf3.ChifaXinYan.Model.Producto;
+import apf3.ChifaXinYan.Service.ProductoService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -27,6 +34,9 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+
+    // Carpeta donde se guardan las imágenes subidas
+    private static final String UPLOAD_DIR = "uploads/productos/";
 
     // GET /api/productos - Listar todos los productos
     @GetMapping
@@ -49,7 +59,7 @@ public class ProductoController {
     // GET /api/productos/buscar?nombre=chaufa&categoria=CHAUFA
     @GetMapping("/buscar")
     public ResponseEntity<List<Producto>> buscarPorNombreYCategoria(
-            @RequestParam String nombre, 
+            @RequestParam String nombre,
             @RequestParam String categoria) {
         return ResponseEntity.ok(productoService.buscarPorNombreYCategoria(nombre, categoria));
     }
@@ -70,16 +80,37 @@ public class ProductoController {
         return ResponseEntity.notFound().build();
     }
 
-    // POST /api/productos - Crear nuevo producto
-    @PostMapping
-    public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto producto) {
+    // POST /api/productos - Crear producto (soporta multipart/form-data con imagen opcional)
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Producto> crearProducto(
+            @RequestPart("producto") @Valid Producto producto,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+
+        if (imagen != null && !imagen.isEmpty()) {
+            String imageUrl = guardarImagen(imagen);
+            if (imageUrl != null) {
+                producto.setImagenUrl(imageUrl);
+            }
+        }
+
         Producto nuevoProducto = productoService.crearProducto(producto);
         return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
     }
 
-    // PUT /api/productos/{id} - Actualizar producto
-    @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @Valid @RequestBody Producto producto) {
+    // PUT /api/productos/{id} - Actualizar producto (soporta multipart/form-data con imagen opcional)
+    @PutMapping(value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Producto> actualizarProducto(
+            @PathVariable Long id,
+            @RequestPart("producto") @Valid Producto producto,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+
+        if (imagen != null && !imagen.isEmpty()) {
+            String imageUrl = guardarImagen(imagen);
+            if (imageUrl != null) {
+                producto.setImagenUrl(imageUrl);
+            }
+        }
+
         Producto actualizado = productoService.actualizarProducto(id, producto);
         if (actualizado != null) {
             return ResponseEntity.ok(actualizado);
@@ -108,5 +139,26 @@ public class ProductoController {
         }
         response.put("message", "Producto no encontrado");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    // Método auxiliar: guarda la imagen en disco y retorna la URL relativa
+    private String guardarImagen(MultipartFile imagen) {
+        try {
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            String extension = "";
+            String originalName = imagen.getOriginalFilename();
+            if (originalName != null && originalName.contains(".")) {
+                extension = originalName.substring(originalName.lastIndexOf("."));
+            }
+            String fileName = UUID.randomUUID().toString() + extension;
+            Path filePath = uploadPath.resolve(fileName);
+            Files.write(filePath, imagen.getBytes());
+            return "/" + UPLOAD_DIR + fileName;
+        } catch (IOException e) {
+            return null;
+        }
     }
 }
