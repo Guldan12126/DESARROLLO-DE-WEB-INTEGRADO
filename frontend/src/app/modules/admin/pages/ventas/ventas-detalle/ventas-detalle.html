@@ -1,1 +1,91 @@
-<p>ventas-detalle works!</p>
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-cogs"></i></div>
+    <div class="header-text">
+      <h2>Gestión y Auditoría de Venta #{{ venta?.id }}</h2>
+      <p>Administración avanzada del comprobante</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-nuevo" style="background-color: #6c757d;" (click)="volver()">
+        <i class="fas fa-arrow-left"></i> Volver a Lista
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+  </div>
+
+  <div *ngIf="!isLoading && venta" class="pedido-detalle-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+    
+    <!-- Resumen Técnico -->
+    <div class="user-table-card info-card">
+      <h3 class="card-title" style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+        <i class="fas fa-database"></i> Metadatos de la Transacción
+      </h3>
+      
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th style="width: 30%; background: #f8f9fa;">ID de Transacción BD</th>
+            <td>{{ venta.id }}</td>
+          </tr>
+          <tr>
+            <th style="background: #f8f9fa;">ID Pedido Vinculado</th>
+            <td><a [routerLink]="['/admin/pedidos/ver']" [queryParams]="{ id: venta.pedido?.id }">Ver Pedido #{{ venta.pedido?.id }}</a></td>
+          </tr>
+          <tr>
+            <th style="background: #f8f9fa;">Timestamp de Cobro</th>
+            <td>{{ venta.fechaHora | date:'medium' }}</td>
+          </tr>
+          <tr>
+            <th style="background: #f8f9fa;">Usuario Emisor (Cajero)</th>
+            <td>{{ venta.usuario?.nombre || 'Usuario Sistema' }} (ID: {{ venta.usuario?.id || 1 }})</td>
+          </tr>
+          <tr>
+            <th style="background: #f8f9fa;">Pasarela / Método</th>
+            <td class="font-bold text-primary">{{ venta.metodoPago }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4 class="mt-4 mb-3">Trazabilidad Financiera</h4>
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th style="width: 30%; background: #f8f9fa;">Total Procesado</th>
+            <td class="text-success font-bold">{{ venta.totalVenta | currency:'PEN':'S/ ' }}</td>
+          </tr>
+          <tr>
+            <th style="background: #f8f9fa;">Dinero Recibido Físico/Virtual</th>
+            <td>{{ venta.montoRecibido | currency:'PEN':'S/ ' }}</td>
+          </tr>
+          <tr>
+            <th style="background: #f8f9fa;">Cambio / Vuelto Generado</th>
+            <td class="text-danger">{{ venta.vuelto | currency:'PEN':'S/ ' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Panel de Acciones Peligrosas -->
+    <div class="user-table-card" style="border: 1px solid #dc3545;">
+      <h3 class="card-title text-danger" style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #f5c6cb;">
+        <i class="fas fa-exclamation-triangle"></i> Zona de Peligro
+      </h3>
+      
+      <div class="alert alert-warning" role="alert" style="font-size: 0.9rem;">
+        <strong>Atención:</strong> La anulación de una venta modificará los ingresos del día en caja y afectará los reportes financieros. Utilice esta opción únicamente en caso de devoluciones o errores graves de facturación.
+      </div>
+
+      <div class="text-center mt-4 mb-2">
+        <button class="btn btn-danger btn-lg w-100" (click)="anularVenta()" [disabled]="isAnulando">
+          <i class="fas fa-ban" *ngIf="!isAnulando"></i> 
+          <i class="fas fa-spinner fa-spin" *ngIf="isAnulando"></i> 
+          ANULAR VENTA
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

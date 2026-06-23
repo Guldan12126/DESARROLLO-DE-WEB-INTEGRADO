@@ -1,1 +1,42 @@
-<p>reportes-mensuales works!</p>
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-calendar-alt"></i></div>
+    <div class="header-text">
+      <h2>Reporte de Ventas Mensuales</h2>
+      <p>Cierre contable agrupado por mes (YYYY-MM)</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="descargarPdf()">
+        <i class="fas fa-file-pdf"></i> Exportar PDF Oficial
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+  </div>
+
+  <div class="user-table-card" *ngIf="!isLoading">
+    <div class="table-responsive">
+      <table class="xin-yan-table">
+        <thead>
+          <tr>
+            <th>Mes Fiscal</th>
+            <th class="text-center">Ventas Mensuales</th>
+            <th class="text-right">Ingresos (S/)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="ventasPorMes.length === 0">
+            <td colspan="3" class="text-center">No hay ventas registradas.</td>
+          </tr>
+          <tr *ngFor="let m of ventasPorMes">
+            <td class="font-bold"><i class="fas fa-calendar text-danger mr-2"></i> {{ m.mes }}</td>
+            <td class="text-center"><span class="role-badge role-admin">{{ m.cantidad }} tickets</span></td>
+            <td class="text-right font-bold text-success">{{ m.total | currency:'PEN':'S/ ' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

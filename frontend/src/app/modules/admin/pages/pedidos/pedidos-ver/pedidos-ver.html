@@ -1,1 +1,75 @@
-<p>pedidos-ver works!</p>
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-file-invoice"></i></div>
+    <div class="header-text">
+      <h2>Detalle del Pedido #{{ pedido?.id }}</h2>
+      <p>Información completa, productos y estado actual</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-nuevo" style="background-color: #6c757d;" (click)="volver()">
+        <i class="fas fa-arrow-left"></i> Volver a Lista
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+  </div>
+
+  <div *ngIf="!isLoading && pedido" class="pedido-detalle-grid">
+    <!-- Info General -->
+    <div class="user-table-card info-card">
+      <h3 class="card-title"><i class="fas fa-info-circle"></i> Información General</h3>
+      <div class="info-list">
+        <div class="info-item">
+          <span class="info-label">Fecha y Hora:</span>
+          <span class="info-value">{{ pedido.fechaPedido | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Estado:</span>
+          <span class="role-badge" [ngClass]="pedido.estado.toLowerCase()">{{ pedido.estado }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Ubicación:</span>
+          <span class="info-value font-bold" *ngIf="pedido.mesa">Mesa {{ pedido.mesa.numero }} ({{ pedido.mesa.ubicacion }})</span>
+          <span class="info-value text-muted" *ngIf="!pedido.mesa">Para Llevar</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Productos -->
+    <div class="user-table-card productos-card">
+      <h3 class="card-title"><i class="fas fa-shopping-basket"></i> Productos Solicitados</h3>
+      
+      <div class="table-responsive">
+        <table class="xin-yan-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cant.</th>
+              <th>Precio Unit.</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="pedido.detalles?.length === 0">
+              <td colspan="4" class="text-center">Este pedido no tiene productos registrados.</td>
+            </tr>
+            <tr *ngFor="let det of pedido.detalles">
+              <td>{{ det.producto?.nombre }}</td>
+              <td class="font-bold text-center">{{ det.cantidad }}</td>
+              <td>{{ det.precioUnitario | currency:'PEN':'S/ ' }}</td>
+              <td class="font-bold">{{ (det.cantidad * det.precioUnitario) | currency:'PEN':'S/ ' }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-end font-bold text-uppercase" style="font-size: 1.1rem; padding-top: 15px;">Total a Pagar:</td>
+              <td class="font-bold text-success" style="font-size: 1.2rem; padding-top: 15px;">{{ pedido.total | currency:'PEN':'S/ ' }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

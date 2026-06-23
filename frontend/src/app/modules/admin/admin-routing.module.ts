@@ -10,6 +10,7 @@ import { Productos } from './pages/productos/productos';
 import { ProductosCategorias } from './pages/productos/productos-categorias/productos-categorias';
 import { ProductosStock } from './pages/productos/productos-stock/productos-stock';
 import { Mesas } from './pages/mesas/mesas';
+import { MesasLista } from './pages/mesas/mesas-lista/mesas-lista';
 import { MesasCrear } from './pages/mesas/mesas-crear/mesas-crear';
 import { MesasMapa } from './pages/mesas/mesas-mapa/mesas-mapa';
 import { Pedidos } from './pages/pedidos/pedidos';
@@ -56,7 +57,7 @@ const routes: Routes = [
         path: 'mesas',
         children: [
           { path: '', redirectTo: 'lista', pathMatch: 'full' },
-          { path: 'lista', component: Mesas },
+          { path: 'lista', component: MesasLista },
           { path: 'crear', component: MesasCrear },
           { path: 'mapa', component: MesasMapa },
         ],

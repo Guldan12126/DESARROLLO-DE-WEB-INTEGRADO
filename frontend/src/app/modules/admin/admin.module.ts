@@ -33,6 +33,8 @@ import { ReportesMensuales } from './pages/reportes/reportes-mensuales/reportes-
 import { ReportesProductos } from './pages/reportes/reportes-productos/reportes-productos';
 import { ReportesMesas } from './pages/reportes/reportes-mesas/reportes-mesas';
 
+import { MesasLista } from './pages/mesas/mesas-lista/mesas-lista';
+
 @NgModule({
   declarations: [
     AdminComponent,
@@ -43,6 +45,7 @@ import { ReportesMesas } from './pages/reportes/reportes-mesas/reportes-mesas';
     ProductosListaComponent,
     Productos,
     Mesas,
+    MesasLista,
     Pedidos,
     Ventas,
     Reportes,

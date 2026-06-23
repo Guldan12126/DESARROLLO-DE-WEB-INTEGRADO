@@ -1,1 +1,66 @@
-<p>pedidos-historial works!</p>
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-history"></i></div>
+    <div class="header-text">
+      <h2>Historial de Pedidos</h2>
+      <p>Registro de todos los pedidos creados, completados o anulados</p>
+    </div>
+  </div>
+
+  <div class="user-table-card search-filter-card">
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" [(ngModel)]="searchTerm" (input)="aplicarFiltros()"
+               placeholder="Buscar por # pedido o estado..." class="search-input">
+      </div>
+      <button class="btn-primary btn-refresh-styled" (click)="cargarHistorial()" [disabled]="isLoading">
+        <i class="fas fa-sync" [class.fa-spin]="isLoading"></i> Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div class="user-table-card">
+    <div class="table-responsive">
+      <table class="xin-yan-table">
+        <thead>
+          <tr>
+            <th>Pedido #</th>
+            <th>Mesa</th>
+            <th>Fecha y Hora</th>
+            <th>Total (S/)</th>
+            <th>Estado Final</th>
+            <th>Ver Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="6" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando historial...</td>
+          </tr>
+          <tr *ngIf="!isLoading && pedidosFiltrados.length === 0">
+            <td colspan="6" class="text-center">No hay pedidos en el historial.</td>
+          </tr>
+          <tr *ngFor="let pedido of pedidosFiltrados">
+            <td class="font-bold text-muted">#{{ pedido.id }}</td>
+            <td>
+              <span class="font-bold" *ngIf="pedido.mesa">Mesa {{ pedido.mesa.numero }}</span>
+              <span class="text-muted" *ngIf="!pedido.mesa">Para llevar</span>
+            </td>
+            <td>{{ pedido.fechaPedido | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="font-bold">{{ calcularTotal(pedido) | number:'1.2-2' }}</td>
+            <td>
+              <span class="role-badge" [ngClass]="getEstadoClase(pedido.estado)">
+                {{ pedido.estado }}
+              </span>
+            </td>
+            <td>
+              <a [routerLink]="['/admin/pedidos/ver']" [queryParams]="{ id: pedido.id }" class="btn-action btn-edit" title="Ver Detalle Completo">
+                <i class="fas fa-eye"></i> Detalle
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,51 @@
-<p>reportes-productos works!</p>
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-chart-pie"></i></div>
+    <div class="header-text">
+      <h2>Ranking de Productos (Más Vendidos)</h2>
+      <p>Platos y bebidas preferidos por los clientes</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="descargarPdf()">
+        <i class="fas fa-file-pdf"></i> Exportar PDF Oficial
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+  </div>
+
+  <div class="user-table-card" *ngIf="!isLoading">
+    <div class="table-responsive">
+      <table class="xin-yan-table">
+        <thead>
+          <tr>
+            <th>Puesto</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th class="text-center">Unidades Vendidas</th>
+            <th class="text-right">Ingresos Brutos (S/)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="productos.length === 0">
+            <td colspan="5" class="text-center">No hay datos suficientes para el ranking.</td>
+          </tr>
+          <tr *ngFor="let p of productos; let i = index">
+            <td class="font-bold">
+              <span *ngIf="i===0" class="text-warning"><i class="fas fa-trophy"></i> #1</span>
+              <span *ngIf="i===1" style="color: silver"><i class="fas fa-medal"></i> #2</span>
+              <span *ngIf="i===2" style="color: #cd7f32"><i class="fas fa-medal"></i> #3</span>
+              <span *ngIf="i>2" class="text-muted">#{{ i + 1 }}</span>
+            </td>
+            <td class="font-bold text-primary">{{ p.producto }}</td>
+            <td>{{ p.categoria }}</td>
+            <td class="text-center"><span class="role-badge role-admin">{{ p.cantidadVendida }}</span></td>
+            <td class="text-right font-bold text-success">{{ p.ingresosGenerados | currency:'PEN':'S/ ' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
