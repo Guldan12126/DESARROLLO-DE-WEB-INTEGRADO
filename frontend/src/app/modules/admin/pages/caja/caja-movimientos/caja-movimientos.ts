@@ -23,12 +23,13 @@ export class CajaMovimientos implements OnInit {
 
   cargarMovimientos(): void {
     this.isLoading = true;
+    // Llama a GET /api/cajas/movimientos — endpoint real en el backend
     this.cajaService.obtenerMovimientos().subscribe({
-      next: (data) => {
+      next: (data: any[]) => {
         this.movimientos = data;
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al cargar movimientos:', err);
         this.toastService.error('No se pudo conectar con el servidor para obtener los movimientos.');
         this.isLoading = false;

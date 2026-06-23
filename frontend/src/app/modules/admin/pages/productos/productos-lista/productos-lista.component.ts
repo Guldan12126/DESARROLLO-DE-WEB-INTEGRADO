@@ -118,6 +118,7 @@ export class ProductosListaComponent implements OnInit {
     if (!this.validarEdicion()) return;
 
     this.isSaving = true;
+
     const datos = {
       nombre: this.editNombre.trim(),
       precio: this.editPrecio,
@@ -127,7 +128,14 @@ export class ProductosListaComponent implements OnInit {
       activo: this.editActivo
     };
 
-    this.productoService.actualizarProducto(this.productoEditando.id, datos).subscribe({
+    // ✅ Corregido: el backend usa @RequestPart("producto"), requiere multipart/form-data
+    // Enviamos el objeto como Blob JSON en la parte 'producto', igual que en el formulario de creación
+    const formData = new FormData();
+    formData.append('producto', new Blob([JSON.stringify(datos)], {
+      type: 'application/json'
+    }));
+
+    this.productoService.actualizarProducto(this.productoEditando.id, formData).subscribe({
       next: () => {
         this.toastService.success(`Producto "${this.editNombre}" actualizado correctamente.`);
         this.cerrarEditModal();
@@ -140,6 +148,7 @@ export class ProductosListaComponent implements OnInit {
       }
     });
   }
+
 
   cerrarEditModal(): void {
     this.showEditModal = false;

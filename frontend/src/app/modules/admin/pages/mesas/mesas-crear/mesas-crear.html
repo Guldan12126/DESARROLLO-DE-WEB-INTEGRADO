@@ -1,1 +1,55 @@
-<p>mesas-crear works!</p>
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-plus-circle"></i></div>
+    <div class="header-text">
+      <h2>Registrar Nueva Mesa</h2>
+      <p>Agregue una nueva mesa al sistema de reservas y pedidos</p>
+    </div>
+  </div>
+
+  <div class="user-table-card form-card">
+    <div class="form-container">
+      <div class="form-grid">
+        <div class="form-group form-group-half-width">
+          <label><i class="fas fa-hashtag"></i> Número de Mesa</label>
+          <input type="number" [(ngModel)]="nuevaMesa.numero" [class.is-invalid]="formErrors.numero" 
+                 placeholder="Ej. 12" class="form-input-styled">
+          <span class="error-text" *ngIf="formErrors.numero"><i class="fas fa-exclamation-circle"></i> {{ formErrors.numero }}</span>
+        </div>
+
+        <div class="form-group form-group-half-width">
+          <label><i class="fas fa-users"></i> Capacidad (personas)</label>
+          <input type="number" [(ngModel)]="nuevaMesa.capacidad" [class.is-invalid]="formErrors.capacidad" 
+                 placeholder="Ej. 4" class="form-input-styled">
+          <span class="error-text" *ngIf="formErrors.capacidad"><i class="fas fa-exclamation-circle"></i> {{ formErrors.capacidad }}</span>
+        </div>
+
+        <div class="form-group form-group-half-width">
+          <label><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+          <select [(ngModel)]="nuevaMesa.ubicacion" [class.is-invalid]="formErrors.ubicacion" class="form-input-styled">
+            <option value="SALON_PRINCIPAL">Salón Principal</option>
+            <option value="TERRAZA">Terraza</option>
+            <option value="VIP">Zona VIP</option>
+          </select>
+          <span class="error-text" *ngIf="formErrors.ubicacion"><i class="fas fa-exclamation-circle"></i> {{ formErrors.ubicacion }}</span>
+        </div>
+
+        <div class="form-group form-group-half-width">
+          <label><i class="fas fa-toggle-on"></i> Estado Inicial</label>
+          <select [(ngModel)]="nuevaMesa.activo" class="form-input-styled">
+            <option [ngValue]="true">Activa (Lista para usar)</option>
+            <option [ngValue]="false">Inactiva (Mantenimiento)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions mt-4">
+        <button class="btn-nuevo btn-cancel-edit me-3" (click)="cancelar()">Cancelar</button>
+        <button class="btn-primary" (click)="crearMesa()" [disabled]="isSaving">
+          <i class="fas" [class.fa-save]="!isSaving" [class.fa-spinner]="isSaving" [class.fa-spin]="isSaving"></i> 
+          {{ isSaving ? 'Guardando...' : 'Registrar Mesa' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

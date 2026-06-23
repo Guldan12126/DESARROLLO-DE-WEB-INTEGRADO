@@ -1,0 +1,56 @@
+// Se reutilizan los estilos globales de _productos-lista.scss y _variables.scss.
+// Pequeños ajustes específicos para la vista de stock.
+
+.filter-btn {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  color: #495057;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #e2e6ea;
+  }
+
+  &.active-filter {
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+    color: #856404;
+
+    i {
+      color: #856404;
+    }
+  }
+
+  i {
+    margin-right: 6px;
+  }
+}
+
+.stock-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.text-warning {
+  color: #ffc107;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.ms-1 {
+  margin-left: 4px;
+}
+
+.me-1 {
+  margin-right: 4px;
+}
+
+.me-2 {
+  margin-right: 8px;
+}

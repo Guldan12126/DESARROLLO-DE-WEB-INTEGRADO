@@ -1,19 +1,19 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MesaService } from '../../../../../shared/services/mesa.service';
 import { ToastService } from '../../../../../shared/services/toast.service';
-import { interval, Subscription } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mesas-mapa',
   standalone: false,
   templateUrl: './mesas-mapa.html',
-  styleUrl: '../../../../../../scss/_mesas-mapa.scss',
+  styleUrl: './mesas-mapa.scss'
 })
-export class MesasMapa implements OnInit, OnDestroy {
+export class MesasMapa implements OnInit {
   mesas: any[] = [];
-  private pollingSubscription!: Subscription;
-  isLoading: boolean = true;
+  mesasSalon: any[] = [];
+  mesasTerraza: any[] = [];
+  mesasVIP: any[] = [];
+  isLoading: boolean = false;
 
   constructor(
     @Inject(MesaService) private mesaService: MesaService,
@@ -21,29 +21,56 @@ export class MesasMapa implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Configuramos el polling: consulta cada 5 segundos para ver cambios de estado
-    this.pollingSubscription = interval(5000)
-      .pipe(
-        startWith(0),
-        switchMap(() => this.mesaService.listarTodas())
-      )
-      .subscribe({
-        next: (data) => {
-          this.mesas = data;
-          this.isLoading = false;
+    this.cargarMesas();
+  }
+
+  cargarMesas(): void {
+    this.isLoading = true;
+    this.mesaService.listarActivas().subscribe({
+      next: (data) => {
+        this.mesas = data;
+        this.agruparPorUbicacion();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar mesas:', err);
+        this.toastService.error('Error al cargar el mapa de mesas.');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  agruparPorUbicacion(): void {
+    this.mesasSalon = this.mesas.filter(m => m.ubicacion === 'SALON_PRINCIPAL');
+    this.mesasTerraza = this.mesas.filter(m => m.ubicacion === 'TERRAZA');
+    this.mesasVIP = this.mesas.filter(m => m.ubicacion === 'VIP');
+  }
+
+  // Permite simular un cambio de estado desde el admin
+  cambiarEstado(mesa: any, nuevoEstado: string): void {
+    // Si se pasa a disponible, la liberamos
+    if (nuevoEstado === 'DISPONIBLE') {
+      this.mesaService.liberarMesa(mesa.id).subscribe({
+        next: () => {
+          this.toastService.success(`Mesa ${mesa.numero} liberada.`);
+          this.cargarMesas();
         },
-        error: (err) => {
-          console.error('Error al actualizar mesas:', err);
-          this.isLoading = false;
-        }
+        error: () => this.toastService.error('Error al liberar la mesa.')
       });
-  }
-
-  ngOnDestroy(): void {
-    if (this.pollingSubscription) this.pollingSubscription.unsubscribe();
-  }
-
-  verDetalleMesa(mesa: any): void {
-    this.toastService.info(`Mesa ${mesa.numero}: ${mesa.estado}`);
+    } 
+    // Si se pasa a pendiente de pago
+    else if (nuevoEstado === 'PENDIENTE_PAGO') {
+      this.mesaService.marcarPendientePago(mesa.id).subscribe({
+        next: () => {
+          this.toastService.success(`Mesa ${mesa.numero} marcada como pendiente de pago.`);
+          this.cargarMesas();
+        },
+        error: () => this.toastService.error('Error al actualizar mesa.')
+      });
+    }
+    // Si se pasa a ocupada (requiere un pedido ID en la realidad, aquí forzamos o notificamos)
+    else if (nuevoEstado === 'OCUPADA') {
+      this.toastService.info('Para ocupar una mesa, registre un pedido asignado a ella.');
+    }
   }
 }

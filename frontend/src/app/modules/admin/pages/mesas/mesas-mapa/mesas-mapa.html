@@ -1,29 +1,92 @@
 <div class="usuarios-container">
   <div class="page-header">
-    <div class="header-icon"><i class="fas fa-map-location-dot"></i></div>
+    <div class="header-icon"><i class="fas fa-map"></i></div>
     <div class="header-text">
       <h2>Mapa de Salón</h2>
       <p>Estado de las mesas en tiempo real</p>
     </div>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="cargarMesas()" [disabled]="isLoading">
+        <i class="fas fa-sync" [class.fa-spin]="isLoading"></i> Actualizar Mapa
+      </button>
+    </div>
   </div>
 
-  <div class="leyenda-mapa">
-    <div class="item"><span class="color disponible"></span> Disponible</div>
-    <div class="item"><span class="color ocupada"></span> Ocupada</div>
-    <div class="item"><span class="color pago"></span> Esperando Pago</div>
+  <div class="mapa-leyenda">
+    <div class="leyenda-item"><span class="color-box disponible"></span> Disponible</div>
+    <div class="leyenda-item"><span class="color-box ocupada"></span> Ocupada</div>
+    <div class="leyenda-item"><span class="color-box pendiente"></span> Esperando Pago</div>
   </div>
 
-  <div class="mapa-grid">
-    <div *ngFor="let mesa of mesas" 
-         class="mesa-item" 
-         [ngClass]="mesa.estado.toLowerCase()"
-         (click)="verDetalleMesa(mesa)">
-      <div class="mesa-circle">
-        <span class="num">{{ mesa.numero }}</span>
-        <i class="fas fa-chair"></i>
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+    <p class="mt-2 text-muted">Cargando distribución...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="mapa-zonas">
+    <!-- Salón Principal -->
+    <div class="zona-card" *ngIf="mesasSalon.length > 0">
+      <h3 class="zona-title"><i class="fas fa-home"></i> Salón Principal</h3>
+      <div class="mesas-grid">
+        <div class="mesa-item" *ngFor="let mesa of mesasSalon" [ngClass]="mesa.estado.toLowerCase()">
+          <div class="mesa-header">Mesa {{ mesa.numero }}</div>
+          <div class="mesa-body">
+            <i class="fas fa-users"></i> {{ mesa.capacidad }}
+          </div>
+          <div class="mesa-footer">
+            <div class="dropdown">
+              <button class="btn-estado">{{ mesa.estado.replace('_', ' ') }} <i class="fas fa-caret-down"></i></button>
+              <div class="dropdown-menu">
+                <a (click)="cambiarEstado(mesa, 'DISPONIBLE')" *ngIf="mesa.estado !== 'DISPONIBLE'">Liberar</a>
+                <a (click)="cambiarEstado(mesa, 'PENDIENTE_PAGO')" *ngIf="mesa.estado === 'OCUPADA'">Cobrar</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mesa-info">
-        <small>{{ mesa.capacidad }} pers.</small>
+    </div>
+
+    <!-- Terraza -->
+    <div class="zona-card" *ngIf="mesasTerraza.length > 0">
+      <h3 class="zona-title"><i class="fas fa-umbrella-beach"></i> Terraza</h3>
+      <div class="mesas-grid">
+        <div class="mesa-item" *ngFor="let mesa of mesasTerraza" [ngClass]="mesa.estado.toLowerCase()">
+          <div class="mesa-header">Mesa {{ mesa.numero }}</div>
+          <div class="mesa-body">
+            <i class="fas fa-users"></i> {{ mesa.capacidad }}
+          </div>
+          <div class="mesa-footer">
+            <div class="dropdown">
+              <button class="btn-estado">{{ mesa.estado.replace('_', ' ') }} <i class="fas fa-caret-down"></i></button>
+              <div class="dropdown-menu">
+                <a (click)="cambiarEstado(mesa, 'DISPONIBLE')" *ngIf="mesa.estado !== 'DISPONIBLE'">Liberar</a>
+                <a (click)="cambiarEstado(mesa, 'PENDIENTE_PAGO')" *ngIf="mesa.estado === 'OCUPADA'">Cobrar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIP -->
+    <div class="zona-card" *ngIf="mesasVIP.length > 0">
+      <h3 class="zona-title"><i class="fas fa-star text-warning"></i> VIP</h3>
+      <div class="mesas-grid">
+        <div class="mesa-item" *ngFor="let mesa of mesasVIP" [ngClass]="mesa.estado.toLowerCase()">
+          <div class="mesa-header">Mesa {{ mesa.numero }}</div>
+          <div class="mesa-body">
+            <i class="fas fa-users"></i> {{ mesa.capacidad }}
+          </div>
+          <div class="mesa-footer">
+            <div class="dropdown">
+              <button class="btn-estado">{{ mesa.estado.replace('_', ' ') }} <i class="fas fa-caret-down"></i></button>
+              <div class="dropdown-menu">
+                <a (click)="cambiarEstado(mesa, 'DISPONIBLE')" *ngIf="mesa.estado !== 'DISPONIBLE'">Liberar</a>
+                <a (click)="cambiarEstado(mesa, 'PENDIENTE_PAGO')" *ngIf="mesa.estado === 'OCUPADA'">Cobrar</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

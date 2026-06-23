@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import apf3.ChifaXinYan.Model.Caja;
 import apf3.ChifaXinYan.Model.MovimientoCaja;
+import apf3.ChifaXinYan.Repository.MovimientoCajaRepository;
 import apf3.ChifaXinYan.Service.CajaService;
 
 @RestController
@@ -22,16 +23,20 @@ import apf3.ChifaXinYan.Service.CajaService;
 public class CajaController {
 
     private final CajaService cajaService;
+    private final MovimientoCajaRepository movimientoCajaRepository;
 
-    public CajaController(CajaService cajaService) {
+    public CajaController(CajaService cajaService, MovimientoCajaRepository movimientoCajaRepository) {
         this.cajaService = cajaService;
+        this.movimientoCajaRepository = movimientoCajaRepository;
     }
 
+    // GET /api/cajas - Lista todas las cajas
     @GetMapping
     public ResponseEntity<List<Caja>> listarTodas() {
         return ResponseEntity.ok(cajaService.listarTodasLasCajas());
     }
 
+    // GET /api/cajas/abierta - Obtiene la caja actualmente abierta
     @GetMapping("/abierta")
     public ResponseEntity<Caja> obtenerCajaAbierta() {
         return cajaService.obtenerCajaAbierta()
@@ -39,6 +44,19 @@ public class CajaController {
                 .orElse(ResponseEntity.noContent().build());
     }
 
+    // GET /api/cajas/movimientos - Lista TODOS los movimientos de todas las cajas
+    @GetMapping("/movimientos")
+    public ResponseEntity<List<MovimientoCaja>> listarTodosLosMovimientos() {
+        return ResponseEntity.ok(movimientoCajaRepository.findAll());
+    }
+
+    // GET /api/cajas/{id}/movimientos - Lista los movimientos de una caja específica
+    @GetMapping("/{id}/movimientos")
+    public ResponseEntity<List<MovimientoCaja>> listarMovimientosPorCaja(@PathVariable Long id) {
+        return ResponseEntity.ok(movimientoCajaRepository.findByCajaId(id));
+    }
+
+    // POST /api/cajas/abrir?usuarioId=&montoApertura= - Abre una nueva caja
     @PostMapping("/abrir")
     public ResponseEntity<?> abrirCaja(@RequestParam Long usuarioId, @RequestParam double montoApertura) {
         try {
@@ -51,6 +69,7 @@ public class CajaController {
         }
     }
 
+    // POST /api/cajas/{id}/cerrar?montoCierre= - Cierra una caja
     @PostMapping("/{id}/cerrar")
     public ResponseEntity<?> cerrarCaja(@PathVariable Long id, @RequestParam double montoCierre) {
         try {
@@ -63,6 +82,7 @@ public class CajaController {
         }
     }
 
+    // POST /api/cajas/{id}/movimiento - Registra un movimiento en una caja
     @PostMapping("/{id}/movimiento")
     public ResponseEntity<?> registrarMovimiento(
             @PathVariable Long id,

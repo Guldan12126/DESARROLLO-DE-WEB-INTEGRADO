@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// ✅ Corregido: ahora usa environment en lugar de URL hardcodeada
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class CategoriaService {
-  // Ajusta esta URL según la configuración de tu backend
-  private apiUrl = 'http://localhost:8080/api/categorias';
+  private apiUrl = `${environment.apiUrl}/categorias`;
 
   constructor(private http: HttpClient) { }
 
