@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { PedidoService } from '../../../../shared/services/pedido.service';
 import { MesaService } from '../../../../shared/services/mesa.service';
 import { ToastService } from '../../../../shared/services/toast.service';
+import { VentaService } from '../../../../shared/services/venta.service';
+import { CajaService } from '../../../../shared/services/caja.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard-cajero',
@@ -32,7 +35,10 @@ export class DashboardCajeroComponent implements OnInit {
   constructor(
     private pedidoService: PedidoService,
     private mesaService: MesaService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private ventaService: VentaService,
+    private cajaService: CajaService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -52,15 +58,39 @@ export class DashboardCajeroComponent implements OnInit {
         this.pedidosPorCobrar = pedidos.filter(p => p.estado === 'ENTREGADO' || p.estado === 'LISTO');
         this.stats.pedidosPendientesCobro = this.pedidosPorCobrar.length;
         
-        // Calcular ventas ficticias del día (o reales si hay pagadas en la base de datos)
-        // Por ahora sumamos un valor base
-        this.stats.totalVentasHoy = 780.00;
-        this.isLoading = false;
+        // Obtener saldo de caja real
+        this.cajaService.obtenerCajaAbierta().subscribe({
+          next: (caja) => {
+            if (caja) {
+              // Si la caja está abierta, sumamos los movimientos
+              this.stats.cajaSaldo = caja.montoApertura; // Necesitamos endpoint de balance o calcularlo en backend
+              // Ocultamos un poco esto asumiendo q se calculará, por ahora dejamos el monto base + ventas
+            }
+          },
+          error: (err) => {
+            console.error('No hay caja abierta', err);
+            this.stats.cajaSaldo = 0;
+          }
+        });
+
+        // Obtener ventas del día
+        this.ventaService.obtenerVentasDelDia().subscribe({
+          next: (res) => {
+            const total = res?.total || 0;
+            this.stats.totalVentasHoy = total;
+            this.stats.cajaSaldo = this.stats.cajaSaldo === 0 ? total : this.stats.cajaSaldo + total;
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error('Error al cargar ventas de hoy', err);
+            this.stats.totalVentasHoy = 0;
+            this.isLoading = false;
+          }
+        });
       },
       error: (err) => {
         console.error('Error al cargar pedidos por cobrar:', err);
-        this.toastService.error('Error al cargar datos del servidor. Usando datos de prueba.');
-        this.cargarDatosPrueba();
+        this.toastService.error('Error al cargar datos del servidor.');
         this.isLoading = false;
       }
     });
@@ -104,70 +134,26 @@ export class DashboardCajeroComponent implements OnInit {
 
     this.isLoading = true;
     const pedidoId = this.selectedPedido.id;
-    const mesaId = this.selectedPedido.mesa?.id;
+    const cajeroId = this.authService.getUserId() || 1; // Usar el ID del usuario actual o 1 como fallback temporal
+    
+    // El monto recibido real (si es tarjeta/yape, se asume exacto al total)
+    const montoFinalRecibido = this.metodoPago === 'EFECTIVO' ? this.montoRecibido : this.selectedPedido.total;
 
-    // 1. Actualizar estado del pedido a PAGADO
-    this.pedidoService.actualizarEstado(pedidoId, 'PAGADO').subscribe({
-      next: () => {
-        // 2. Liberar la mesa correspondiente
-        if (mesaId) {
-          this.mesaService.liberarMesa(mesaId).subscribe({
-            next: () => {
-              this.toastService.success(`¡Pedido #${pedidoId} pagado y mesa liberada con éxito!`);
-              // Sumar al saldo de caja
-              this.stats.cajaSaldo += this.selectedPedido.total;
-              this.cerrarCobro();
-              this.cargarDatos();
-            },
-            error: (err) => {
-              console.error('Error al liberar mesa:', err);
-              this.toastService.success(`¡Pedido #${pedidoId} pagado! (Mesa requiere liberación manual)`);
-              this.cerrarCobro();
-              this.cargarDatos();
-            }
-          });
-        } else {
-          this.toastService.success(`¡Pedido #${pedidoId} pagado con éxito!`);
-          this.cerrarCobro();
-          this.cargarDatos();
-        }
+    this.ventaService.registrarVenta(pedidoId, this.metodoPago, montoFinalRecibido, cajeroId).subscribe({
+      next: (res) => {
+        this.toastService.success(`¡Pedido #${pedidoId} pagado y comprobante generado!`);
+        this.cerrarCobro();
+        this.cargarDatos(); // Recargar pedidos, caja y total del día
       },
       error: (err) => {
         console.error('Error al procesar pago:', err);
-        this.toastService.error('Error al procesar el pago.');
+        this.toastService.error(err.error?.message || 'Error al procesar el pago. ¿Hay una caja abierta?');
         this.isLoading = false;
       }
     });
   }
 
   cargarDatosPrueba(): void {
-    this.stats = {
-      totalVentasHoy: 650.00,
-      cajaSaldo: 450.00,
-      pedidosPendientesCobro: 2
-    };
-
-    this.pedidosPorCobrar = [
-      {
-        id: 301,
-        mesa: { id: 1, numero: 2 },
-        estado: 'ENTREGADO',
-        detalles: [
-          { producto: { nombre: 'Pollo Chijaukay' }, cantidad: 1 },
-          { producto: { nombre: 'Arroz Chaufa Pork' }, cantidad: 2 }
-        ],
-        total: 68.50
-      },
-      {
-        id: 302,
-        mesa: { id: 3, numero: 7 },
-        estado: 'ENTREGADO',
-        detalles: [
-          { producto: { nombre: 'Kam Lu Wantan Especial' }, cantidad: 1 },
-          { producto: { nombre: 'Chicha Morada Jarra' }, cantidad: 1 }
-        ],
-        total: 55.00
-      }
-    ];
+    // Ya no se usa. Borrado por limpieza.
   }
 }

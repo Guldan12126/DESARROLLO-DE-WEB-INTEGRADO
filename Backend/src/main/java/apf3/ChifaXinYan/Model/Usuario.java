@@ -1,5 +1,7 @@
 package apf3.ChifaXinYan.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +35,7 @@ public class Usuario {
     @NotBlank(message = "La contrasena es obligatoria")
     @Size(min = 6, max = 100, message = "La contrasena debe tener entre 6 y 100 caracteres")
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @NotBlank(message = "El rol es obligatorio")

@@ -1,0 +1,126 @@
+<div class="dashboard-container" style="display: flex; gap: 25px; align-items: flex-start; flex-wrap: wrap;">
+  
+  <!-- Parte Central: Menú interactivo -->
+  <div style="flex: 1; min-width: 600px;">
+    <div class="dashboard-header" style="margin-bottom: 20px;">
+      <div class="title-area">
+        <h1>Nueva Comanda 📝</h1>
+        <p class="subtitle">Seleccione los platos para el pedido</p>
+      </div>
+    </div>
+
+    <!-- Selección de Mesa -->
+    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 5px solid #3498db;">
+      <h3 style="margin-top: 0; color: #2c3e50; font-size: 1.1rem; margin-bottom: 15px;"><i class="fas fa-chair"></i> Asignar Mesa</h3>
+      <select [(ngModel)]="mesaSeleccionada" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; color: #333; outline: none; background: #fdfdfd;">
+        <option [ngValue]="null" disabled selected>-- Seleccione una mesa libre --</option>
+        <option *ngFor="let mesa of mesasLibres" [ngValue]="mesa.id">
+          Mesa {{ mesa.numero }} (Capacidad: {{ mesa.capacidad }} personas)
+        </option>
+      </select>
+      <div *ngIf="mesasLibres.length === 0" style="color: #e74c3c; font-size: 0.85rem; margin-top: 8px;">
+        <i class="fas fa-exclamation-triangle"></i> No hay mesas libres actualmente en el salón.
+      </div>
+    </div>
+
+    <!-- Filtros de menú -->
+    <div class="filters-bar" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <button class="btn" [style.background]="filtroActual === 'TODOS' ? '#e74c3c' : 'white'" 
+              [style.color]="filtroActual === 'TODOS' ? 'white' : '#333'"
+              (click)="setFiltro('TODOS')"
+              style="padding: 8px 20px; border-radius: 20px; border: 1px solid #ddd; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+        Todos
+      </button>
+      <button *ngFor="let cat of categorias" class="btn" 
+              [style.background]="filtroActual === cat ? '#e74c3c' : 'white'"
+              [style.color]="filtroActual === cat ? 'white' : '#333'"
+              (click)="setFiltro(cat)"
+              style="padding: 8px 20px; border-radius: 20px; border: 1px solid #ddd; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+        {{ cat }}
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" style="text-align: center; padding: 40px;">
+      <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #e74c3c;"></i>
+    </div>
+
+    <!-- Grid de Menú -->
+    <div class="charts-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;" *ngIf="!isLoading">
+      <div *ngFor="let prod of productosFiltrados" class="chart-card" 
+           style="background: white; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.06); overflow: hidden; cursor: pointer; transition: transform 0.1s;"
+           onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'"
+           (click)="agregarAlCarrito(prod)">
+        <div style="height: 120px; background: #eee; position: relative;">
+          <img *ngIf="prod.imagenUrl" [src]="prod.imagenUrl" style="width: 100%; height: 100%; object-fit: cover;">
+          <div *ngIf="!prod.imagenUrl" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #ccc;">
+            <i class="fas fa-utensils" style="font-size: 2.5rem;"></i>
+          </div>
+          <div *ngIf="prod.stock <= 0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center;">
+            <span style="background: #e74c3c; color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem;">Agotado</span>
+          </div>
+        </div>
+        <div style="padding: 12px;">
+          <h4 style="margin: 0 0 5px 0; color: #333; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="prod.nombre">
+            {{ prod.nombre }}
+          </h4>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #27ae60; font-weight: 800;">S/ {{ prod.precio | number:'1.2-2' }}</span>
+            <span style="font-size: 0.75rem; color: #7f8c8d;">Stock: {{ prod.stock }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Derecho: Carrito (Comanda) -->
+  <div style="width: 350px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: sticky; top: 20px; display: flex; flex-direction: column; max-height: calc(100vh - 40px);">
+    <div style="padding: 20px; border-bottom: 2px dashed #eee; background: #fdfdfd; border-radius: 12px 12px 0 0;">
+      <h2 style="margin: 0; color: #2c3e50; font-size: 1.4rem; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-receipt" style="color: #e74c3c;"></i> Detalle Comanda
+      </h2>
+      <div *ngIf="mesaSeleccionada" style="margin-top: 10px; color: #3498db; font-weight: bold;">
+        Para Mesa #{{ mesaSeleccionada }}
+      </div>
+    </div>
+
+    <!-- Items -->
+    <div style="padding: 20px; overflow-y: auto; flex: 1;">
+      <div *ngIf="carrito.length === 0" style="text-align: center; color: #999; padding: 40px 0;">
+        <i class="fas fa-shopping-basket" style="font-size: 3rem; color: #eee; margin-bottom: 10px; display: block;"></i>
+        Agregue platos haciendo clic en ellos
+      </div>
+
+      <div *ngFor="let item of carrito; let i = index" style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f5f5f5;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+          <span style="font-weight: bold; color: #333; flex: 1; padding-right: 10px;">{{ item.producto.nombre }}</span>
+          <button (click)="quitarDelCarrito(i)" style="background: none; border: none; color: #e74c3c; cursor: pointer; padding: 0;">
+            <i class="fas fa-times-circle"></i>
+          </button>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px; background: #f9f9f9; padding: 4px; border-radius: 20px; border: 1px solid #eee;">
+            <button (click)="disminuirCantidad(i)" style="width: 25px; height: 25px; border-radius: 50%; border: none; background: white; cursor: pointer; color: #e74c3c; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"><i class="fas fa-minus"></i></button>
+            <span style="font-weight: bold; width: 20px; text-align: center;">{{ item.cantidad }}</span>
+            <button (click)="aumentarCantidad(i)" style="width: 25px; height: 25px; border-radius: 50%; border: none; background: #e74c3c; color: white; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"><i class="fas fa-plus"></i></button>
+          </div>
+          <span style="font-weight: 800; color: #27ae60;">S/ {{ item.subtotal | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total y Botón de Enviar -->
+    <div style="padding: 20px; background: #fafafa; border-top: 1px solid #eee; border-radius: 0 0 12px 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <span style="color: #7f8c8d; font-size: 1.1rem; font-weight: bold;">TOTAL</span>
+        <span style="color: #2c3e50; font-size: 1.6rem; font-weight: 900;">S/ {{ totalCarrito | number:'1.2-2' }}</span>
+      </div>
+      <button class="btn" (click)="enviarComanda()" [disabled]="isSubmitting || carrito.length === 0 || !mesaSeleccionada"
+              style="width: 100%; padding: 15px; border-radius: 10px; border: none; background: #e74c3c; color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.2s;"
+              [style.opacity]="(isSubmitting || carrito.length === 0 || !mesaSeleccionada) ? '0.5' : '1'">
+        <i class="fas" [class.fa-paper-plane]="!isSubmitting" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting"></i> 
+        {{ isSubmitting ? 'Enviando...' : 'Enviar a Cocina' }}
+      </button>
+    </div>
+  </div>
+
+</div>

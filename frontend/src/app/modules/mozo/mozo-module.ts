@@ -7,12 +7,20 @@ import { DashboardMozoComponent } from './pages/dashboard-mozo/dashboard-mozo.co
 import { SidebarMozo } from '../../shared/components/sidebar-mozo/sidebar-mozo.component';
 import { MozoRoutingModule } from './mozo-routing-module';
 import { SharedModule } from '../../shared/shared.module';
+import { MesasMapaComponent } from './pages/mesas-mapa/mesas-mapa';
+import { PedidosNuevoComponent } from './pages/pedidos-nuevo/pedidos-nuevo';
+import { PedidosListaComponent } from './pages/pedidos-lista/pedidos-lista';
+import { PedidosHistorialComponent } from './pages/pedidos-historial/pedidos-historial';
 
 @NgModule({
   declarations: [
     MozoComponent,
     DashboardMozoComponent,
-    SidebarMozo
+    SidebarMozo,
+    MesasMapaComponent,
+    PedidosNuevoComponent,
+    PedidosListaComponent,
+    PedidosHistorialComponent
   ],
   imports: [
     CommonModule,   

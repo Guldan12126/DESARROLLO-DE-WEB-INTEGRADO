@@ -1,0 +1,63 @@
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-history"></i></div>
+    <div class="header-text">
+      <h2>Historial de Ventas</h2>
+      <p>Registro de comprobantes y pagos procesados</p>
+    </div>
+  </div>
+
+  <div class="user-table-card search-filter-card">
+    <div class="search-filter-container" style="display: flex; gap: 15px; padding: 15px; align-items: center;">
+      <div class="search-bar" style="flex: 1; display: flex; align-items: center; background: #f8f9fa; border-radius: 8px; padding: 8px 15px;">
+        <i class="fas fa-search" style="color: #6c757d; margin-right: 10px;"></i>
+        <input type="text" [(ngModel)]="searchTerm" (input)="aplicarFiltros()"
+               placeholder="Buscar por comprobante, método de pago o pedido..." style="border: none; background: transparent; width: 100%; outline: none;">
+      </div>
+      <button class="btn btn-outline-secondary" (click)="cargarVentas()" [disabled]="isLoading">
+        <i class="fas fa-sync" [class.fa-spin]="isLoading"></i> Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div class="user-table-card">
+    <div class="table-responsive">
+      <table class="xin-yan-table" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background: #f8f9fa; text-align: left; border-bottom: 2px solid #dee2e6;">
+            <th style="padding: 12px;">Comprobante #</th>
+            <th style="padding: 12px;">Pedido Ref.</th>
+            <th style="padding: 12px;">Fecha de Emisión</th>
+            <th style="padding: 12px;">Método de Pago</th>
+            <th style="padding: 12px;">Total (S/)</th>
+            <th style="padding: 12px;">Recibido</th>
+            <th style="padding: 12px;">Vuelto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="7" class="text-center" style="padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Cargando ventas...</td>
+          </tr>
+          <tr *ngIf="!isLoading && ventasFiltradas.length === 0">
+            <td colspan="7" class="text-center" style="padding: 20px;">No hay ventas registradas.</td>
+          </tr>
+          <tr *ngFor="let venta of ventasFiltradas" style="border-bottom: 1px solid #dee2e6;">
+            <td style="padding: 12px; font-weight: bold; color: #0d6efd;">{{ venta.numeroComprobante || 'B001-' + venta.id }}</td>
+            <td style="padding: 12px; color: #6c757d;">#{{ venta.pedido?.id }}</td>
+            <td style="padding: 12px;">{{ venta.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td style="padding: 12px;">
+              <span class="badge" 
+                [ngStyle]="{'background-color': venta.metodoPago === 'EFECTIVO' ? '#198754' : '#0d6efd', 'color': 'white', 'padding': '4px 8px', 'border-radius': '4px'}">
+                <i class="fas" [ngClass]="{'fa-money-bill': venta.metodoPago === 'EFECTIVO', 'fa-credit-card': venta.metodoPago !== 'EFECTIVO'}"></i>
+                {{ venta.metodoPago }}
+              </span>
+            </td>
+            <td style="padding: 12px; font-weight: bold; color: #198754;">{{ venta.monto | currency:'PEN':'S/ ' }}</td>
+            <td style="padding: 12px;">{{ venta.montoRecibido | currency:'PEN':'S/ ' }}</td>
+            <td style="padding: 12px; color: #dc3545;">{{ venta.vuelto | currency:'PEN':'S/ ' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

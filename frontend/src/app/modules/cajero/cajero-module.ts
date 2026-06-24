@@ -8,11 +8,20 @@ import { SidebarCajero } from '../../shared/components/sidebar-cajero/sidebar-ca
 import { CajeroRoutingModule } from './cajero-routing-module';
 import { SharedModule } from '../../shared/shared.module';
 
+import { CajaGestionComponent } from './pages/caja-gestion/caja-gestion';
+import { CajaMovimientosComponent } from './pages/caja-movimientos/caja-movimientos';
+import { VentasHistorialComponent } from './pages/ventas-historial/ventas-historial';
+import { PedidosHistorialComponent } from './pages/pedidos-historial/pedidos-historial';
+
 @NgModule({
   declarations: [
     CajeroComponent,
     DashboardCajeroComponent,
-    SidebarCajero
+    SidebarCajero,
+    CajaGestionComponent,
+    CajaMovimientosComponent,
+    VentasHistorialComponent,
+    PedidosHistorialComponent
   ],
   imports: [
     CommonModule,

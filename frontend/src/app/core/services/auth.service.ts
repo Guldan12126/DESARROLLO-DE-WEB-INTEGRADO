@@ -11,6 +11,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
+  id: number;
   nombre: string;
   rol?: string;
   role?: string;
@@ -18,6 +19,7 @@ export interface LoginResponse {
 
 export interface UserSession {
   token: string;
+  id: number;
   nombre: string;
   rol: string;
   email: string;
@@ -29,6 +31,7 @@ export interface UserSession {
 export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly tokenKey = 'token';
+  private readonly idKey = 'idUsuario';
   private readonly roleKey = 'role';
   private readonly nameKey = 'nombreUsuario';
   private readonly emailKey = 'emailUsuario';
@@ -50,6 +53,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.idKey);
     localStorage.removeItem(this.roleKey);
     localStorage.removeItem(this.nameKey);
     localStorage.removeItem(this.emailKey);
@@ -72,6 +76,10 @@ export class AuthService {
     return this.sessionSubject.value?.rol ?? localStorage.getItem(this.roleKey) ?? '';
   }
 
+  getUserId(): number | null {
+    return this.sessionSubject.value?.id ?? (Number(localStorage.getItem(this.idKey)) || null);
+  }
+
   getHomeRouteByRole(role?: string): string {
     switch ((role ?? this.getRole()).toUpperCase()) {
       case 'ADMIN':
@@ -90,6 +98,7 @@ export class AuthService {
   private buildSession(response: LoginResponse, email: string): UserSession {
     return {
       token: response.token,
+      id: response.id,
       nombre: response.nombre || 'Usuario',
       rol: (response.rol || response.role || '').toUpperCase(),
       email,
@@ -98,6 +107,7 @@ export class AuthService {
 
   private persistSession(session: UserSession): void {
     localStorage.setItem(this.tokenKey, session.token);
+    localStorage.setItem(this.idKey, session.id.toString());
     localStorage.setItem(this.roleKey, session.rol);
     localStorage.setItem(this.nameKey, session.nombre);
     localStorage.setItem(this.emailKey, session.email);
@@ -106,16 +116,18 @@ export class AuthService {
 
   private getStoredSession(): UserSession | null {
     const token = localStorage.getItem(this.tokenKey);
+    const id = localStorage.getItem(this.idKey);
     const rol = localStorage.getItem(this.roleKey);
     const nombre = localStorage.getItem(this.nameKey);
     const email = localStorage.getItem(this.emailKey) ?? '';
 
-    if (!token || !rol || !nombre) {
+    if (!token || !id || !rol || !nombre) {
       return null;
     }
 
     return {
       token,
+      id: Number(id),
       rol,
       nombre,
       email,
