@@ -60,10 +60,10 @@
               </span>
             </td>
             <td class="table-actions" style="justify-content: flex-start; gap: 4px;">
-              <button class="btn btn-sm btn-outline-warning" *ngIf="pedido.estado === 'PENDIENTE'" (click)="actualizarEstado(pedido, 'PREPARANDO')" title="Pasar a Preparando">
+              <button class="btn btn-sm btn-outline-warning" *ngIf="pedido.estado === 'PENDIENTE'" (click)="actualizarEstado(pedido, 'EN_PREPARACION')" title="Pasar a En Preparación">
                 <i class="fas fa-fire"></i>
               </button>
-              <button class="btn btn-sm btn-outline-success" *ngIf="pedido.estado === 'PREPARANDO'" (click)="actualizarEstado(pedido, 'LISTO')" title="Marcar Listo">
+              <button class="btn btn-sm btn-outline-success" *ngIf="pedido.estado === 'EN_PREPARACION'" (click)="actualizarEstado(pedido, 'LISTO')" title="Marcar Listo">
                 <i class="fas fa-check"></i>
               </button>
               <button class="btn btn-sm btn-outline-primary" *ngIf="pedido.estado === 'LISTO'" (click)="actualizarEstado(pedido, 'ENTREGADO')" title="Marcar Entregado">

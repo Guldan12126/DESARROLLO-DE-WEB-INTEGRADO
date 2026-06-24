@@ -111,7 +111,12 @@ public class PedidoService {
         pedido.getDetalles().add(detalle);
         pedido.calcularTotal();
         
-        return pedidoRepository.save(pedido);
+        // No llamamos pedidoRepository.save(pedido) porque el pedido ya está gestionado
+        // por Hibernate dentro de esta transacción. El cascade=ALL en la relación
+        // @OneToMany persistirá automáticamente el nuevo DetallePedido durante el flush
+        // al finalizar la transacción. Llamar save() invoca merge(), lo cual causa
+        // TransientObjectException al intentar hacer merge en cascada sobre el detalle nuevo.
+        return pedido;
     }
 
     @Transactional(rollbackFor = Exception.class)

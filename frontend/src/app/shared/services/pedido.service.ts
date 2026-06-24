@@ -38,7 +38,7 @@ export class PedidoService {
 
   agregarDetalle(id: number, productoId: number, cantidad: number): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/${id}/detalle`, {
-      producto: { id: productoId },
+      productoId: productoId,
       cantidad: cantidad
     });
   }

@@ -1,6 +1,7 @@
 package apf3.ChifaXinYan.Controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import apf3.ChifaXinYan.Enum.EstadoPedido;
-import apf3.ChifaXinYan.Model.DetallePedido;
 import apf3.ChifaXinYan.Model.Pedido;
 import apf3.ChifaXinYan.Service.PedidoService;
 import jakarta.validation.Valid;
@@ -61,21 +61,46 @@ public class PedidoController {
         return new ResponseEntity<>(nuevo, HttpStatus.CREATED);
     }
 
+    /**
+     * Agrega un detalle (producto + cantidad) a un pedido existente.
+     * Recibe un Map genérico en lugar de una entidad JPA para evitar que Jackson
+     * cree instancias transitorias de DetallePedido/Pedido/Producto que
+     * contaminen el contexto de persistencia de Hibernate.
+     * 
+     * Formatos aceptados:
+     *   { "productoId": 1, "cantidad": 2 }
+     *   { "producto": { "id": 1 }, "cantidad": 2 }
+     */
+    @SuppressWarnings("unchecked")
     @PostMapping("/{id}/detalle")
     public ResponseEntity<Pedido> agregarDetalle(
-            @PathVariable Long id, 
-            @Valid @RequestBody DetallePedido detalle) {
-        
-        // Validar que el producto y su ID estén presentes en el detalle
-        if (detalle.getProducto() == null || detalle.getProducto().getId() == null) {
-            throw new IllegalArgumentException("Error: El detalle del pedido debe especificar un producto válido.");
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> body) {
+
+        // Extraer productoId desde cualquiera de los dos formatos
+        Long productoId;
+        Object productoObj = body.get("producto");
+        if (productoObj instanceof Map) {
+            Object idObj = ((Map<String, Object>) productoObj).get("id");
+            if (idObj == null) {
+                throw new IllegalArgumentException("Error: El detalle del pedido debe especificar un producto válido (producto.id).");
+            }
+            productoId = Long.valueOf(idObj.toString());
+        } else if (body.containsKey("productoId")) {
+            productoId = Long.valueOf(body.get("productoId").toString());
+        } else {
+            throw new IllegalArgumentException("Error: El detalle del pedido debe especificar un producto válido (productoId o producto.id).");
         }
-        
-        Pedido actualizado = pedidoService.agregarDetalle(
-                id, 
-                detalle.getProducto().getId(), 
-                detalle.getCantidad()
-        );
+
+        int cantidad = body.containsKey("cantidad")
+                ? Integer.parseInt(body.get("cantidad").toString())
+                : 0;
+
+        if (cantidad < 1) {
+            throw new IllegalArgumentException("Error: La cantidad debe ser al menos 1.");
+        }
+
+        Pedido actualizado = pedidoService.agregarDetalle(id, productoId, cantidad);
         return ResponseEntity.ok(actualizado);
     }
 

@@ -1,5 +1,7 @@
 package apf3.ChifaXinYan.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +25,7 @@ public class DetallePedido {
     @NotNull(message = "El pedido es obligatorio")
     @ManyToOne
     @JoinColumn(name = "pedido_id", nullable = false)
+    @JsonIgnore
     private Pedido pedido;
 
     @NotNull(message = "El producto es obligatorio")

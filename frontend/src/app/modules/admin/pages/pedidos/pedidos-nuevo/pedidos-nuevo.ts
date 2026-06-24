@@ -105,7 +105,11 @@ export class PedidosNuevo implements OnInit {
     
     try {
       // 1. Crear el pedido base
-      const nuevoPedidoPayload = { mesa: { id: this.mesaSeleccionadaId } };
+      // Asignamos usuario con id 1 por defecto para satisfacer la restricción not-null de la BD
+      const nuevoPedidoPayload = { 
+        mesa: { id: this.mesaSeleccionadaId },
+        usuario: { id: 1 }
+      };
       const pedidoCreado = await this.pedidoService.crearPedido(nuevoPedidoPayload).toPromise();
       
       const pedidoId = pedidoCreado.id;

@@ -68,10 +68,11 @@ export class Pedidos implements OnInit {
   getEstadoClase(estado: string): string {
     switch(estado) {
       case 'PENDIENTE': return 'role-cajero'; // Amarillo
-      case 'PREPARANDO': return 'role-mesero'; // Azul
+      case 'EN_PREPARACION': return 'role-mesero'; // Azul
       case 'LISTO': return 'activo'; // Verde
       case 'ENTREGADO': return 'role-admin'; // Gris oscuro
       case 'PAGADO': return 'inactivo'; // Oculto/Gris claro
+      case 'ANULADO': return 'inactivo';
       default: return '';
     }
   }
