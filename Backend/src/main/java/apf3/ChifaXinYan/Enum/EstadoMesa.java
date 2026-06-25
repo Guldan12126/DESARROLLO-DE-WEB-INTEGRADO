@@ -4,7 +4,8 @@ package apf3.ChifaXinYan.Enum;
 public enum EstadoMesa {
     DISPONIBLE("Disponible - Libre para nuevos clientes"),
     OCUPADA("Ocupada - Clientes atendiendo"),
-    PENDIENTE_PAGO("Pendiente de pago - Cliente terminó de comer");
+    PENDIENTE_PAGO("Pendiente de pago - Cliente terminó de comer"),
+    RESERVADA("Reservada - Esperando clientes");
 
     private final String descripcion;
 
