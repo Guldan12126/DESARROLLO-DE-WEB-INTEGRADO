@@ -136,6 +136,16 @@
                 <a routerLink="/admin/reportes/mesas-mas-usadas" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-chart-line"></i> Mesas más Usadas</a>
             </div>
         </div>
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('configuracion')">
+                <i class="fas fa-cog"></i> <span>Configuración</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.configuracion"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.configuracion">
+                <a routerLink="/admin/perfil" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-user"></i> Mi Perfil</a>
+                <a routerLink="/admin/ajustes" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-sliders-h"></i> Ajustes Generales</a>
+            </div>
+        </div>
     </nav>
 
     <div class="sidebar-footer">

@@ -26,7 +26,8 @@ export class SidebarAdminComponent implements OnInit, OnDestroy {
     pedidos: false,
     ventas: false,
     caja: false,
-    reportes: false
+    reportes: false,
+    configuracion: false
   };
 
   constructor(

@@ -5,6 +5,7 @@ import { PedidoService } from '../../../../../shared/services/pedido.service';
   selector: 'app-pedidos-historial',
   standalone: false,
   templateUrl: './pedidos-historial.html',
+  styleUrl: './pedidos-historial.scss'
 })
 export class PedidosHistorial implements OnInit {
   pedidos: any[] = [];

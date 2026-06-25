@@ -28,7 +28,8 @@ export class UsuariosComponent implements OnInit {
       nombre: this.nombre,
       email: this.email,
       password: this.password,
-      rol: this.rol
+      rol: this.rol,
+      activo: true
     };
 
     this.usuarioService.registrarUsuario(usuarioData).subscribe({ 

@@ -21,9 +21,9 @@
         <!-- Categoría -->
         <div class="form-group">
           <label><i class="fas fa-layer-group"></i> Categoría</label>
-          <select [(ngModel)]="nuevoProducto.categoria.nombre" name="categoria" [class.is-invalid]="formErrors.categoria">
+          <select [(ngModel)]="nuevoProducto.categoria.id" name="categoria" [class.is-invalid]="formErrors.categoria">
             <option value="">Seleccione...</option>
-            <option *ngFor="let cat of categorias" [value]="cat.nombre">{{ cat.nombre }}</option>
+            <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
           </select>
           <span class="error-text" *ngIf="formErrors.categoria">{{ formErrors.categoria }}</span>
         </div>

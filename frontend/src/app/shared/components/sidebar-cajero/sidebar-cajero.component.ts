@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-sidebar-cajero',
@@ -22,7 +23,8 @@ export class SidebarCajero implements OnInit {
 
   constructor(
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -57,9 +59,7 @@ export class SidebarCajero implements OnInit {
   }
 
   onLogout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('nombreUsuario');
+    this.authService.logout();
     this.router.navigate(['/login']);
     this.toastService.info('Sesión cerrada correctamente');
   }

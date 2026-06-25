@@ -14,7 +14,7 @@ export class Productos implements OnInit {
   nuevoProducto: any = {
     nombre: '',
     precio: null,
-    categoria: { nombre: '' },
+    categoria: { id: '' },
     stock: 0,
     imagenUrl: '',
     descripcion: '',
@@ -101,7 +101,7 @@ export class Productos implements OnInit {
     this.formErrors = {};
     if (!this.nuevoProducto.nombre.trim()) this.formErrors.nombre = 'El nombre es obligatorio.';
     if (!this.nuevoProducto.precio || this.nuevoProducto.precio <= 0) this.formErrors.precio = 'Ingrese un precio válido.';
-    if (!this.nuevoProducto.categoria.nombre) this.formErrors.categoria = 'Seleccione una categoría.';
+    if (!this.nuevoProducto.categoria.id) this.formErrors.categoria = 'Seleccione una categoría.';
     if (this.nuevoProducto.stock < 0) this.formErrors.stock = 'El stock no puede ser negativo.';
     
     return Object.keys(this.formErrors).length === 0;
