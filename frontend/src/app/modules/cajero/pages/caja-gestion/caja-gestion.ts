@@ -6,6 +6,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 @Component({
   selector: 'app-caja-gestion',
   templateUrl: './caja-gestion.html',
+  styleUrl: './caja-gestion.scss',
   standalone: false
 })
 export class CajaGestionComponent implements OnInit {

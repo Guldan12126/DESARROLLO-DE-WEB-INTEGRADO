@@ -12,6 +12,7 @@ import { CajaGestionComponent } from './pages/caja-gestion/caja-gestion';
 import { CajaMovimientosComponent } from './pages/caja-movimientos/caja-movimientos';
 import { VentasHistorialComponent } from './pages/ventas-historial/ventas-historial';
 import { PedidosHistorialComponent } from './pages/pedidos-historial/pedidos-historial';
+import { PedidosPorCobrar } from './pages/pedidos-por-cobrar/pedidos-por-cobrar';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { PedidosHistorialComponent } from './pages/pedidos-historial/pedidos-his
     CajaGestionComponent,
     CajaMovimientosComponent,
     VentasHistorialComponent,
-    PedidosHistorialComponent
+    PedidosHistorialComponent,
+    PedidosPorCobrar
   ],
   imports: [
     CommonModule,

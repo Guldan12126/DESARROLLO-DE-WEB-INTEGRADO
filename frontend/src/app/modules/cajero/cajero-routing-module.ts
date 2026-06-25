@@ -6,6 +6,7 @@ import { CajaGestionComponent } from './pages/caja-gestion/caja-gestion';
 import { CajaMovimientosComponent } from './pages/caja-movimientos/caja-movimientos';
 import { VentasHistorialComponent } from './pages/ventas-historial/ventas-historial';
 import { PedidosHistorialComponent } from './pages/pedidos-historial/pedidos-historial';
+import { PedidosPorCobrar } from './pages/pedidos-por-cobrar/pedidos-por-cobrar';
 
 const routes: Routes = [
   {
@@ -15,9 +16,9 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardCajeroComponent },
       { path: 'caja/gestion', component: CajaGestionComponent },
       { path: 'caja/movimientos', component: CajaMovimientosComponent },
-      { path: 'ventas/nueva', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'ventas/nueva', redirectTo: 'pedidos/por-cobrar', pathMatch: 'full' },
       { path: 'ventas/historial', component: VentasHistorialComponent },
-      { path: 'pedidos/por-cobrar', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'pedidos/por-cobrar', component: PedidosPorCobrar },
       { path: 'pedidos/historial', component: PedidosHistorialComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

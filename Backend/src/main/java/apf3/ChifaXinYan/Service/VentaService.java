@@ -98,8 +98,14 @@ public class VentaService {
         Caja cajaAbierta = cajaService.obtenerCajaAbierta()
                 .orElseThrow(() -> new RuntimeException("Error: Debe abrir caja antes de registrar una venta."));
         
-        cajaService.registrarMovimiento(cajaAbierta.getId(), "INGRESO", nuevaVenta.getMonto(), 
-                "Venta: " + nuevaVenta.getNumeroComprobante() + " - Mesa: " + pedido.getMesa().getId());
+        String descripcionMovimiento = "Venta: " + nuevaVenta.getNumeroComprobante();
+        if (pedido.getMesa() != null) {
+            descripcionMovimiento += " - Mesa: " + pedido.getMesa().getId();
+        } else {
+            descripcionMovimiento += " - Para llevar";
+        }
+
+        cajaService.registrarMovimiento(cajaAbierta.getId(), "INGRESO", nuevaVenta.getMonto(), descripcionMovimiento);
 
         // Actualizar estado del pedido a PAGADO
         pedido.setEstado(EstadoPedido.PAGADO);
