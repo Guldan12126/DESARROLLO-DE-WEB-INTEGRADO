@@ -76,8 +76,8 @@ public class VentaService {
             throw new RuntimeException("Pedido no encontrado");
         }
         
-        if (pedido.getEstado() != EstadoPedido.LISTO && pedido.getEstado() != EstadoPedido.ENTREGADO) {
-            throw new RuntimeException("El pedido no está listo para pagar. Estado actual: " + pedido.getEstado());
+        if (pedido.getEstado() == EstadoPedido.PAGADO || pedido.getEstado() == EstadoPedido.ANULADO) {
+            throw new RuntimeException("El pedido ya está pagado o anulado. Estado actual: " + pedido.getEstado());
         }
         
         // Validar que el monto recibido sea suficiente para cubrir el total del pedido
