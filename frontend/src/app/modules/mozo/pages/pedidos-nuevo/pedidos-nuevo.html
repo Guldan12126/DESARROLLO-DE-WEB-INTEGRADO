@@ -10,16 +10,23 @@
     </div>
 
     <!-- Selección de Mesa -->
-    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 5px solid #3498db;">
-      <h3 style="margin-top: 0; color: #2c3e50; font-size: 1.1rem; margin-bottom: 15px;"><i class="fas fa-chair"></i> Asignar Mesa</h3>
-      <select [(ngModel)]="mesaSeleccionada" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; color: #333; outline: none; background: #fdfdfd;">
-        <option [ngValue]="null" disabled selected>-- Seleccione una mesa libre --</option>
-        <option *ngFor="let mesa of mesasLibres" [ngValue]="mesa.id">
-          Mesa {{ mesa.numero }} (Capacidad: {{ mesa.capacidad }} personas)
-        </option>
-      </select>
-      <div *ngIf="mesasLibres.length === 0" style="color: #e74c3c; font-size: 0.85rem; margin-top: 8px;">
-        <i class="fas fa-exclamation-triangle"></i> No hay mesas libres actualmente en el salón.
+    <div class="mesas-section" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 5px solid #3498db;">
+      <h3 *ngIf="!pedidoIdSeleccionado" style="margin-top: 0; color: #2c3e50; font-size: 1.1rem; margin-bottom: 15px;"><i class="fas fa-chair"></i> 1. Seleccionar Mesa</h3>
+      <h3 *ngIf="pedidoIdSeleccionado" class="text-danger" style="margin-top: 0; color: #e74c3c; font-size: 1.1rem; margin-bottom: 15px;">Añadiendo a Mesa {{ mesaSeleccionada }} (Pedido #{{ pedidoIdSeleccionado }})</h3>
+      
+      <div class="mesas-grid" *ngIf="!pedidoIdSeleccionado" style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button *ngFor="let mesa of mesasLibres" 
+                class="mesa-btn"
+                [class.selected]="mesaSeleccionada === mesa.id"
+                (click)="mesaSeleccionada = mesa.id"
+                [style.background]="mesaSeleccionada === mesa.id ? '#3498db' : '#f8f9fa'"
+                [style.color]="mesaSeleccionada === mesa.id ? 'white' : '#333'"
+                style="padding: 10px 20px; border-radius: 8px; border: 1px solid #ddd; cursor: pointer;">
+          Mesa {{ mesa.numero }}
+        </button>
+        <div *ngIf="mesasLibres.length === 0" class="empty-state" style="color: #e74c3c;">
+          No hay mesas disponibles.
+        </div>
       </div>
     </div>
 
@@ -118,7 +125,7 @@
               style="width: 100%; padding: 15px; border-radius: 10px; border: none; background: #e74c3c; color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.2s;"
               [style.opacity]="(isSubmitting || carrito.length === 0 || !mesaSeleccionada) ? '0.5' : '1'">
         <i class="fas" [class.fa-paper-plane]="!isSubmitting" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting"></i> 
-        {{ isSubmitting ? 'Enviando...' : 'Enviar a Cocina' }}
+        {{ isSubmitting ? 'Procesando...' : (pedidoIdSeleccionado ? 'Añadir a la Cuenta' : 'Enviar a Cocina') }}
       </button>
     </div>
   </div>

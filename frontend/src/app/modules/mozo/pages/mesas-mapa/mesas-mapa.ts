@@ -39,7 +39,13 @@ export class MesasMapaComponent implements OnInit {
     });
   }
 
-  tomarPedido(idMesa: number): void {
-    this.router.navigate(['/mozo/pedidos/nuevo'], { queryParams: { mesa: idMesa } });
+  tomarPedido(mesa: any): void {
+    if (mesa.estado === 'DISPONIBLE') {
+      this.router.navigate(['/mozo/pedidos/nuevo'], { queryParams: { mesaId: mesa.id } });
+    } else if (mesa.estado === 'OCUPADA' && mesa.pedidoActualId) {
+      this.router.navigate(['/mozo/pedidos/nuevo'], { queryParams: { mesaId: mesa.id, pedidoId: mesa.pedidoActualId } });
+    } else {
+      this.toastService.info('La mesa no puede recibir pedidos en este momento.');
+    }
   }
 }

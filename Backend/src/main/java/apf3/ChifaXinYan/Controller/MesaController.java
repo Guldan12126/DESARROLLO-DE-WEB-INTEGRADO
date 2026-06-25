@@ -101,6 +101,15 @@ public class MesaController {
         return ResponseEntity.badRequest().build();
     }
 
+    @PutMapping("/{id}/reservar")
+    public ResponseEntity<Mesa> reservarMesa(@PathVariable Long id) {
+        Mesa actualizada = mesaService.reservarMesa(id);
+        if (actualizada != null) {
+            return ResponseEntity.ok(actualizada);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
     @PutMapping("/{id}/pendiente-pago")
     public ResponseEntity<Mesa> marcarPendientePago(@PathVariable Long id) {
         Mesa actualizada = mesaService.marcarPendientePago(id);

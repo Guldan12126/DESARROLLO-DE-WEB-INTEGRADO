@@ -48,6 +48,10 @@ export class MesaService {
     return this.http.put<any>(`${this.apiUrl}/${id}/ocupar?pedidoId=${pedidoId}`, {});
   }
 
+  reservarMesa(id: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}/reservar`, {});
+  }
+
   marcarPendientePago(id: number): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}/pendiente-pago`, {});
   }

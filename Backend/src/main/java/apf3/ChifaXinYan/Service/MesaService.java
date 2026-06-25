@@ -106,6 +106,16 @@ public class MesaService {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    public Mesa reservarMesa(Long id) {
+        Mesa mesa = mesaRepository.findById(id).orElse(null);
+        if (mesa != null && mesa.getEstado() == EstadoMesa.DISPONIBLE) {
+            mesa.setEstado(EstadoMesa.RESERVADA);
+            return mesaRepository.save(mesa);
+        }
+        return null;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     public Mesa marcarPendientePago(Long id) {
         Mesa mesa = mesaRepository.findById(id).orElse(null);
         if (mesa != null && mesa.getEstado() == EstadoMesa.OCUPADA) {

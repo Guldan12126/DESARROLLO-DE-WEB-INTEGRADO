@@ -16,6 +16,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 export class PedidosNuevoComponent implements OnInit {
   mesasLibres: any[] = [];
   mesaSeleccionada: number | null = null;
+  pedidoIdSeleccionado: number | null = null;
   
   productos: any[] = [];
   categorias: string[] = [];
@@ -40,8 +41,14 @@ export class PedidosNuevoComponent implements OnInit {
     
     // Ver si venimos desde el mapa con una mesa seleccionada
     this.route.queryParams.subscribe(params => {
-      if (params['mesa']) {
+      if (params['mesaId']) {
+        this.mesaSeleccionada = Number(params['mesaId']);
+      } else if (params['mesa']) { // Soporte para links antiguos
         this.mesaSeleccionada = Number(params['mesa']);
+      }
+
+      if (params['pedidoId']) {
+        this.pedidoIdSeleccionado = Number(params['pedidoId']);
       }
     });
   }
@@ -127,7 +134,7 @@ export class PedidosNuevoComponent implements OnInit {
   }
 
   enviarComanda(): void {
-    if (!this.mesaSeleccionada) {
+    if (!this.mesaSeleccionada && !this.pedidoIdSeleccionado) {
       this.toastService.warn('Por favor seleccione una mesa.');
       return;
     }
@@ -137,10 +144,30 @@ export class PedidosNuevoComponent implements OnInit {
     }
 
     this.isSubmitting = true;
-    
     const usuarioId = Number(localStorage.getItem('userId')) || 1; 
 
-    // 1. Crear el pedido
+    // Flujo 1: Agregar a pedido existente
+    if (this.pedidoIdSeleccionado) {
+      const peticiones = this.carrito.map(item => 
+        this.pedidoService.agregarDetalle(this.pedidoIdSeleccionado!, item.producto.id, item.cantidad)
+      );
+      
+      forkJoin(peticiones).subscribe({
+        next: () => {
+          this.toastService.success('¡Platos añadidos a la mesa exitosamente!');
+          this.isSubmitting = false;
+          this.router.navigate(['/mozo/mesas/mapa']);
+        },
+        error: (err) => {
+          console.error('Error al agregar detalles', err);
+          this.toastService.error('Hubo un error al añadir los platos.');
+          this.isSubmitting = false;
+        }
+      });
+      return;
+    }
+
+    // Flujo 2: Crear nuevo pedido
     const nuevoPedido = {
       mesa: { id: this.mesaSeleccionada },
       usuario: { id: usuarioId }
@@ -148,17 +175,18 @@ export class PedidosNuevoComponent implements OnInit {
 
     this.pedidoService.crearPedido(nuevoPedido).pipe(
       switchMap(pedidoCreado => {
-        // 2. Por cada item del carrito, agregar el detalle
         const peticiones = this.carrito.map(item => 
           this.pedidoService.agregarDetalle(pedidoCreado.id, item.producto.id, item.cantidad)
         );
+        // Además, marcar la mesa como ocupada
+        peticiones.push(this.mesaService.ocuparMesa(this.mesaSeleccionada!, pedidoCreado.id));
         return forkJoin(peticiones);
       })
     ).subscribe({
       next: () => {
         this.toastService.success('¡Comanda enviada a cocina exitosamente!');
         this.isSubmitting = false;
-        this.router.navigate(['/mozo/pedidos/lista']);
+        this.router.navigate(['/mozo/mesas/mapa']);
       },
       error: (err) => {
         console.error('Error al procesar comanda', err);
