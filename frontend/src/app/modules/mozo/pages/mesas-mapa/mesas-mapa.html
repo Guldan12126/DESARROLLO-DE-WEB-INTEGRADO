@@ -20,7 +20,7 @@
     
     <div *ngFor="let mesa of mesas" class="chart-card" 
          [ngStyle]="{
-           'border-top': '4px solid ' + (mesa.estado === 'DISPONIBLE' ? '#2ecc71' : (mesa.estado === 'OCUPADA' ? '#e74c3c' : '#f39c12')),
+           'border-top': '4px solid ' + (mesa.estado === 'DISPONIBLE' ? '#2ecc71' : (mesa.estado === 'OCUPADA' ? '#e74c3c' : (mesa.estado === 'PENDIENTE_PAGO' ? '#9b59b6' : '#f39c12'))),
            'background': 'white', 'border-radius': '12px', 'box-shadow': '0 4px 10px rgba(0,0,0,0.06)', 'overflow': 'hidden', 'text-align': 'center'
          }">
       <div style="padding: 25px 20px;">
@@ -29,11 +29,11 @@
         
         <div style="margin: 20px 0;">
           <span [ngStyle]="{
-            'background': mesa.estado === 'DISPONIBLE' ? '#eafaf1' : (mesa.estado === 'OCUPADA' ? '#fdedec' : '#fef9e7'),
-            'color': mesa.estado === 'DISPONIBLE' ? '#2ecc71' : (mesa.estado === 'OCUPADA' ? '#e74c3c' : '#f39c12'),
-            'border': '1px solid ' + (mesa.estado === 'DISPONIBLE' ? '#2ecc71' : (mesa.estado === 'OCUPADA' ? '#e74c3c' : '#f39c12'))
+            'background': mesa.estado === 'DISPONIBLE' ? '#eafaf1' : (mesa.estado === 'OCUPADA' ? '#fdedec' : (mesa.estado === 'PENDIENTE_PAGO' ? '#f4ecf8' : '#fef9e7')),
+            'color': mesa.estado === 'DISPONIBLE' ? '#2ecc71' : (mesa.estado === 'OCUPADA' ? '#e74c3c' : (mesa.estado === 'PENDIENTE_PAGO' ? '#8e44ad' : '#f39c12')),
+            'border': '1px solid ' + (mesa.estado === 'DISPONIBLE' ? '#2ecc71' : (mesa.estado === 'OCUPADA' ? '#e74c3c' : (mesa.estado === 'PENDIENTE_PAGO' ? '#8e44ad' : '#f39c12')))
           }" style="padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
-            {{ mesa.estado }}
+            {{ mesa.estado === 'PENDIENTE_PAGO' ? 'POR COBRAR' : mesa.estado }}
           </span>
         </div>
 
@@ -43,11 +43,16 @@
         </button>
 
         <button *ngIf="mesa.estado === 'OCUPADA' && mesa.pedidoActualId" class="btn" (click)="tomarPedido(mesa)"
-                style="background: #e74c3c; color: white; width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; transition: background 0.2s; margin-top: 5px;">
+                style="background: #e74c3c; color: white; width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; transition: background 0.2s; margin-bottom: 5px;">
           <i class="fas fa-cart-plus"></i> Agregar Platos
         </button>
+
+        <button *ngIf="mesa.estado === 'OCUPADA' && mesa.pedidoActualId" class="btn" (click)="pedirCuenta(mesa)"
+                style="background: #9b59b6; color: white; width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; transition: background 0.2s;">
+          <i class="fas fa-receipt"></i> Pedir Cuenta
+        </button>
         
-        <button *ngIf="mesa.estado !== 'DISPONIBLE' && !(mesa.estado === 'OCUPADA' && mesa.pedidoActualId)" class="btn" disabled
+        <button *ngIf="mesa.estado !== 'DISPONIBLE' && mesa.estado !== 'OCUPADA'" class="btn" disabled
                 style="background: #bdc3c7; color: white; width: 100%; padding: 12px; border-radius: 8px; font-weight: 700; border: none; cursor: not-allowed;">
           <i class="fas fa-ban"></i> No Disponible
         </button>

@@ -48,4 +48,21 @@ export class MesasMapaComponent implements OnInit {
       this.toastService.info('La mesa no puede recibir pedidos en este momento.');
     }
   }
+
+  pedirCuenta(mesa: any): void {
+    if (confirm(`¿Estás seguro de solicitar la cuenta para la Mesa ${mesa.numero}? Esto enviará la mesa al cajero para su cobro.`)) {
+      this.isLoading = true;
+      this.mesaService.marcarPendientePago(mesa.id).subscribe({
+        next: () => {
+          this.toastService.success(`Cuenta solicitada para la Mesa ${mesa.numero}. Imprimiendo pre-cuenta...`);
+          this.cargarMesas();
+        },
+        error: (err) => {
+          console.error('Error al pedir cuenta:', err);
+          this.toastService.error('Hubo un error al solicitar la cuenta.');
+          this.isLoading = false;
+        }
+      });
+    }
+  }
 }

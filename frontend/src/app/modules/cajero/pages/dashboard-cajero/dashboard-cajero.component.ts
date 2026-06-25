@@ -5,6 +5,8 @@ import { ToastService } from '../../../../shared/services/toast.service';
 import { VentaService } from '../../../../shared/services/venta.service';
 import { CajaService } from '../../../../shared/services/caja.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-cajero',
@@ -14,7 +16,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 })
 export class DashboardCajeroComponent implements OnInit {
   nombreUsuario: string = 'Cajero';
-  pedidosPorCobrar: any[] = [];
+  mesasPorCobrar: any[] = [];
   
   stats = {
     totalVentasHoy: 0,
@@ -26,6 +28,7 @@ export class DashboardCajeroComponent implements OnInit {
   
   // Estado del modal de cobro
   showPaymentModal: boolean = false;
+  selectedMesa: any = null;
   selectedPedido: any = null;
   metodoPago: string = 'EFECTIVO';
   montoRecibido: number = 0;
@@ -52,54 +55,80 @@ export class DashboardCajeroComponent implements OnInit {
   cargarDatos(): void {
     this.isLoading = true;
     
-    this.pedidoService.listarActivos().subscribe({
-      next: (pedidos) => {
-        // Pedidos listos o entregados que no han sido pagados
-        this.pedidosPorCobrar = pedidos.filter(p => p.estado === 'ENTREGADO' || p.estado === 'LISTO');
-        this.stats.pedidosPendientesCobro = this.pedidosPorCobrar.length;
-        
-        // Obtener saldo de caja real
-        this.cajaService.obtenerCajaAbierta().subscribe({
-          next: (caja) => {
-            if (caja) {
-              // Si la caja está abierta, sumamos los movimientos
-              this.stats.cajaSaldo = caja.montoApertura; // Necesitamos endpoint de balance o calcularlo en backend
-              // Ocultamos un poco esto asumiendo q se calculará, por ahora dejamos el monto base + ventas
-            }
-          },
-          error: (err) => {
-            console.error('No hay caja abierta', err);
-            this.stats.cajaSaldo = 0;
+    this.mesaService.listarPendientes().subscribe({
+      next: (mesas) => {
+        if (mesas.length === 0) {
+          this.mesasPorCobrar = [];
+          this.stats.pedidosPendientesCobro = 0;
+          this.cargarVentasYCaja();
+          return;
+        }
+
+        // Para cada mesa pendiente, obtener el detalle de su pedido actual
+        const peticionesPedidos = mesas.map(m => {
+          if (m.pedidoActualId) {
+            return this.pedidoService.obtenerPorId(m.pedidoActualId).pipe(
+              catchError(() => of(null))
+            );
           }
+          return of(null);
         });
 
-        // Obtener ventas del día
-        this.ventaService.obtenerVentasDelDia().subscribe({
-          next: (res) => {
-            const total = res?.total || 0;
-            this.stats.totalVentasHoy = total;
-            this.stats.cajaSaldo = this.stats.cajaSaldo === 0 ? total : this.stats.cajaSaldo + total;
-            this.isLoading = false;
-          },
-          error: (err) => {
-            console.error('Error al cargar ventas de hoy', err);
-            this.stats.totalVentasHoy = 0;
-            this.isLoading = false;
-          }
+        forkJoin(peticionesPedidos).subscribe((pedidosResult) => {
+          this.mesasPorCobrar = mesas.map((m, index) => {
+            return {
+              ...m,
+              pedido: pedidosResult[index]
+            };
+          }).filter(m => m.pedido != null); // Solo mesas con pedido válido
+          
+          this.stats.pedidosPendientesCobro = this.mesasPorCobrar.length;
+          this.cargarVentasYCaja();
         });
       },
       error: (err) => {
-        console.error('Error al cargar pedidos por cobrar:', err);
+        console.error('Error al cargar mesas por cobrar:', err);
         this.toastService.error('Error al cargar datos del servidor.');
         this.isLoading = false;
       }
     });
   }
 
-  abrirCobro(pedido: any): void {
-    this.selectedPedido = pedido;
+  cargarVentasYCaja(): void {
+    // Obtener saldo de caja real
+    this.cajaService.obtenerCajaAbierta().subscribe({
+      next: (caja) => {
+        if (caja) {
+          this.stats.cajaSaldo = caja.montoApertura; 
+        }
+      },
+      error: (err) => {
+        console.error('No hay caja abierta', err);
+        this.stats.cajaSaldo = 0;
+      }
+    });
+
+    // Obtener ventas del día
+    this.ventaService.obtenerVentasDelDia().subscribe({
+      next: (res) => {
+        const total = res?.total || 0;
+        this.stats.totalVentasHoy = total;
+        this.stats.cajaSaldo = this.stats.cajaSaldo === 0 ? total : this.stats.cajaSaldo + total;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar ventas de hoy', err);
+        this.stats.totalVentasHoy = 0;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  abrirCobro(mesa: any): void {
+    this.selectedMesa = mesa;
+    this.selectedPedido = mesa.pedido;
     this.metodoPago = 'EFECTIVO';
-    this.montoRecibido = Math.ceil(pedido.total);
+    this.montoRecibido = Math.ceil(this.selectedPedido.total);
     this.vuelto = 0;
     this.formError = '';
     this.showPaymentModal = true;
@@ -108,6 +137,7 @@ export class DashboardCajeroComponent implements OnInit {
 
   cerrarCobro(): void {
     this.showPaymentModal = false;
+    this.selectedMesa = null;
     this.selectedPedido = null;
   }
 
@@ -141,7 +171,7 @@ export class DashboardCajeroComponent implements OnInit {
 
     this.ventaService.registrarVenta(pedidoId, this.metodoPago, montoFinalRecibido, cajeroId).subscribe({
       next: (res) => {
-        this.toastService.success(`¡Pedido #${pedidoId} pagado y comprobante generado!`);
+        this.toastService.success(`¡Cuenta de Mesa ${this.selectedMesa.numero} cobrada y comprobante generado!`);
         this.cerrarCobro();
         this.cargarDatos(); // Recargar pedidos, caja y total del día
       },

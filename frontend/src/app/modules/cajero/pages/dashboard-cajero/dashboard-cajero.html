@@ -54,44 +54,47 @@
 
   <!-- Tabla de Pedidos Pendientes de Pago -->
   <div class="chart-card">
-    <div class="chart-header">
-      <h3>Cuentas Pendientes de Cobro</h3>
-    </div>
-    <div class="chart-body" style="height: auto; min-height: 200px; padding: 15px 0;">
-      <div *ngIf="pedidosPorCobrar.length === 0" style="text-align: center; padding: 40px; color: #777;">
-        <i class="fas fa-circle-check" style="font-size: 3.5rem; color: #2ecc71; margin-bottom: 15px; display: block;"></i>
-        <span style="font-weight: 600; font-size: 1.1rem; color: #2ecc71;">¡Excelente! Todas las cuentas están al día.</span>
+    <div class="card-header" style="padding: 20px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fff;">
+        <h3 style="margin: 0; color: #333; font-weight: 700; font-family: 'Playfair Display', serif;"><i class="fas fa-file-invoice-dollar" style="color: var(--primary); margin-right: 10px;"></i> Mesas Esperando Pago</h3>
+        <span style="background: #eafaf1; color: #2ecc71; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700;">{{ mesasPorCobrar.length }} mesas</span>
       </div>
 
-      <div *ngIf="pedidosPorCobrar.length > 0" class="table-responsive" style="overflow-x: auto;">
+      <div *ngIf="mesasPorCobrar.length === 0" style="padding: 50px 20px; text-align: center; color: #999;">
+        <i class="fas fa-check-circle" style="font-size: 3rem; color: #e0e0e0; margin-bottom: 15px;"></i>
+        <h4 style="margin: 0; font-weight: 600;">No hay mesas pendientes de cobro</h4>
+        <p style="margin: 5px 0 0 0; font-size: 0.9rem;">El salón está al día.</p>
+      </div>
+
+      <div *ngIf="mesasPorCobrar.length > 0" class="table-responsive" style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
           <thead>
             <tr style="border-bottom: 2px solid #eee;">
               <th style="padding: 12px 10px; font-weight: 700; color: #555;">Mesa</th>
-              <th style="padding: 12px 10px; font-weight: 700; color: #555;">N° Pedido</th>
-              <th style="padding: 12px 10px; font-weight: 700; color: #555;">Consumo / Detalles</th>
+              <th style="padding: 12px 10px; font-weight: 700; color: #555;">Detalles de Consumo</th>
               <th style="padding: 12px 10px; font-weight: 700; color: #555;">Monto Total</th>
-              <th style="padding: 12px 10px; font-weight: 700; color: #555;">Estado</th>
+              <th style="padding: 12px 10px; font-weight: 700; color: #555;">Estado Mesa</th>
               <th style="padding: 12px 10px; font-weight: 700; color: #555; text-align: center;">Acción</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let pedido of pedidosPorCobrar" style="border-bottom: 1px solid #f2f2f2;">
-              <td style="padding: 15px 10px; font-weight: 700; color: #333; font-size: 1.1rem;">Mesa {{ pedido.mesa?.numero }}</td>
-              <td style="padding: 15px 10px; font-weight: 600; color: #7f8c8d;">#{{ pedido.id }}</td>
+            <tr *ngFor="let mesa of mesasPorCobrar" style="border-bottom: 1px solid #f2f2f2;">
+              <td style="padding: 15px 10px; font-weight: 700; color: #333; font-size: 1.1rem;">
+                Mesa {{ mesa.numero }}
+                <div style="font-size: 0.8rem; color: #999; font-weight: 400;">Pedido #{{ mesa.pedido?.id }}</div>
+              </td>
               <td style="padding: 15px 10px;">
-                <div *ngFor="let det of pedido.detalles" style="font-size: 0.9rem; color: #666; margin-bottom: 4px;">
+                <div *ngFor="let det of mesa.pedido?.detalles" style="font-size: 0.9rem; color: #666; margin-bottom: 4px;">
                   <span style="font-weight: 600; color: #444;">{{ det.cantidad }}</span>x {{ det.producto?.nombre }}
                 </div>
               </td>
-              <td style="padding: 15px 10px; font-weight: 800; color: var(--primary); font-size: 1.1rem;">S/ {{ pedido.total | number:'1.2-2' }}</td>
+              <td style="padding: 15px 10px; font-weight: 800; color: var(--primary); font-size: 1.1rem;">S/ {{ mesa.pedido?.total | number:'1.2-2' }}</td>
               <td style="padding: 15px 10px;">
-                <span style="background-color: #fef9e7; color: #f39c12; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
-                  {{ pedido.estado }}
+                <span style="background-color: #f4ecf8; color: #8e44ad; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
+                  POR COBRAR
                 </span>
               </td>
               <td style="padding: 15px 10px; text-align: center;">
-                <button class="btn btn-primary" (click)="abrirCobro(pedido)"
+                <button class="btn btn-primary" (click)="abrirCobro(mesa)"
                         style="background: var(--primary-gradient); color: white; border-radius: 8px; font-weight: 600; padding: 8px 16px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
                   <i class="fas fa-cash-register"></i> Cobrar Cuenta
                 </button>
@@ -100,7 +103,6 @@
           </tbody>
         </table>
       </div>
-    </div>
   </div>
 
   <!-- Modal de Pago (Cobro) -->
@@ -109,7 +111,7 @@
       <div class="modal-header" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
         <h3 style="margin: 0; color: #333; font-weight: 700; font-family: 'Playfair Display', serif; font-size: 1.4rem;">
           <i class="fas fa-calculator" style="color: var(--primary); margin-right: 8px;"></i>
-          Cobro Mesa {{ selectedPedido?.mesa?.numero }}
+          Cobro Mesa {{ selectedMesa?.numero }}
         </h3>
         <button (click)="cerrarCobro()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #aaa;"><i class="fas fa-times"></i></button>
       </div>
