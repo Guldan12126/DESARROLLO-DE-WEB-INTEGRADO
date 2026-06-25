@@ -34,9 +34,6 @@ public class MovimientoCaja {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
-    @ManyToOne
-    @JoinColumn(name = "proveedor_id") 
-    private Proveedor proveedor;
 
     public MovimientoCaja() {
         this.fecha = LocalDateTime.now();
@@ -60,6 +57,4 @@ public class MovimientoCaja {
     public LocalDateTime getFecha() { return fecha; }
     public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 
-    public Proveedor getProveedor() { return proveedor; }
-    public void setProveedor(Proveedor proveedor) { this.proveedor = proveedor; }
 }

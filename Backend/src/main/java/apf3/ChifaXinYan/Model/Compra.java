@@ -21,9 +21,7 @@ public class Compra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "proveedor_id", nullable = false)
-    private Proveedor proveedor;
+
 
     @Column(nullable = false)
     private LocalDateTime fecha;
@@ -40,8 +38,7 @@ public class Compra {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public Proveedor getProveedor() { return proveedor; }
-    public void setProveedor(Proveedor proveedor) { this.proveedor = proveedor; }
+
     public LocalDateTime getFecha() { return fecha; }
     public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
     public double getTotal() { return total; }

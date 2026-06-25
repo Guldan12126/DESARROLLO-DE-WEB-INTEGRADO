@@ -14,7 +14,6 @@
             <th><i class="far fa-clock"></i> Fecha y Hora</th>
             <th><i class="fas fa-filter"></i> Tipo</th>
             <th><i class="fas fa-info-circle"></i> Descripción / Detalle</th>
-            <th><i class="fas fa-truck"></i> Proveedor</th>
             <th><i class="fas fa-coins"></i> Monto</th>
           </tr>
         </thead>
@@ -25,10 +24,6 @@
               <span class="tipo-badge" [ngClass]="mov.tipo.toLowerCase()">{{ mov.tipo }}</span>
             </td>
             <td>{{ mov.descripcion }}</td>
-            <td>
-              <span class="proveedor-info" *ngIf="mov.proveedor">{{ mov.proveedor.nombre }}</span>
-              <span class="text-muted" *ngIf="!mov.proveedor">-</span>
-            </td>
             <td class="monto" [ngClass]="getMontoClase(mov.tipo)">
               {{ (mov.tipo === 'EGRESO' ? '-' : '+') }} {{ mov.monto | currency:'PEN':'S/ ' }}
             </td>
