@@ -41,7 +41,7 @@ export class DashboardCocinaComponent implements OnInit {
       next: (pedidos) => {
         // Separar por estado
         this.pedidosPendientes = pedidos.filter(p => p.estado === 'PENDIENTE');
-        this.pedidosPreparando = pedidos.filter(p => p.estado === 'PREPARANDO');
+        this.pedidosPreparando = pedidos.filter(p => p.estado === 'EN_PREPARACION');
         
         // Actualizar estadísticas
         this.stats.pendientes = this.pedidosPendientes.length;
@@ -62,7 +62,7 @@ export class DashboardCocinaComponent implements OnInit {
   }
 
   iniciarPreparacion(id: number): void {
-    this.pedidoService.actualizarEstado(id, 'PREPARANDO').subscribe({
+    this.pedidoService.actualizarEstado(id, 'EN_PREPARACION').subscribe({
       next: () => {
         this.toastService.success('¡Pedido en preparación!');
         this.cargarPedidos();
@@ -118,7 +118,7 @@ export class DashboardCocinaComponent implements OnInit {
       {
         id: 200,
         mesa: { numero: 5 },
-        estado: 'PREPARANDO',
+        estado: 'EN_PREPARACION',
         detalles: [
           { producto: { nombre: 'Chaufa de Chancho Asado' }, cantidad: 1 },
           { producto: { nombre: 'Pollo con Verduras' }, cantidad: 1 }

@@ -25,7 +25,7 @@
 
     <div *ngFor="let pedido of pedidosActivos" class="chart-card" 
          [ngStyle]="{
-           'border-top': '5px solid ' + (pedido.estado === 'LISTO' ? '#2ecc71' : (pedido.estado === 'PREPARANDO' ? '#3498db' : '#f39c12')),
+           'border-top': '5px solid ' + (pedido.estado === 'LISTO' ? '#2ecc71' : (pedido.estado === 'EN_PREPARACION' ? '#3498db' : '#f39c12')),
            'background': 'white', 'border-radius': '12px', 'box-shadow': '0 4px 10px rgba(0,0,0,0.05)', 'overflow': 'hidden', 'display': 'flex', 'flex-direction': 'column'
          }">
       <div style="padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
@@ -36,12 +36,12 @@
       <div style="padding: 15px 20px; flex: 1;">
         <div style="margin-bottom: 15px; text-align: center;">
           <span [ngStyle]="{
-            'background': pedido.estado === 'LISTO' ? '#eafaf1' : (pedido.estado === 'PREPARANDO' ? '#ebf5fb' : '#fef9e7'),
-            'color': pedido.estado === 'LISTO' ? '#2ecc71' : (pedido.estado === 'PREPARANDO' ? '#3498db' : '#f39c12'),
-            'border': '1px solid ' + (pedido.estado === 'LISTO' ? '#2ecc71' : (pedido.estado === 'PREPARANDO' ? '#3498db' : '#f39c12'))
+            'background': pedido.estado === 'LISTO' ? '#eafaf1' : (pedido.estado === 'EN_PREPARACION' ? '#ebf5fb' : '#fef9e7'),
+            'color': pedido.estado === 'LISTO' ? '#2ecc71' : (pedido.estado === 'EN_PREPARACION' ? '#3498db' : '#f39c12'),
+            'border': '1px solid ' + (pedido.estado === 'LISTO' ? '#2ecc71' : (pedido.estado === 'EN_PREPARACION' ? '#3498db' : '#f39c12'))
           }" style="padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; display: inline-block;">
             <i class="fas" [class.fa-clock]="pedido.estado === 'PENDIENTE'" 
-                           [class.fa-fire]="pedido.estado === 'PREPARANDO'" 
+                           [class.fa-fire]="pedido.estado === 'EN_PREPARACION'" 
                            [class.fa-bell]="pedido.estado === 'LISTO'"></i>
             {{ pedido.estado }}
           </span>

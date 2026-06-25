@@ -51,7 +51,7 @@ export class DashboardMozoComponent implements OnInit {
         this.pedidoService.listarActivos().subscribe({
           next: (pedidos) => {
             this.pedidosActivos = pedidos;
-            this.stats.pedidosPendientes = pedidos.filter(p => p.estado === 'PENDIENTE' || p.estado === 'PREPARANDO').length;
+            this.stats.pedidosPendientes = pedidos.filter(p => p.estado === 'PENDIENTE' || p.estado === 'EN_PREPARACION').length;
             this.stats.pedidosListos = pedidos.filter(p => p.estado === 'LISTO').length;
             this.isLoading = false;
           },
@@ -104,7 +104,7 @@ export class DashboardMozoComponent implements OnInit {
       {
         id: 101,
         mesa: { numero: 1 },
-        estado: 'PREPARANDO',
+        estado: 'EN_PREPARACION',
         detalles: [
           { producto: { nombre: 'Arroz Chaufa de Pollo' }, cantidad: 2 },
           { producto: { nombre: 'Lomo Saltado' }, cantidad: 1 }

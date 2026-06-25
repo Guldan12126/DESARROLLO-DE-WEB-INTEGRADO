@@ -26,7 +26,7 @@ export class PedidosListaComponent implements OnInit {
     
     this.pedidoService.listarActivos().subscribe({
       next: (pedidos) => {
-        // Mostrar solo los que importan al mozo ahora mismo: PENDIENTE, PREPARANDO, LISTO
+        // Mostrar solo los que importan al mozo ahora mismo: PENDIENTE, EN_PREPARACION, LISTO
         // NOTA: En un caso real, filtraríamos por ID de Mozo. Por ahora mostramos todos los activos.
         this.pedidosActivos = pedidos.filter(p => ['PENDIENTE', 'EN_PREPARACION', 'LISTO'].includes(p.estado))
                                      .sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());

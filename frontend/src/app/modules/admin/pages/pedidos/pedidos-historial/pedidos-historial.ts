@@ -47,7 +47,7 @@ export class PedidosHistorial implements OnInit {
   getEstadoClase(estado: string): string {
     switch(estado) {
       case 'PENDIENTE': return 'role-cajero';
-      case 'PREPARANDO': return 'role-mesero';
+      case 'EN_PREPARACION': return 'role-mesero';
       case 'LISTO': return 'activo';
       case 'ENTREGADO': return 'role-admin';
       case 'PAGADO': return 'inactivo';

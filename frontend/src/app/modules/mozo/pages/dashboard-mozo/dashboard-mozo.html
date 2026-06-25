@@ -36,7 +36,7 @@
       <div class="info">
         <span class="label">Pedidos en Cocina</span>
         <h3 class="value">{{ stats.pedidosPendientes }}</h3>
-        <span class="trend">En cola / preparando</span>
+        <span class="trend">En cola / Preparando</span>
       </div>
     </div>
 
@@ -131,8 +131,8 @@
                 <td style="padding: 15px 10px; font-weight: 700; color: #333;">S/ {{ pedido.total | number:'1.2-2' }}</td>
                 <td style="padding: 15px 10px;">
                   <span [ngClass]="pedido.estado.toLowerCase()" style="display: inline-block; padding: 6px 12px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;"
-                        [style.background-color]="pedido.estado === 'PENDIENTE' ? '#fef9e7' : pedido.estado === 'PREPARANDO' ? '#ebf5fb' : pedido.estado === 'LISTO' ? '#e8f8f5' : '#f4f6f7'"
-                        [style.color]="pedido.estado === 'PENDIENTE' ? '#f39c12' : pedido.estado === 'PREPARANDO' ? '#2980b9' : pedido.estado === 'LISTO' ? '#27ae60' : '#7f8c8d'">
+                        [style.background-color]="pedido.estado === 'PENDIENTE' ? '#fef9e7' : pedido.estado === 'EN_PREPARACION' ? '#ebf5fb' : pedido.estado === 'LISTO' ? '#e8f8f5' : '#f4f6f7'"
+                        [style.color]="pedido.estado === 'PENDIENTE' ? '#f39c12' : pedido.estado === 'EN_PREPARACION' ? '#2980b9' : pedido.estado === 'LISTO' ? '#27ae60' : '#7f8c8d'">
                     {{ pedido.estado }}
                   </span>
                 </td>
