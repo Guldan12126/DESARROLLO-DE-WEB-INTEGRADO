@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PedidoService } from '../../../../../shared/services/pedido.service';
-import { VentaService } from '../../../../../shared/services/venta.service';
-import { AuthService } from '../../../../../core/services/auth.service';
-import { ToastService } from '../../../../../shared/services/toast.service';
+import { PedidoService } from '../../../../shared/services/pedido.service';
+import { VentaService } from '../../../../shared/services/venta.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-pedidos-por-cobrar',
@@ -33,8 +33,8 @@ export class PedidosPorCobrar implements OnInit {
   cargarPedidos() {
     this.isLoading = true;
     this.pedidoService.listarTodos().subscribe({
-      next: (data) => {
-        this.pedidos = data.filter(p => p.estado === 'LISTO' || p.estado === 'ENTREGADO');
+      next: (data: any[]) => {
+        this.pedidos = data.filter((p: any) => p.estado === 'LISTO' || p.estado === 'ENTREGADO');
         this.isLoading = false;
       },
       error: () => {
@@ -77,14 +77,14 @@ export class PedidosPorCobrar implements OnInit {
       this.montoRecibido, 
       cajeroId
     ).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         const vuelto = this.montoRecibido - total;
         this.toastService.success(`Cobro registrado. Vuelto: S/ ${vuelto.toFixed(2)}`);
         this.isSaving = false;
         this.cerrarModal();
         this.cargarPedidos();
       },
-      error: (err) => {
+      error: (err: any) => {
         this.toastService.error(err.error?.message || 'Error al registrar la venta. Asegúrese de tener la caja abierta.');
         this.isSaving = false;
       }
