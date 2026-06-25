@@ -47,7 +47,7 @@
                     </li>
                   </ul>
                 </td>
-                <td style="padding: 15px; color: #777;">{{ pedido.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td style="padding: 15px; color: #777;">{{ pedido.fechaPedido | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td style="padding: 15px;">
                   <span [ngStyle]="{
                     'background': pedido.estado === 'LISTO' ? '#e8f8f5' : (pedido.estado === 'ENTREGADO' ? '#eaf2f8' : '#eafaf1'),

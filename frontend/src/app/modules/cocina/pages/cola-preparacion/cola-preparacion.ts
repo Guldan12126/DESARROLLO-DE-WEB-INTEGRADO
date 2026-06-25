@@ -12,6 +12,9 @@ export class ColaPreparacionComponent implements OnInit {
   pedidosPendientes: any[] = [];
   pedidosPreparando: any[] = [];
   isLoading: boolean = false;
+  
+  now: Date = new Date();
+  intervalTimer: any;
 
   constructor(
     private pedidoService: PedidoService,
@@ -20,6 +23,15 @@ export class ColaPreparacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarPedidos();
+    this.intervalTimer = setInterval(() => {
+      this.now = new Date();
+    }, 30000); // Actualizar cada 30 segundos
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalTimer) {
+      clearInterval(this.intervalTimer);
+    }
   }
 
   cargarPedidos(): void {
@@ -29,7 +41,7 @@ export class ColaPreparacionComponent implements OnInit {
       next: (pedidos) => {
         // Separar por estado
         this.pedidosPendientes = pedidos.filter(p => p.estado === 'PENDIENTE');
-        this.pedidosPreparando = pedidos.filter(p => p.estado === 'PREPARANDO');
+        this.pedidosPreparando = pedidos.filter(p => p.estado === 'EN_PREPARACION');
         this.isLoading = false;
       },
       error: (err) => {
@@ -41,7 +53,7 @@ export class ColaPreparacionComponent implements OnInit {
   }
 
   iniciarPreparacion(id: number): void {
-    this.pedidoService.actualizarEstado(id, 'PREPARANDO').subscribe({
+    this.pedidoService.actualizarEstado(id, 'EN_PREPARACION').subscribe({
       next: () => {
         this.toastService.success('¡Pedido en preparación!');
         this.cargarPedidos();
@@ -64,5 +76,34 @@ export class ColaPreparacionComponent implements OnInit {
         this.toastService.error('No se pudo actualizar el estado del pedido.');
       }
     });
+  }
+
+  getTiempoTranscurrido(fecha: string): string {
+    if (!fecha) return '0m';
+    const start = new Date(fecha).getTime();
+    const current = this.now.getTime();
+    const diffMs = current - start;
+    const diffMins = Math.floor(diffMs / 60000);
+    
+    if (diffMins < 0) return '0m';
+    if (diffMins < 60) return `${diffMins}m`;
+    const hours = Math.floor(diffMins / 60);
+    const mins = diffMins % 60;
+    return `${hours}h ${mins}m`;
+  }
+
+  cancelarPedido(id: number): void {
+    if(confirm('¿Está seguro de cancelar este pedido por falta de insumos?')) {
+      this.pedidoService.actualizarEstado(id, 'ANULADO').subscribe({
+        next: () => {
+          this.toastService.success('Pedido anulado.');
+          this.cargarPedidos();
+        },
+        error: (err) => {
+          console.error('Error al anular pedido:', err);
+          this.toastService.error('No se pudo anular el pedido.');
+        }
+      });
+    }
   }
 }

@@ -22,9 +22,9 @@ export class PedidosCompletadosComponent implements OnInit {
     this.pedidoService.listarTodos().subscribe({
       next: (pedidos) => {
         // Para la cocina, los completados son los que ya terminaron (LISTO, ENTREGADO, PAGADO)
-        this.pedidosCompletados = pedidos
+          this.pedidosCompletados = pedidos
           .filter(p => ['LISTO', 'ENTREGADO', 'PAGADO'].includes(p.estado))
-          .sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
+          .sort((a, b) => new Date(b.fechaPedido).getTime() - new Date(a.fechaPedido).getTime());
         this.isLoading = false;
       },
       error: (err) => {

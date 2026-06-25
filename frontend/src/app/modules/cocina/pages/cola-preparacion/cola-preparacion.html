@@ -33,7 +33,12 @@
              style="background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: transform 0.2s;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f2f2f2; padding-bottom: 8px;">
             <span style="font-weight: 800; font-size: 1.1rem; color: #333;">Mesa {{ pedido.mesa?.numero }}</span>
-            <span style="color: #7f8c8d; font-size: 0.85rem; font-weight: 600;">Pedido #{{ pedido.id }}</span>
+            <div style="text-align: right;">
+              <div style="color: #7f8c8d; font-size: 0.85rem; font-weight: 600;">Pedido #{{ pedido.id }}</div>
+              <div style="color: #e74c3c; font-size: 0.8rem; font-weight: bold; margin-top: 2px;">
+                <i class="far fa-clock"></i> Hace {{ getTiempoTranscurrido(pedido.fechaPedido) }}
+              </div>
+            </div>
           </div>
           <div style="margin-bottom: 15px;">
             <div *ngFor="let det of pedido.detalles" style="margin-bottom: 6px; font-size: 1rem; color: #333;">
@@ -41,10 +46,17 @@
               <span>{{ det.producto?.nombre }}</span>
             </div>
           </div>
-          <button class="btn" (click)="iniciarPreparacion(pedido.id)"
-                  style="background: #f39c12; color: white; width: 100%; padding: 10px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.2);">
-            <i class="fas fa-fire-burner"></i> Empezar Preparación
-          </button>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn" (click)="iniciarPreparacion(pedido.id)"
+                    style="flex: 1; background: #f39c12; color: white; padding: 10px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.2);">
+              <i class="fas fa-fire-burner"></i> Empezar
+            </button>
+            <button class="btn" (click)="cancelarPedido(pedido.id)"
+                    style="background: #e74c3c; color: white; padding: 10px 15px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2);"
+                    title="Cancelar pedido por falta de insumos">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -65,7 +77,12 @@
              style="background: #fcfdfd; border: 1px solid #d4e6f1; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.08);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #d4e6f1; padding-bottom: 8px;">
             <span style="font-weight: 800; font-size: 1.1rem; color: #2980b9;">Mesa {{ pedido.mesa?.numero }}</span>
-            <span style="color: #2980b9; font-size: 0.85rem; font-weight: 700;">Pedido #{{ pedido.id }}</span>
+            <div style="text-align: right;">
+              <div style="color: #2980b9; font-size: 0.85rem; font-weight: 700;">Pedido #{{ pedido.id }}</div>
+              <div style="color: #e74c3c; font-size: 0.8rem; font-weight: bold; margin-top: 2px;">
+                <i class="far fa-clock"></i> Hace {{ getTiempoTranscurrido(pedido.fechaPedido) }}
+              </div>
+            </div>
           </div>
           <div style="margin-bottom: 15px;">
             <div *ngFor="let det of pedido.detalles" style="margin-bottom: 6px; font-size: 1rem; color: #333;">
