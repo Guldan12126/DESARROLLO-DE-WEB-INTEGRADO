@@ -2,7 +2,6 @@ package apf3.ChifaXinYan.Model;
 
 import java.time.LocalDateTime;
 
-import jakarta.validation.Valid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +30,6 @@ public class Producto {
     private String nombre;
     
     @NotNull(message = "La categoría es obligatoria")
-    @Valid
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria; 

@@ -58,13 +58,17 @@ public class ProductoService {
 
     // Método auxiliar para obtener una categoría gestionada
     private Categoria getManagedCategory(Categoria categoria) {
-        if (categoria == null || categoria.getNombre() == null || categoria.getNombre().trim().isEmpty()) {
-            throw new RuntimeException("Error: La categoría del producto no puede ser nula o vacía.");
+        if (categoria == null) {
+            throw new RuntimeException("Error: La categoría del producto no puede ser nula.");
         }
 
         // Si la categoría entrante ya tiene un ID, intentamos obtenerla de la BD
         if (categoria.getId() != null) {
             return categoriaService.obtenerPorId(categoria.getId()); // Lanza excepción si no la encuentra
+        }
+
+        if (categoria.getNombre() == null || categoria.getNombre().trim().isEmpty()) {
+            throw new RuntimeException("Error: El nombre de la categoría es obligatorio al crear una nueva categoría.");
         }
 
         // Si no tiene ID, intentamos buscarla por nombre. Si no existe, la creamos.
