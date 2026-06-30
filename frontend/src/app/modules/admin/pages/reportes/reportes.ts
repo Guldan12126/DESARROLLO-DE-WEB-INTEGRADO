@@ -41,13 +41,21 @@ export class Reportes implements OnInit {
     this.totalTransacciones = this.ventas.length;
 
     this.ventas.forEach(v => {
-      const fecha = new Date(v.fechaHora).toISOString().split('T')[0]; // YYYY-MM-DD
+      // El campo en el backend se llama 'fecha', no 'fechaHora'
+      const fechaRaw = v.fecha;
+      if (!fechaRaw) return; // Saltar registros sin fecha
+
+      const fechaObj = new Date(fechaRaw);
+      if (isNaN(fechaObj.getTime())) return; // Saltar fechas inválidas
+
+      const fecha = fechaObj.toISOString().split('T')[0]; // YYYY-MM-DD
       if (!agrupado[fecha]) {
         agrupado[fecha] = { fecha, cantidad: 0, total: 0 };
       }
       agrupado[fecha].cantidad++;
-      agrupado[fecha].total += v.totalVenta;
-      this.totalGeneral += v.totalVenta;
+      // El campo en el backend se llama 'monto', no 'totalVenta'
+      agrupado[fecha].total += v.monto || 0;
+      this.totalGeneral += v.monto || 0;
     });
 
     // Convertir objeto a arreglo y ordenar por fecha descendente

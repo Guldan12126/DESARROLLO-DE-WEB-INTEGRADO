@@ -37,15 +37,19 @@ export class ReportesMensuales implements OnInit {
     this.totalGeneral = 0;
 
     ventas.forEach(v => {
-      // YYYY-MM
-      const mes = new Date(v.fechaHora).toISOString().substring(0, 7);
+      // YYYY-MM — el campo del backend se llama 'fecha'
+      const fechaRaw = v.fecha;
+      if (!fechaRaw) return;
+      const fechaObj = new Date(fechaRaw);
+      if (isNaN(fechaObj.getTime())) return;
+      const mes = fechaObj.toISOString().substring(0, 7);
       
       if (!agrupado[mes]) {
         agrupado[mes] = { mes, cantidad: 0, total: 0 };
       }
       agrupado[mes].cantidad++;
-      agrupado[mes].total += v.totalVenta;
-      this.totalGeneral += v.totalVenta;
+      agrupado[mes].total += v.monto || 0;
+      this.totalGeneral += v.monto || 0;
     });
 
     this.ventasPorMes = Object.values(agrupado).sort((a: any, b: any) => b.mes.localeCompare(a.mes));

@@ -49,7 +49,12 @@ export class ReportesSemanales implements OnInit {
     this.totalGeneral = 0;
 
     this.ventas.forEach(v => {
-      const d = new Date(v.fechaHora);
+      // El campo del backend se llama 'fecha', no 'fechaHora'
+      const fechaRaw = v.fecha;
+      if (!fechaRaw) return;
+      const d = new Date(fechaRaw);
+      if (isNaN(d.getTime())) return;
+
       const [year, week] = this.getWeekNumber(d);
       const key = `${year}-W${week.toString().padStart(2, '0')}`;
       
@@ -57,8 +62,8 @@ export class ReportesSemanales implements OnInit {
         agrupado[key] = { semana: key, year, week, cantidad: 0, total: 0 };
       }
       agrupado[key].cantidad++;
-      agrupado[key].total += v.totalVenta;
-      this.totalGeneral += v.totalVenta;
+      agrupado[key].total += v.monto || 0;
+      this.totalGeneral += v.monto || 0;
     });
 
     // Ordenar de la semana más reciente a la más antigua

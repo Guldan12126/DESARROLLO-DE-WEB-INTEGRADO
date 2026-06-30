@@ -15,7 +15,6 @@ import { Pedidos } from './pages/pedidos/pedidos';
 import { Ventas } from './pages/ventas/ventas';
 import { Reportes } from './pages/reportes/reportes';
 import { CajaComponent } from './pages/caja/caja';
-import { ToastService } from '../../shared/services/toast.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../../shared/shared.module';
 import { ProductosCategorias } from './pages/productos/productos-categorias/productos-categorias';
@@ -72,9 +71,6 @@ import { MesasLista } from './pages/mesas/mesas-lista/mesas-lista';
     HttpClientModule,
     AdminRoutingModule,
     SharedModule,
-  ],
-  providers: [
-    ToastService,
   ],
 })
 export class AdminModule {}

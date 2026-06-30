@@ -46,14 +46,14 @@ export class ReportesMesas implements OnInit {
           };
         }
         agrupado[mesaNum].visitas++;
-        agrupado[mesaNum].ingresos += v.totalVenta;
+        agrupado[mesaNum].ingresos += v.monto || 0;
       } else {
         // Pedidos para llevar
         if (!agrupado['Llevar']) {
           agrupado['Llevar'] = { numero: 'Llevar', capacidad: '-', visitas: 0, ingresos: 0 };
         }
         agrupado['Llevar'].visitas++;
-        agrupado['Llevar'].ingresos += v.totalVenta;
+        agrupado['Llevar'].ingresos += v.monto || 0;
       }
     });
 
