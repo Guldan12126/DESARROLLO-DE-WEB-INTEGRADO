@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
 import { errorInterceptor } from './interceptors/error.interceptor'; 
+import { ToastComponent } from '../toast.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { errorInterceptor } from './interceptors/error.interceptor';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ToastComponent
   ],
   providers: [
     provideHttpClient(

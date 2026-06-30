@@ -30,6 +30,7 @@ import { AsyncPipe } from '@angular/common';
       cursor: pointer;
     }
   `],
+  standalone: true,
   imports: [AsyncPipe] // Añadir AsyncPipe aquí
 })
 export class ToastComponent {
