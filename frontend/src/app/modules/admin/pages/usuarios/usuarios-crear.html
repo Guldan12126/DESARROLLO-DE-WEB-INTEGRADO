@@ -10,7 +10,7 @@
     </div>
 
     <div class="form-card"> 
-        <form class="xin-yan-form" (ngSubmit)="userForm.valid && onSubmit()" #userForm="ngForm">
+        <form class="xin-yan-form" (ngSubmit)="userForm.valid && onSubmit(userForm)" #userForm="ngForm">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="nombre"><i class="fas fa-id-card"></i> Nombre Completo</label>

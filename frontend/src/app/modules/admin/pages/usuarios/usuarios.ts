@@ -1,4 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { UsuarioService } from '../../../../shared/services/usuario.service'; 
 import { NotificationService } from '../../../../shared/services/notification.service';
@@ -23,7 +24,7 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  onSubmit(): void {
+  onSubmit(form: NgForm): void {
     const usuarioData = {
       nombre: this.nombre,
       email: this.email,
@@ -36,7 +37,9 @@ export class UsuariosComponent implements OnInit {
       next: (res) => {
         this.toastService.success('Personal registrado exitosamente');
         this.notificationService.actualizarConteo('ADMIN').subscribe();
-        this.limpiarFormulario();
+        form.resetForm({
+          rol: '' // Valor por defecto para el select
+        });
       },
       error: (err) => {
         console.error('Error al registrar:', err);
@@ -47,12 +50,5 @@ export class UsuariosComponent implements OnInit {
         }
       }
     });
-  }
-
-  private limpiarFormulario() {
-    this.nombre = '';
-    this.email = '';
-    this.password = '';
-    this.rol = '';
   }
 }
