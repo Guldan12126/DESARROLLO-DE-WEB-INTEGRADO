@@ -1,0 +1,66 @@
+/* ========== COMPONENTES: REPORTES MENSUALES ========== */
+
+.usuarios-container {
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 22px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(211, 47, 47, 0.06);
+
+    .header-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(211, 47, 47, 0.08);
+      color: var(--primary);
+      flex: 0 0 auto;
+
+      i {
+        font-size: 1.2rem;
+      }
+    }
+
+    .header-text {
+      flex: 1;
+
+      h2 {
+        margin-bottom: 6px;
+        font-size: 1.35rem;
+      }
+
+      p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 0 0 auto;
+
+      .btn-export-pdf {
+        height: 44px;
+      }
+    }
+  }
+
+  .user-table-card {
+    margin-top: 18px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    padding: 18px;
+  }
+}
+

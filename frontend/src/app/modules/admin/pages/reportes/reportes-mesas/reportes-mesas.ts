@@ -6,6 +6,8 @@ import { ReporteService } from '../../../../../shared/services/reporte.service';
   selector: 'app-reportes-mesas',
   standalone: false,
   templateUrl: './reportes-mesas.html',
+  styleUrls: ['../../../../../../scss/_reportes-mesas.scss']
+
 })
 export class ReportesMesas implements OnInit {
   isLoading: boolean = false;
