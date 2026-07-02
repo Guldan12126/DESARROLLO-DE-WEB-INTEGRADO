@@ -3,7 +3,7 @@
   <div class="page-header" style="grid-column: 1 / -1;">
     <div class="header-icon"><i class="fas fa-cash-register"></i></div>
     <div class="header-text">
-      <h2>Punto de Venta (Nuevo Pedido)</h2>
+      <h2>Punto de Venta</h2>
       <p>Seleccione una mesa, agregue platos y confirme la orden</p>
     </div>
   </div>
@@ -23,8 +23,8 @@
     <div class="productos-grid">
       <div class="producto-card" *ngFor="let prod of productosFiltrados" (click)="agregarAlCarrito(prod)">
         <div class="prod-img">
-          <!-- Placeholder visual -->
-          <i class="fas fa-utensils"></i>
+          <img *ngIf="prod.imagenUrl" [src]="prod.imagenUrl" [alt]="prod.nombre" />
+          <i *ngIf="!prod.imagenUrl" class="fas fa-utensils"></i>
         </div>
         <div class="prod-info">
           <div class="prod-name">{{ prod.nombre }}</div>

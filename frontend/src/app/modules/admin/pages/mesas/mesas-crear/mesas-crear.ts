@@ -7,7 +7,7 @@ import { ToastService } from '../../../../../shared/services/toast.service';
   selector: 'app-mesas-crear',
   standalone: false,
   templateUrl: './mesas-crear.html',
-  styleUrl: './mesas-crear.scss'
+  styleUrls: ['../../../../../../scss/_mesas-crear.scss']
 })
 export class MesasCrear {
   nuevaMesa: any = {

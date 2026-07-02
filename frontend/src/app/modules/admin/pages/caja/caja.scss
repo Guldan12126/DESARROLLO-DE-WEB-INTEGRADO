@@ -50,6 +50,41 @@
   gap: 24px;
 }
 
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(211, 47, 47, 0.1);
+  color: var(--primary, #d32f2f);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  margin: 20px 0;
+}
+
+.subsection-title {
+  margin: 0 0 16px 0;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subsection-title i {
+  color: var(--primary, #d32f2f);
+}
+
+.subsection-title {
+  font-size: 1.05rem;
+}
+
+
 .caja-card {
   background: white;
   padding: 24px;
