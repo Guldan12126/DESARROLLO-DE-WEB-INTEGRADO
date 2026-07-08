@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Chifa XinYan - Sistema de Gestión</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --rojo: #C0392B;
+    --rojo-oscuro: #922B21;
+    --rojo-claro: #FADBD8;
+    --dorado: #D4AC0D;
+    --negro: #1A1A1A;
+    --gris-oscuro: #2C2C2C;
+    --gris-medio: #6B6B6B;
+    --gris-claro: #F5F5F5;
+    --blanco: #FFFFFF;
+    --verde: #1E8449;
+    --verde-claro: #D5F5E3;
+    --naranja: #E67E22;
+    --naranja-claro: #FDEBD0;
+    --azul: #2471A3;
+    --azul-claro: #D6EAF8;
+    --borde: #E0E0E0;
+    --sidebar-w: 280px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F0EFEA;
+    color: var(--negro);
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--gris-oscuro);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--rojo);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .logo-text strong {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    display: block;
+  }
+
+  .logo-text span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .sidebar-user {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--rojo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .user-info span {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .user-info small {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .rol-badge {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--rojo);
+    display: inline-block;
+  }
+
+  nav {
+    flex: 1;
+    padding: 12px 0;
+    overflow-y: auto;
+  }
+
+  .nav-section {
+    padding: 8px 20px 4px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .nav-item.active {
+    background: var(--rojo);
+    color: #fff;
+  }
+
+  .nav-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+  }
+
+  .sidebar-bottom {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.5);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 6px 0;
+    width: 100%;
+  }
+
+  .logout-btn:hover {
+    color: #fff;
+  }
+
+  /* MAIN */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .topbar {
+    background: var(--blanco);
+    border-bottom: 1px solid var(--borde);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .topbar-left h1 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .topbar-left span {
+    font-size: 12px;
+    color: var(--gris-medio);
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--borde);
+    background: var(--blanco);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .btn-icon:hover {
+    background: var(--gris-claro);
+  }
+
+  .content {
+    padding: 24px 32px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  /* VIEWS */
+  .view {
+    display: none;
+  }
+
+  .view.active {
+    display: block;
+  }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--borde);
+    position: relative;
+  }
+
+  .stat-card.red::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--rojo);
+    border-radius: 12px 12px 0 0;
+  }
+
+  .stat-card.gold::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--dorado);
+  }
+
+  .stat-card.green::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--verde);
+  }
+
+  .stat-card.blue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--azul);
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--gris-medio);
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--gris-medio);
+    margin-top: 6px;
+  }
+
+  .stat-icon {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 24px;
+    opacity: 0.15;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--blanco);
+    border-radius: 12px;
+    border: 1px solid var(--borde);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .card-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--borde);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .card-header h2 {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .card-body {
+    padding: 20px 24px;
+  }
+
+  /* TABLES */
+  .table-container {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--gris-medio);
+    border-bottom: 1px solid var(--borde);
+    background: var(--gris-claro);
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #F0F0F0;
+  }
+
+  tr:hover td {
+    background: #FAFAFA;
+  }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-libre {
+    background: var(--verde-claro);
+    color: #145A32;
+  }
+
+  .badge-ocupada {
+    background: var(--rojo-claro);
+    color: var(--rojo-oscuro);
+  }
+
+  .badge-PENDIENTE {
+    background: #FEF9E7;
+    color: #7D6608;
+  }
+
+  .badge-EN_COCINA {
+    background: var(--naranja-claro);
+    color: #784212;
+  }
+
+  .badge-LISTO {
+    background: var(--azul-claro);
+    color: #1A5276;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-primary {
+    background: var(--rojo);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--rojo-oscuro);
+  }
+
+  .btn-secondary {
+    background: var(--blanco);
+    color: var(--negro);
+    border-color: var(--borde);
+  }
+
+  .btn-secondary:hover {
+    background: var(--gris-claro);
+  }
+
+  .btn-sm {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .btn-success {
+    background: var(--verde);
+    color: #fff;
+  }
+
+  .btn-warning {
+    background: var(--naranja);
+    color: #fff;
+  }
+
+  .btn-danger {
+    background: var(--blanco);
+    color: var(--rojo);
+    border-color: var(--rojo-claro);
+  }
+
+  .btn-danger:hover {
+    background: var(--rojo-claro);
+  }
+
+  /* MESAS GRID */
+  .mesas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .mesa-card {
+    border: 2px solid var(--borde);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    background: var(--blanco);
+  }
+
+  .mesa-card.libre {
+    border-color: #A9DFBF;
+  }
+
+  .mesa-card.ocupada {
+    border-color: var(--rojo);
+    background: #FFF9F9;
+  }
+
+  .mesa-numero {
+    font-size: 32px;
+    font-weight: 700;
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .mesa-cap {
+    font-size: 12px;
+    color: var(--gris-medio);
+    margin: 4px 0;
+  }
+
+  .mesa-estado {
+    margin: 10px 0;
+  }
+
+  .mesa-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  /* PRODUCTOS GRID */
+  .productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .producto-card {
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    background: var(--blanco);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .producto-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .producto-nombre {
+    font-weight: 600;
+    margin: 8px 0 4px;
+  }
+
+  .producto-precio {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--rojo);
+  }
+
+  /* CART */
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #F0F0F0;
+  }
+
+  .cart-item-info {
+    flex: 1;
+  }
+
+  .cart-item-name {
+    font-weight: 500;
+  }
+
+  .cart-item-price {
+    font-size: 12px;
+    color: var(--gris-medio);
+  }
+
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--borde);
+    background: var(--blanco);
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .qty-btn:hover {
+    background: var(--rojo);
+    color: #fff;
+  }
+
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    font-size: 18px;
+    font-weight: 700;
+    border-top: 2px solid var(--negro);
+    margin-top: 8px;
+  }
+
+  /* COCINA BOARD */
+  .cocina-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .cocina-col {
+    background: var(--blanco);
+    border-radius: 12px;
+    border: 1px solid var(--borde);
+    overflow: hidden;
+  }
+
+  .cocina-header {
+    padding: 14px 20px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .cocina-header.pendiente {
+    background: #FEF9E7;
+    color: #7D6608;
+  }
+
+  .cocina-header.cocina {
+    background: var(--naranja-claro);
+    color: #784212;
+  }
+
+  .cocina-ticket {
+    margin: 12px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--blanco);
+  }
+
+  .cocina-ticket-header {
+    padding: 10px 14px;
+    background: var(--gris-claro);
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .cocina-ticket-body {
+    padding: 12px 14px;
+  }
+
+  .cocina-item {
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cocina-item::before {
+    content: '•';
+    color: var(--rojo);
+  }
+
+  .cocina-ticket-footer {
+    padding: 10px 14px;
+    border-top: 1px solid #F0F0F0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* FORM */
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--rojo);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* LOGIN */
+  .login-page {
+    position: fixed;
+    inset: 0;
+    background: var(--gris-oscuro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+
+  .login-card {
+    background: var(--blanco);
+    border-radius: 16px;
+    padding: 48px 40px;
+    width: 400px;
+  }
+
+  .login-logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .login-logo-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--rojo);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 12px;
+  }
+
+  .login-logo h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+  }
+
+  .login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .login-divider::before,
+  .login-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--borde);
+  }
+
+  .quick-login-btns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .quick-btn {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--borde);
+    background: var(--blanco);
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .quick-btn:hover {
+    border-color: var(--rojo);
+    background: var(--rojo-claro);
+  }
+
+  .quick-btn small {
+    display: block;
+    font-size: 10px;
+    color: var(--gris-medio);
+  }
+
+  /* ALERT */
+  .alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .alert-success {
+    background: var(--verde-claro);
+    color: #145A32;
+  }
+
+  .alert-error {
+    background: var(--rojo-claro);
+    color: var(--rojo-oscuro);
+  }
+
+  /* MODAL */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+
+  .modal.open {
+    display: flex;
+  }
+
+  .modal-content {
+    background: var(--blanco);
+    border-radius: 16px;
+    width: 500px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--borde);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-body {
+    padding: 24px;
+  }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--borde);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  /* FILTERS */
+  .filter-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid var(--borde);
+    background: var(--blanco);
+  }
+
+  .chip.active {
+    background: var(--rojo);
+    color: #fff;
+    border-color: var(--rojo);
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🍜</div>
+      <h1>Chifa Xin Yan</h1>
+      <p>Sistema de Gestión de Restaurante</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" id="loginEmail" class="form-control" placeholder="usuario@chifa.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" id="loginPass" class="form-control" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="doLogin()">Ingresar al sistema</button>
+    <div class="login-divider"><span>acceso rápido</span></div>
+    <div class="quick-login-btns">
+      <button class="quick-btn" onclick="quickLogin('admin@chifa.com','admin123')">🏛️ Admin<small>Administrador</small></button>
+      <button class="quick-btn" onclick="quickLogin('mozo@chifa.com','mozo123')">🍽️ Mozo<small>Mozos</small></button>
+      <button class="quick-btn" onclick="quickLogin('cocina@chifa.com','cocina123')">👨‍🍳 Cocina<small>Chef</small></button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appShell" style="display:none;height:100vh;">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🍜</div>
+      <div class="logo-text">
+        <strong>Xin Yan</strong>
+        <span>GESTIÓN CHIFA</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebarInitials">AD</div>
+      <div class="user-info">
+        <span id="sidebarName">Administrador</span>
+        <small><span class="rol-badge" id="sidebarRol">ADMIN</span></small>
+      </div>
+    </div>
+    <nav id="sidebarNav"></nav>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="doLogout()">↩ Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1 id="topbarTitle">Dashboard</h1>
+        <span id="topbarDate"></span>
+      </div>
+      <div class="topbar-right">
+        <div class="btn-icon" onclick="refreshCurrentView()">🔄</div>
+      </div>
+    </div>
+    <div class="content">
+      <div id="messageContainer"></div>
+
+      <!-- DASHBOARD -->
+      <div id="view-dashboard" class="view">
+        <div id="dashboardContent"></div>
+      </div>
+
+      <!-- PRODUCTOS -->
+      <div id="view-productos" class="view">
+        <div class="card">
+          <div class="card-header">
+            <h2>Gestión de Productos</h2>
+            <button class="btn btn-primary btn-sm" onclick="openProductModal()">+ Nuevo producto</button>
+          </div>
+          <div class="card-body">
+            <input type="text" id="searchProducto" class="form-control" placeholder="🔍 Buscar producto..." onkeyup="cargarProductos()">
+            <div class="table-container" id="productosTable"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PEDIDOS -->
+      <div id="view-pedidos" class="view">
+        <div class="card">
+          <div class="card-header">
+            <h2>Pedidos Activos</h2>
+            <div class="filter-chips">
+              <div class="chip active" onclick="filterPedidos('todos',this)">Todos</div>
+              <div class="chip" onclick="filterPedidos('PENDIENTE',this)">Pendiente</div>
+              <div class="chip" onclick="filterPedidos('EN_COCINA',this)">En cocina</div>
+              <div class="chip" onclick="filterPedidos('LISTO',this)">Listo</div>
+            </div>
+          </div>
+          <div class="table-container" id="pedidosTable"></div>
+        </div>
+      </div>
+
+      <!-- NUEVO PEDIDO -->
+      <div id="view-nuevo-pedido" class="view">
+        <div class="two-col">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <h2>Seleccionar Mesa</h2>
+              </div>
+              <div class="card-body">
+                <select id="selectMesa" class="form-control">
+                  <option value="">Seleccione una mesa</option>
+                </select>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h2>Menú de Productos</h2>
+              </div>
+              <div class="card-body">
+                <input type="text" id="searchMenu" class="form-control" placeholder="🔍 Buscar..." onkeyup="cargarMenuProductos()">
+                <div class="productos-grid" id="menuProductos"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <h2>Pedido Actual</h2>
+                <span id="cartCount" class="badge badge-ocupada">0 items</span>
+              </div>
+              <div class="card-body">
+                <div id="cartItems"></div>
+                <div id="cartSummary" style="display:none;">
+                  <div class="cart-total">
+                    <span>Total</span>
+                    <span id="cartTotal">S/ 0.00</span>
+                  </div>
+                  <textarea id="pedidoObservaciones" class="form-control" placeholder="Observaciones..." rows="2" style="margin-top:12px;"></textarea>
+                  <button class="btn btn-primary" style="width:100%;margin-top:16px;" onclick="confirmarPedido()">Enviar a cocina →</button>
+                  <button class="btn btn-secondary" style="width:100%;margin-top:8px;" onclick="cancelarPedidoActual()">Cancelar pedido</button>
+                </div>
+                <div id="cartEmpty" style="text-align:center;padding:40px;color:var(--gris-medio);">🍽️<br>Agrega productos del menú</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MESAS -->
+      <div id="view-mesas" class="view">
+        <div class="card">
+          <div class="card-header">
+            <h2>Estado de Mesas</h2>
+            <button class="btn btn-primary btn-sm" onclick="openMesaModal()">+ Nueva mesa</button>
+          </div>
+          <div class="card-body">
+            <div id="mesasContainer"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VENTAS -->
+      <div id="view-ventas" class="view">
+        <div class="stats-grid">
+          <div class="stat-card red">
+            <div class="stat-label">Ventas hoy</div>
+            <div class="stat-value" id="ventasHoyValor">S/ 0</div>
+            <div class="stat-icon">💰</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">Transacciones</div>
+            <div class="stat-value" id="transaccionesHoy">0</div>
+            <div class="stat-icon">📋</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h2>Historial de Ventas</h2>
+          </div>
+          <div class="table-container" id="ventasTable"></div>
+        </div>
+      </div>
+
+      <!-- USUARIOS -->
+      <div id="view-usuarios" class="view">
+        <div class="card">
+          <div class="card-header">
+            <h2>Gestión de Usuarios</h2>
+          </div>
+          <div class="table-container" id="usuariosTable"></div>
+        </div>
+      </div>
+
+      <!-- COCINA -->
+      <div id="view-cocina" class="view">
+        <div id="cocinaContent"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL PRODUCTO -->
+<div id="modalProducto" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Nuevo Producto</h3>
+      <button class="close-btn" onclick="closeModal('modalProducto')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Nombre</label><input type="text" id="prodNombre" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Categoría</label><input type="text" id="prodCategoria" class="form-control"></div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Precio</label><input type="number" id="prodPrecio" class="form-control" step="0.5"></div>
+        <div class="form-group"><label class="form-label">Stock</label><input type="number" id="prodStock" class="form-control"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalProducto')">Cancelar</button>
+      <button class="btn btn-primary" onclick="crearProducto()">Crear</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MESA -->
+<div id="modalMesa" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Nueva Mesa</h3>
+      <button class="close-btn" onclick="closeModal('modalMesa')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Número de mesa</label><input type="number" id="mesaNumero" class="form-control"></div>
+      <div class="form-group"><label class="form-label">Capacidad</label><input type="number" id="mesaCapacidad" class="form-control" value="4"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalMesa')">Cancelar</button>
+      <button class="btn btn-primary" onclick="crearMesa()">Crear</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // USUARIOS LOCALES
+  const USERS = {
+    'admin@chifa.com': { id: 1, nombre: 'Admin General', password: 'admin123', rol: 'ADMIN', initials: 'AD' },
+    'mozo@chifa.com': { id: 2, nombre: 'Juan Pérez', password: 'mozo123', rol: 'MOZO', initials: 'JP' },
+    'cocina@chifa.com': { id: 3, nombre: 'Chef Luis', password: 'cocina123', rol: 'COCINA', initials: 'CL' }
+  };
+
+  let currentUser = null;
+  let currentPedidosFilter = 'todos';
+  let cart = [];
+  let nextId = 100;
+
+  // DATOS
+  let productosData = [
+    { id: 1, nombre: 'Arroz Chaufa Especial', categoria: 'Chaufas', precio: 28, stock: 45 },
+    { id: 2, nombre: 'Chaufa de Pollo', categoria: 'Chaufas', precio: 24, stock: 32 },
+    { id: 3, nombre: 'Sopa Wantan', categoria: 'Sopas', precio: 18, stock: 8 },
+    { id: 4, nombre: 'Tallarin Saltado', categoria: 'Tallarines', precio: 26, stock: 12 },
+    { id: 5, nombre: 'Pollo Tipakay', categoria: 'Especiales', precio: 32, stock: 20 },
+    { id: 6, nombre: 'Menú Combinado', categoria: 'Menú', precio: 22, stock: 50 },
+    { id: 7, nombre: 'Coca Cola', categoria: 'Bebidas', precio: 6, stock: 15 },
+    { id: 8, nombre: 'Limonada', categoria: 'Bebidas', precio: 9, stock: 30 }
+  ];
+
+  let pedidosData = [
+    { id: 47, mesaId: 2, mesaNumero: 2, usuario: 'Juan Pérez', estado: 'EN_COCINA', fecha: new Date().setHours(12,45), items: [{nombre:'Arroz Chaufa Especial',cantidad:2,precio:28},{nombre:'Sopa Wantan',cantidad:1,precio:18}], total: 74 },
+    { id: 48, mesaId: 3, mesaNumero: 3, usuario: 'Juan Pérez', estado: 'LISTO', fecha: new Date().setHours(12,38), items: [{nombre:'Tallarin Saltado',cantidad:1,precio:26},{nombre:'Pollo Tipakay',cantidad:1,precio:32}], total: 58 },
+    { id: 49, mesaId: 5, mesaNumero: 5, usuario: 'María Quispe', estado: 'EN_COCINA', fecha: new Date().setHours(13,10), items: [{nombre:'Menú Combinado',cantidad:3,precio:22}], total: 66 },
+  ];
+
+  let mesasData = [
+    { id: 1, numero: 1, capacidad: 4, estado: 'LIBRE' },
+    { id: 2, numero: 2, capacidad: 6, estado: 'OCUPADA' },
+    { id: 3, numero: 3, capacidad: 4, estado: 'OCUPADA' },
+    { id: 4, numero: 4, capacidad: 2, estado: 'LIBRE' },
+    { id: 5, numero: 5, capacidad: 4, estado: 'OCUPADA' },
+    { id: 6, numero: 6, capacidad: 8, estado: 'LIBRE' },
+    { id: 7, numero: 7, capacidad: 4, estado: 'LIBRE' },
+    { id: 8, numero: 8, capacidad: 6, estado: 'LIBRE' },
+    { id: 9, numero: 9, capacidad: 4, estado: 'LIBRE' },
+    { id: 10, numero: 10, capacidad: 2, estado: 'LIBRE' },
+    { id: 11, numero: 11, capacidad: 4, estado: 'LIBRE' },
+    { id: 12, numero: 12, capacidad: 8, estado: 'LIBRE' },
+  ];
+
+  let ventasData = [
+    { id: 1, pedidoId: 46, monto: 95, fecha: new Date().setHours(12,20), metodo: 'Efectivo' },
+    { id: 2, pedidoId: 44, monto: 44, fecha: new Date().setHours(11,58), metodo: 'Yape' }
+  ];
+
+  // FUNCIONES GENERALES
+  function mostrarMensaje(texto, tipo) {
+    const container = document.getElementById('messageContainer');
+    container.innerHTML = `<div class="alert alert-${tipo}">${texto}</div>`;
+    setTimeout(() => container.innerHTML = '', 3000);
+  }
+
+  function formatDate() {
+    const now = new Date();
+    document.getElementById('topbarDate').innerHTML = now.toLocaleDateString('es-PE', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  }
+  formatDate();
+
+  // LOGIN
+  function quickLogin(email, password) {
+    document.getElementById('loginEmail').value = email;
+    document.getElementById('loginPass').value = password;
+    doLogin();
+  }
+
+  function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPass').value.trim();
+    const user = USERS[email];
+    
+    if (user && user.password === password) {
+      currentUser = { ...user, password: undefined };
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('appShell').style.display = 'flex';
+      document.getElementById('sidebarName').innerHTML = user.nombre;
+      document.getElementById('sidebarRol').innerHTML = user.rol;
+      document.getElementById('sidebarInitials').innerHTML = user.initials;
+      
+      const navItems = getNavItems(user.rol);
+      buildNav(navItems);
+      mostrarSeccion('dashboard');
+      cargarDashboard();
+      mostrarMensaje(`Bienvenido ${user.nombre}`, 'success');
+    } else {
+      mostrarMensaje('Credenciales incorrectas', 'error');
+    }
+  }
+
+  function getNavItems(rol) {
+    if (rol === 'ADMIN') {
+      return [
+        { label: 'Dashboard', icon: '📊', view: 'dashboard' },
+        { sep: 'OPERACIONES' },
+        { label: 'Mesas', icon: '🪑', view: 'mesas' },
+        { label: 'Pedidos', icon: '📋', view: 'pedidos' },
+        { label: 'Nuevo Pedido', icon: '➕', view: 'nuevo-pedido' },
+        { sep: 'ADMINISTRACIÓN' },
+        { label: 'Productos', icon: '🍜', view: 'productos' },
+        { label: 'Ventas', icon: '💰', view: 'ventas' },
+        { label: 'Usuarios', icon: '👥', view: 'usuarios' }
+      ];
+    } else if (rol === 'COCINA') {
+      return [
+        { label: 'Dashboard', icon: '📊', view: 'dashboard' },
+        { sep: 'COCINA' },
+        { label: 'Tablero Cocina', icon: '🔥', view: 'cocina' },
+        { label: 'Productos', icon: '🍜', view: 'productos' }
+      ];
+    } else {
+      return [
+        { label: 'Dashboard', icon: '📊', view: 'dashboard' },
+        { sep: 'MI TURNO' },
+        { label: 'Mesas', icon: '🪑', view: 'mesas' },
+        { label: 'Pedidos', icon: '📋', view: 'pedidos' },
+        { label: 'Nuevo Pedido', icon: '➕', view: 'nuevo-pedido' }
+      ];
+    }
+  }
+
+  function buildNav(items) {
+    const nav = document.getElementById('sidebarNav');
+    nav.innerHTML = '';
+    items.forEach(item => {
+      if (item.sep) {
+        const div = document.createElement('div');
+        div.className = 'nav-section';
+        div.textContent = item.sep;
+        nav.appendChild(div);
+      } else {
+        const btn = document.createElement('button');
+        btn.className = 'nav-item';
+        btn.innerHTML = `<span class="nav-icon">${item.icon}</span>${item.label}`;
+        btn.onclick = () => mostrarSeccion(item.view);
+        nav.appendChild(btn);
+      }
+    });
+  }
+
+  function mostrarSeccion(view) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(`view-${view}`).classList.add('active');
+    
+    const titles = { dashboard:'Dashboard', productos:'Productos', pedidos:'Pedidos', 'nuevo-pedido':'Nuevo Pedido', mesas:'Mesas', ventas:'Ventas', usuarios:'Usuarios', cocina:'Tablero de Cocina' };
+    document.getElementById('topbarTitle').innerHTML = titles[view] || view;
+    
+    if (view === 'dashboard') cargarDashboard();
+    if (view === 'productos') cargarProductos();
+    if (view === 'pedidos') cargarPedidos();
+    if (view === 'nuevo-pedido') cargarNuevoPedido();
+    if (view === 'mesas') cargarMesas();
+    if (view === 'ventas') cargarVentas();
+    if (view === 'usuarios') cargarUsuarios();
+    if (view === 'cocina') cargarCocina();
+  }
+
+  function refreshCurrentView() {
+    const active = document.querySelector('.view.active');
+    if (active) {
+      const id = active.id.replace('view-', '');
+      if (id === 'dashboard') cargarDashboard();
+      if (id === 'productos') cargarProductos();
+      if (id === 'pedidos') cargarPedidos();
+      if (id === 'nuevo-pedido') cargarNuevoPedido();
+      if (id === 'mesas') cargarMesas();
+      if (id === 'ventas') cargarVentas();
+      if (id === 'usuarios') cargarUsuarios();
+      if (id === 'cocina') cargarCocina();
+      mostrarMensaje('Actualizado', 'success');
+    }
+  }
+
+  function doLogout() {
+    currentUser = null;
+    cart = [];
+    document.getElementById('appShell').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'flex';
+  }
+
+  // DASHBOARD
+  function cargarDashboard() {
+    const ventasHoy = ventasData.reduce((sum, v) => sum + v.monto, 0);
+    const pedidosActivos = pedidosData.filter(p => p.estado !== 'LISTO').length;
+    const mesasOcupadas = mesasData.filter(m => m.estado === 'OCUPADA').length;
+    const stockBajo = productosData.filter(p => p.stock < 20).length;
+    
+    document.getElementById('dashboardContent').innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card red"><div class="stat-label">Ventas hoy</div><div class="stat-value">S/ ${ventasHoy}</div><div class="stat-sub">↑ 12% vs ayer</div><div class="stat-icon">💰</div></div>
+        <div class="stat-card gold"><div class="stat-label">Pedidos activos</div><div class="stat-value">${pedidosActivos}</div><div class="stat-sub">${pedidosData.filter(p=>p.estado==='EN_COCINA').length} en cocina</div><div class="stat-icon">📋</div></div>
+        <div class="stat-card green"><div class="stat-label">Mesas ocupadas</div><div class="stat-value">${mesasOcupadas}/${mesasData.length}</div><div class="stat-sub">${mesasData.filter(m=>m.estado==='LIBRE').length} libres</div><div class="stat-icon">🪑</div></div>
+        <div class="stat-card blue"><div class="stat-label">Stock bajo</div><div class="stat-value">${stockBajo}</div><div class="stat-sub">productos críticos</div><div class="stat-icon">⚠️</div></div>
+      </div>
+      <div class="card"><div class="card-header"><h2>Pedidos Recientes</h2></div><div class="table-container"><table><thead><tr><th>Mesa</th><th>Estado</th><th>Total</th><th>Hora</th></tr></thead><tbody>${pedidosData.slice(0,5).map(p => `<tr><td><strong>Mesa ${p.mesaNumero}</strong></td><td><span class="badge badge-${p.estado}">${p.estado}</span></td><td>S/ ${p.total}</td><td>${new Date(p.fecha).toLocaleTimeString()}</td></tr>`).join('')}</tbody></table></div></div>
+    `;
+  }
+
+  // PRODUCTOS
+  function cargarProductos() {
+    const search = document.getElementById('searchProducto')?.value.toLowerCase() || '';
+    const filtered = productosData.filter(p => p.nombre.toLowerCase().includes(search));
+    document.getElementById('productosTable').innerHTML = `
+      <table><thead><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+      <tbody>${filtered.map(p => `<tr><td>${p.id}</td><td><strong>${p.nombre}</strong></td><td>${p.categoria}</td><td>S/ ${p.precio}</td><td style="${p.stock<20?'color:#C0392B;font-weight:600':''}">${p.stock}</td>
+      <td><button class="btn btn-secondary btn-sm" onclick="actualizarStock(${p.id},${p.stock-1})">-1</button><button class="btn btn-secondary btn-sm" onclick="actualizarStock(${p.id},${p.stock+1})">+1</button><button class="btn btn-danger btn-sm" onclick="eliminarProducto(${p.id})">Eliminar</button></td></tr>`).join('')}</tbody></table>
+    `;
+  }
+
+  function actualizarStock(id, nuevo) {
+    const p = productosData.find(p => p.id === id);
+    if (p && nuevo >= 0) { p.stock = nuevo; cargarProductos(); mostrarMensaje('Stock actualizado', 'success'); }
+  }
+
+  function eliminarProducto(id) {
+    if (confirm('¿Eliminar producto?')) { productosData = productosData.filter(p => p.id !== id); cargarProductos(); mostrarMensaje('Producto eliminado', 'success'); }
+  }
+
+  function openProductModal() { document.getElementById('modalProducto').classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function crearProducto() {
+    const nombre = document.getElementById('prodNombre').value;
+    const categoria = document.getElementById('prodCategoria').value;
+    const precio = parseFloat(document.getElementById('prodPrecio').value);
+    const stock = parseInt(document.getElementById('prodStock').value);
+    if (!nombre || !categoria || isNaN(precio)) return mostrarMensaje('Complete todos los campos', 'error');
+    const newId = Math.max(...productosData.map(p=>p.id),0)+1;
+    productosData.push({ id: newId, nombre, categoria, precio, stock });
+    closeModal('modalProducto');
+    document.getElementById('prodNombre').value = '';
+    document.getElementById('prodCategoria').value = '';
+    document.getElementById('prodPrecio').value = '';
+    document.getElementById('prodStock').value = '';
+    cargarProductos();
+    mostrarMensaje('Producto creado', 'success');
+  }
+
+  // PEDIDOS
+  function cargarPedidos() {
+    let filtered = pedidosData;
+    if (currentPedidosFilter !== 'todos') filtered = pedidosData.filter(p => p.estado === currentPedidosFilter);
+    document.getElementById('pedidosTable').innerHTML = `
+      <table><thead><tr><th>ID</th><th>Mesa</th><th>Usuario</th><th>Estado</th><th>Total</th><th>Hora</th><th>Acciones</th></tr></thead>
+      <tbody>${filtered.map(p => `<tr><td>#${p.id}</td><td><strong>Mesa ${p.mesaNumero}</strong></td><td>${p.usuario}</td><td><span class="badge badge-${p.estado}">${p.estado}</span></td><td>S/ ${p.total}</td><td>${new Date(p.fecha).toLocaleTimeString()}</td>
+      <td><button class="btn btn-warning btn-sm" onclick="cambiarEstado(${p.id},'EN_COCINA')">Cocina</button><button class="btn btn-success btn-sm" onclick="cambiarEstado(${p.id},'LISTO')">Listo</button><button class="btn btn-danger btn-sm" onclick="cancelarPedido(${p.id})">Cancelar</button></td></tr>`).join('')}</tbody></table>
+    `;
+  }
+
+  function filterPedidos(estado, el) {
+    currentPedidosFilter = estado;
+    document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    cargarPedidos();
+  }
+
+  function cambiarEstado(id, estado) {
+    const p = pedidosData.find(p => p.id === id);
+    if (p) { p.estado = estado; cargarPedidos(); cargarDashboard(); if(currentUser?.rol==='COCINA')cargarCocina(); mostrarMensaje(`Pedido #${id} ${estado}`, 'success'); }
+  }
+
+  function cancelarPedido(id) {
+    if (confirm('¿Cancelar pedido?')) { pedidosData = pedidosData.filter(p => p.id !== id); cargarPedidos(); cargarDashboard(); mostrarMensaje('Pedido cancelado', 'success'); }
+  }
+
+  // NUEVO PEDIDO
+  function cargarNuevoPedido() {
+    const select = document.getElementById('selectMesa');
+    if (select) {
+      select.innerHTML = '<option value="">Seleccione una mesa</option>' + mesasData.filter(m=>m.estado==='LIBRE').map(m => `<option value="${m.id}">Mesa ${m.numero} - Capacidad ${m.capacidad}</option>`).join('');
+    }
+    cargarMenuProductos();
+    renderCart();
+  }
+
+  function cargarMenuProductos() {
+    const search = document.getElementById('searchMenu')?.value.toLowerCase() || '';
+    const filtered = productosData.filter(p => p.nombre.toLowerCase().includes(search));
+    document.getElementById('menuProductos').innerHTML = filtered.map(p => `
+      <div class="producto-card" onclick="agregarAlCarrito(${p.id},'${p.nombre}',${p.precio})">
+        <div style="font-size:32px;">${p.categoria==='Chaufas'?'🍚':p.categoria==='Sopas'?'🍲':p.categoria==='Bebidas'?'🥤':'🍽️'}</div>
+        <div class="producto-nombre">${p.nombre}</div>
+        <div class="producto-precio">S/ ${p.precio}</div>
+        <div style="font-size:11px;color:var(--gris-medio)">Stock: ${p.stock}</div>
+      </div>
+    `).join('');
+  }
+
+  function agregarAlCarrito(id, nombre, precio) {
+    const existing = cart.find(i => i.id === id);
+    if (existing) existing.cantidad++;
+    else cart.push({ id, nombre, precio, cantidad: 1 });
+    renderCart();
+    mostrarMensaje(`${nombre} agregado`, 'success');
+  }
+
+  function renderCart() {
+    const empty = document.getElementById('cartEmpty');
+    const summary = document.getElementById('cartSummary');
+    const container = document.getElementById('cartItems');
+    const count = document.getElementById('cartCount');
+    
+    if (cart.length === 0) {
+      empty.style.display = 'block';
+      summary.style.display = 'none';
+      count.innerHTML = '0 items';
+      return;
+    }
+    empty.style.display = 'none';
+    summary.style.display = 'block';
+    
+    container.innerHTML = cart.map((item, idx) => `
+      <div class="cart-item">
+        <div class="cart-item-info"><div class="cart-item-name">${item.nombre}</div><div class="cart-item-price">S/ ${item.precio} c/u</div></div>
+        <div class="qty-control"><button class="qty-btn" onclick="cambiarCantidad(${idx},-1)">−</button><span style="min-width:30px;text-align:center">${item.cantidad}</span><button class="qty-btn" onclick="cambiarCantidad(${idx},1)">+</button></div>
+        <div style="font-weight:600;min-width:70px;text-align:right">S/ ${(item.precio * item.cantidad).toFixed(2)}</div>
+      </div>
+    `).join('');
+    
+    const total = cart.reduce((sum, i) => sum + i.precio * i.cantidad, 0);
+    document.getElementById('cartTotal').innerHTML = `S/ ${total.toFixed(2)}`;
+    const totalItems = cart.reduce((sum, i) => sum + i.cantidad, 0);
+    count.innerHTML = `${totalItems} item${totalItems !== 1 ? 's' : ''}`;
+  }
+
+  function cambiarCantidad(idx, delta) {
+    cart[idx].cantidad += delta;
+    if (cart[idx].cantidad <= 0) cart.splice(idx, 1);
+    renderCart();
+  }
+
+  function cancelarPedidoActual() {
+    if (cart.length > 0 && confirm('¿Cancelar pedido actual?')) {
+      cart = [];
+      renderCart();
+      mostrarMensaje('Pedido cancelado', 'success');
+    }
+  }
+
+  function confirmarPedido() {
+    const mesaId = parseInt(document.getElementById('selectMesa').value);
+    if (!mesaId) return mostrarMensaje('Seleccione una mesa', 'error');
+    if (cart.length === 0) return mostrarMensaje('Agregue productos al pedido', 'error');
+    
+    const mesa = mesasData.find(m => m.id === mesaId);
+    const total = cart.reduce((sum, i) => sum + i.precio * i.cantidad, 0);
+    const observaciones = document.getElementById('pedidoObservaciones').value;
+    
+    const newId = Math.max(...pedidosData.map(p=>p.id), 0) + 1;
+    pedidosData.push({
+      id: newId, mesaId: mesa.id, mesaNumero: mesa.numero, usuario: currentUser.nombre,
+      estado: 'PENDIENTE', fecha: new Date(), items: cart.map(i => ({nombre:i.nombre, cantidad:i.cantidad, precio:i.precio})),
+      total: total, observaciones: observaciones
+    });
+    
+    mesa.estado = 'OCUPADA';
+    cart = [];
+    renderCart();
+    document.getElementById('pedidoObservaciones').value = '';
+    document.getElementById('selectMesa').value = '';
+    mostrarMensaje(`Pedido #${newId} enviado a cocina`, 'success');
+    cargarPedidos();
+    cargarDashboard();
+    cargarMesas();
+    mostrarSeccion('pedidos');
+  }
+
+  // MESAS
+  function cargarMesas() {
+    document.getElementById('mesasContainer').innerHTML = `
+      <div class="mesas-grid">${mesasData.map(m => `
+        <div class="mesa-card ${m.estado === 'OCUPADA' ? 'ocupada' : 'libre'}">
+          <div class="mesa-numero">${m.numero.toString().padStart(2,'0')}</div>
+          <div class="mesa-cap">👤 ${m.capacidad} personas</div>
+          <div class="mesa-estado"><span class="badge badge-${m.estado === 'OCUPADA' ? 'ocupada' : 'libre'}">${m.estado}</span></div>
+          ${m.estado === 'OCUPADA' ? '<div style="font-size:11px;color:var(--gris-medio);">En servicio</div>' : ''}
+          <div class="mesa-actions"><button class="btn btn-secondary btn-sm" onclick="cambiarEstadoMesa(${m.id},'OCUPADA')">Ocupar</button><button class="btn btn-secondary btn-sm" onclick="cambiarEstadoMesa(${m.id},'LIBRE')">Liberar</button></div>
+        </div>
+      `).join('')}</div>
+    `;
+  }
+
+  function cambiarEstadoMesa(id, estado) {
+    const mesa = mesasData.find(m => m.id === id);
+    if (mesa) { mesa.estado = estado; cargarMesas(); cargarDashboard(); mostrarMensaje(`Mesa ${mesa.numero} ${estado}`, 'success'); }
+  }
+
+  function openMesaModal() { document.getElementById('modalMesa').classList.add('open'); }
+  function crearMesa() {
+    const numero = parseInt(document.getElementById('mesaNumero').value);
+    const capacidad = parseInt(document.getElementById('mesaCapacidad').value);
+    if (!numero) return mostrarMensaje('Ingrese número', 'error');
+    const newId = Math.max(...mesasData.map(m=>m.id),0)+1;
+    mesasData.push({ id: newId, numero, capacidad, estado: 'LIBRE' });
+    closeModal('modalMesa');
+    document.getElementById('mesaNumero').value = '';
+    cargarMesas();
+    mostrarMensaje('Mesa creada', 'success');
+  }
+
+  // VENTAS
+  function cargarVentas() {
+    const total = ventasData.reduce((sum, v) => sum + v.monto, 0);
+    document.getElementById('ventasHoyValor').innerHTML = `S/ ${total}`;
+    document.getElementById('transaccionesHoy').innerHTML = ventasData.length;
+    document.getElementById('ventasTable').innerHTML = `
+      <table><thead><tr><th>#Venta</th><th>Pedido</th><th>Monto</th><th>Fecha</th><th>Método</th></tr></thead>
+      <tbody>${ventasData.map(v => `<tr><td>V-${v.id}</td><td>#${v.pedidoId}</td><td><strong>S/ ${v.monto}</strong></td><td>${new Date(v.fecha).toLocaleString()}</td><td>${v.metodo}</td></tr>`).join('')}</tbody></table>
+    `;
+  }
+
+  // USUARIOS
+  function cargarUsuarios() {
+    const usuariosList = Object.values(USERS).map((u, idx) => ({ id: idx+1, nombre: u.nombre, email: Object.keys(USERS).find(k=>USERS[k]===u), rol: u.rol }));
+    document.getElementById('usuariosTable').innerHTML = `
+      <table><thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th></tr></thead>
+      <tbody>${usuariosList.map(u => `<tr><td>${u.id}</td><td><strong>${u.nombre}</strong></td><td>${u.email}</td><td><span class="badge badge-${u.rol==='ADMIN'?'ocupada':'libre'}">${u.rol}</span></td></tr>`).join('')}</tbody></table>
+    `;
+  }
+
+  // COCINA
+  function cargarCocina() {
+    const pendientes = pedidosData.filter(p => p.estado === 'PENDIENTE');
+    const enCocina = pedidosData.filter(p => p.estado === 'EN_COCINA');
+    document.getElementById('cocinaContent').innerHTML = `
+      <div class="cocina-cols">
+        <div class="cocina-col"><div class="cocina-header pendiente">🕐 PENDIENTES (${pendientes.length})</div>
+          ${pendientes.map(p => `<div class="cocina-ticket"><div class="cocina-ticket-header"><div><span class="cocina-ticket-mesa">Mesa ${p.mesaNumero}</span> — Pedido #${p.id}</div></div>
+          <div class="cocina-ticket-body">${p.items.map(i => `<div class="cocina-item">${i.nombre} × ${i.cantidad}</div>`).join('')}${p.observaciones ? `<div style="font-size:11px;color:var(--gris-medio);margin-top:8px;padding:6px;background:#FEF9E7;border-radius:6px;">📝 ${p.observaciones}</div>` : ''}</div>
+          <div class="cocina-ticket-footer"><button class="btn btn-warning btn-sm" onclick="cambiarEstado(${p.id},'EN_COCINA')">Iniciar preparación →</button></div></div>`).join('')}
+        </div>
+        <div class="cocina-col"><div class="cocina-header cocina">🔥 EN PREPARACIÓN (${enCocina.length})</div>
+          ${enCocina.map(p => `<div class="cocina-ticket"><div class="cocina-ticket-header"><div><span class="cocina-ticket-mesa">Mesa ${p.mesaNumero}</span> — Pedido #${p.id}</div></div>
+          <div class="cocina-ticket-body">${p.items.map(i => `<div class="cocina-item">${i.nombre} × ${i.cantidad}</div>`).join('')}</div>
+          <div class="cocina-ticket-footer"><button class="btn btn-success btn-sm" onclick="cambiarEstado(${p.id},'LISTO')">Marcar listo ✓</button></div></div>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+</script>
+</body>
+</html>

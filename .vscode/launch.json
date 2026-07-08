@@ -5,7 +5,11 @@
             "name": "Spring Boot-ChifaXinYanApplication<ChifaXinYan>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
+<<<<<<< HEAD
             "mainClass": "apf3.ChifaXinYan.ChifaXinYanApplication",
+=======
+            "mainClass": "apf1.ChifaXinYan.ChifaXinYanApplication",
+>>>>>>> main
             "projectName": "ChifaXinYan",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
