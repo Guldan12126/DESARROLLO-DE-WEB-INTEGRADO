@@ -1,0 +1,137 @@
+<div class="dashboard-container">
+  <!-- Barra de carga superior estilo profesional (tipo YouTube/GitHub) -->
+  <div class="loading-bar" *ngIf="isLoading"></div>
+
+  <header class="dashboard-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="header-text">
+        <h1>Panel de Control</h1>
+        <p class="subtitle">Análisis detallado del Salón Xin Yan</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de Filtros y Selectores de Rango -->
+  <div class="filter-bar">
+    <div class="range-selector">
+      <button type="button" class="btn-range" 
+              [class.active]="rangoActivo === 'hoy'" 
+              [class.is-loading-btn]="isLoading && rangoActivo === 'hoy'"
+              [disabled]="isLoading"
+              (click)="seleccionarRango('hoy')">Hoy</button>
+      <button type="button" class="btn-range" 
+              [class.active]="rangoActivo === '7dias'" 
+              [class.is-loading-btn]="isLoading && rangoActivo === '7dias'"
+              [disabled]="isLoading"
+              (click)="seleccionarRango('7dias')">7 Días</button>
+      <button type="button" class="btn-range" 
+              [class.active]="rangoActivo === '30dias'" 
+              [class.is-loading-btn]="isLoading && rangoActivo === '30dias'"
+              [disabled]="isLoading"
+              (click)="seleccionarRango('30dias')">30 Días</button>
+      <button type="button" class="btn-range" 
+              [class.active]="rangoActivo === 'mes'" 
+              [class.is-loading-btn]="isLoading && rangoActivo === 'mes'"
+              [disabled]="isLoading"
+              (click)="seleccionarRango('mes')">Mes</button>
+      <button type="button" class="btn-range" 
+              [class.active]="rangoActivo === 'anio'" 
+              [class.is-loading-btn]="isLoading && rangoActivo === 'anio'"
+              [disabled]="isLoading"
+              (click)="seleccionarRango('anio')">Año</button>
+    </div>
+
+    <span class="filter-label">Filtrar por fecha:</span>
+    <div class="filter-inputs">
+      <div class="input-group">
+        <div class="input-with-icon">
+          <i class="fas fa-calendar-alt"></i>
+          <input type="date" [(ngModel)]="fechaInicio" (change)="aplicarFiltro()" [disabled]="isLoading">
+        </div>
+      </div>
+      <span class="to-text">al</span>
+      <div class="input-group">
+        <div class="input-with-icon">
+          <i class="fas fa-calendar-alt"></i>
+          <input type="date" [(ngModel)]="fechaFin" (change)="aplicarFiltro()" [disabled]="isLoading">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-refresh" (click)="aplicarFiltro()" [disabled]="isLoading">
+      <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i>
+      <span>Actualizar</span>
+    </button>
+  </div>
+
+  <!-- Tarjetas de Estadísticas (KPIs) -->
+  <div class="stats-grid">
+    <div class="stat-card sales">
+      <div class="icon-box red">
+        <i class="fas fa-hand-holding-dollar"></i>
+      </div>
+      <div class="info">
+        <span class="label">Ventas Totales</span>
+        <h3 class="value">{{ stats.totalVentas | currency:'PEN':'S/ ' }}</h3>
+        <span class="trend up"><i class="fas fa-arrow-up"></i> +12%</span>
+      </div>
+    </div>
+
+    <div class="stat-card orders">
+      <div class="icon-box gold">
+        <i class="fas fa-utensils"></i>
+      </div>
+      <div class="info">
+        <span class="label">Total Pedidos</span>
+        <h3 class="value">{{ stats.totalPedidos }}</h3>
+        <span class="trend up"><i class="fas fa-arrow-up"></i> +5 hoy</span>
+      </div>
+    </div>
+
+    <div class="stat-card stock">
+      <div class="icon-box warning">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="info">
+        <span class="label">Insumos Críticos</span>
+        <h3 class="value">{{ stats.insumosCriticos }}</h3>
+        <span class="trend danger" *ngIf="stats.insumosCriticos > 0">Revisar Stock</span>
+      </div>
+    </div>
+
+    <div class="stat-card tables">
+      <div class="icon-box red">
+        <i class="fas fa-chair"></i>
+      </div>
+      <div class="info">
+        <span class="label">Ocupación Mesas</span>
+        <h3 class="value">{{ stats.mesasOcupadas }} / {{ stats.totalMesas }}</h3>
+        <span class="trend">Capacidad Actual</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Gráficos -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3><i class="fas fa-chart-bar"></i> Rendimiento de Ventas</h3>
+      </div>
+      <div class="chart-body">
+        <canvas #salesChart></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3><i class="fas fa-chart-pie"></i> Distribución por Categoría</h3>
+      </div>
+      <div class="chart-body">
+        <canvas #categoryChart></canvas>
+      </div>
+    </div>
+  </div>
+</div>

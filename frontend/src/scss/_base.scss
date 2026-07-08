@@ -1,0 +1,90 @@
+/* ========== VARIABLES GLOBALES (Design System) ========== */
+:root {
+    /* Paleta de Colores - Estética Oriental */
+    --primary: #d32f2f;
+    --primary-dark: #b71c1c;
+    --primary-light: #ef5350;
+    --secondary: #d4af37; /* Dorado */
+    --accent: #ffb300;
+    
+    /* Gradientes */
+    --primary-gradient: linear-gradient(135deg, #d32f2f 0%, #7f0000 100%);
+    --dark-gradient: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    
+    /* Fondos */
+    --bg-body: #f3f4f6;
+    --bg-card: #ffffff;
+    --bg-dark: #111827;
+    
+    /* Colores de Texto */
+    --text-dark: #111827;
+    --text-gray: #4b5563;
+    --text-light: #9ca3af;
+    --text-white: #ffffff;
+    
+    /* Estados */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+
+    /* Sombras y Bordes */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+    --radius-md: 16px;
+    --radius-lg: 24px;
+}
+
+/* ========== RESET BÁSICO ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ========== TIPOGRAFÍA ========== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif; /* Usada en el branding */
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s ease;
+}
+
+/* ========== BARRA DE DESPLAZAMIENTO ========== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}

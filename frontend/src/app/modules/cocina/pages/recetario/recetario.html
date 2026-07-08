@@ -1,0 +1,56 @@
+<div class="dashboard-container">
+  <div class="dashboard-header" style="margin-bottom: 20px;">
+    <div class="title-area">
+      <h1>Recetario de Cocina 📖</h1>
+      <p class="subtitle">Guía rápida de platillos e instrucciones de preparación</p>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-bar" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button class="btn" [style.background]="filtroActual === 'TODOS' ? '#f39c12' : 'white'" 
+            [style.color]="filtroActual === 'TODOS' ? 'white' : '#333'"
+            (click)="setFiltro('TODOS')"
+            style="padding: 8px 20px; border-radius: 20px; border: 1px solid #ddd; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+      Todos
+    </button>
+    <button *ngFor="let cat of categorias" class="btn" 
+            [style.background]="filtroActual === cat ? '#f39c12' : 'white'"
+            [style.color]="filtroActual === cat ? 'white' : '#333'"
+            (click)="setFiltro(cat)"
+            style="padding: 8px 20px; border-radius: 20px; border: 1px solid #ddd; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+      {{ cat }}
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" style="text-align: center; padding: 40px;">
+    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #f39c12;"></i>
+  </div>
+
+  <!-- Grid de Recetas -->
+  <div class="charts-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;" *ngIf="!isLoading">
+    
+    <div *ngFor="let prod of productosFiltrados" class="chart-card" style="border-top: 4px solid #e67e22; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden;">
+      <div class="chart-header" style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: flex-start;">
+        <h3 style="color: #d35400; font-size: 1.1rem; margin: 0; font-weight: 800;">{{ prod.nombre }}</h3>
+        <span style="background: #fef9e7; color: #f39c12; padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; margin-left: 10px;">
+          {{ prod.categoria?.nombre }}
+        </span>
+      </div>
+      <div class="chart-body" style="padding: 15px;">
+        <img *ngIf="prod.imagenUrl" [src]="prod.imagenUrl" alt="{{ prod.nombre }}" 
+             style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        
+        <div *ngIf="!prod.imagenUrl" style="width: 100%; height: 160px; background: #f2f2f2; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: #ccc;">
+            <i class="fas fa-image" style="font-size: 3rem;"></i>
+        </div>
+
+        <div style="background: #fdfbf7; border: 1px dashed #f39c12; padding: 15px; border-radius: 8px; font-size: 0.9rem; color: #555; line-height: 1.5;">
+          <strong style="color: #d35400;"><i class="fas fa-list-check"></i> Instrucciones / Descripción:</strong><br><br>
+          {{ prod.descripcion || 'Sin instrucciones detalladas. Preparar según la receta estándar del chifa.' }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

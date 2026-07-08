@@ -1,0 +1,431 @@
+@use 'sass:color';
+
+@use 'global-vars-mixins' as g; // Importamos las variables y mixins globales con el alias 'g'
+@use 'shared-modal'; // Importamos los estilos del modal compartido
+
+.usuarios-container,
+.productos-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+
+  // Responsive adjustments for smaller screens
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .header-icon {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    h2 { // Changed from h1 to h2 based on HTML
+      font-size: 2.2rem;
+      color: g.$text-dark;
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      i { color: g.$primary-red; }
+    }
+    p {
+      color: g.$text-light;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-nuevo {
+      background: linear-gradient(45deg, g.$primary-red, g.$dark-red);
+      color: g.$white;
+      padding: 12px 25px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: none;
+      transition: all 0.3s ease;
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(g.$primary-red, 0.4);
+        background: linear-gradient(45deg, g.$dark-red, g.$primary-red);
+      }
+    }
+  }
+
+  // Barra de Búsqueda
+  .search-bar {
+    margin-bottom: 2rem;
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+
+    i {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: g.$primary-red;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 20px 12px 50px;
+      border-radius: 100px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+
+      &:focus {
+        border-color: g.$primary-red;
+        box-shadow: 0 0 0 3px rgba(g.$primary-red, 0.1);
+      }
+    }
+  }
+
+  // Contenedor para hacer la tabla responsive
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
+  }
+
+  // Tabla de Usuarios (o Grid de Cards)
+  .user-table-card {
+    @include g.card-style;
+    overflow: hidden;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+      th {
+        background: rgba(g.$primary-red, 0.03);
+        padding: 15px 20px;
+        text-align: left;
+        color: g.$primary-red;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        border-bottom: 2px solid rgba(g.$gold-accent, 0.2);
+      }
+    
+      td {
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+        color: g.$text-dark;
+        vertical-align: middle;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .table-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+
+        .btn-action {
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: 1.1rem;
+          padding: 5px;
+          border-radius: 5px;
+          transition: all 0.2s ease;
+
+          &.btn-edit { color: #3498db; }
+          &.btn-delete { color: #e74c3c; }
+
+          &:hover {
+            background: rgba(g.$gold-accent, 0.1);
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+
+  // Badges de Roles
+  .role-badge {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    white-space: nowrap; // Prevent wrapping for badges
+
+    &.admin { background: rgba(g.$gold-accent, 0.2); color: #b8860b; border: 1px solid g.$gold-accent; }
+    &.mozo { background: rgba(52, 152, 219, 0.1); color: #2980b9; border: 1px solid #3498db; }
+    &.cocina { background: rgba(46, 204, 113, 0.1); color: #27ae60; border: 1px solid #2ecc71; }
+    &.cajero { background: rgba(155, 89, 182, 0.1); color: #8e44ad; border: 1px solid #9b59b6; }
+  }
+
+  // Sección de Roles (Cards para UsuariosRolesComponent)
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+
+    .role-card {
+      @include g.card-style;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 5px; height: 100%;
+      }
+
+      &.admin::before { background: g.$gold-accent; }
+      &.mozo::before { background: #3498db; }
+      &.cocina::before { background: #2ecc71; }
+      &.cajero::before { background: #9b59b6; }
+
+      .role-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        h3 { margin: 0; color: g.$text-dark; font-size: 1.3rem; }
+        .btn-edit { color: g.$text-light; cursor: pointer; transition: color 0.2s ease; &:hover { color: g.$primary-red; } }
+      }
+
+      .permisos-list {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0;
+        
+        li {
+          font-size: 0.9rem;
+          color: g.$text-light;
+          margin-bottom: 5px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          i { color: #27ae60; font-size: 0.8rem; }
+        }
+      }
+    }
+  }
+
+  // Formulario (UsuariosComponent)
+  .form-card {
+    @include g.card-style;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    
+    .form-grid { 
+      display: grid;
+      grid-template-columns: 1fr; 
+      gap: 1.5rem;
+
+      @media (min-width: 600px) { 
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label { display: block; margin-bottom: 8px; font-weight: 600; color: g.$text-dark; }
+      input, select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        &:focus { border-color: g.$primary-red; outline: none; box-shadow: 0 0 0 3px rgba(g.$primary-red, 0.1); }
+      }
+      .error-text {
+        color: #e74c3c;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: block;
+        i { margin-right: 5px; }
+      }
+      input.is-invalid, select.is-invalid {
+        border-color: #e74c3c;
+      }
+    }
+
+// Estilos de acciones de formulario (reutilizables en Cards y Modales)
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 2.5rem;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+
+    .btn-nuevo { 
+      background: #7f8c8d;
+      color: g.$white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(#7f8c8d, 0.3);
+        background: color.adjust(#7f8c8d, $lightness: -5%);
+      }
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, g.$primary-red, g.$dark-red);
+      color: g.$white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(g.$primary-red, 0.25);
+
+      &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(g.$primary-red, 0.45);
+        filter: brightness(1.1);
+      }
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: #ccc;
+        box-shadow: none;
+      }
+    }
+  }
+
+  // Estilos Xin Yan para el Modal de Edición
+  .categoria-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3000;
+    
+    .modal-content {
+      background: g.$white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      border-top: 6px solid g.$primary-red;
+      animation: modalSlideUp 0.4s ease-out;
+    }
+  }
+  
+    .file-input-hidden {
+      display: none;
+    }
+
+    .btn-upload-file {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px dashed #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      color: g.$text-dark;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      font-weight: 500;
+
+      &:hover {
+        border-color: g.$primary-red;
+        background-color: #f0f0f0;
+        color: g.$primary-red;
+      }
+
+      i {
+        color: g.$primary-red;
+        font-size: 1.2rem;
+      }
+    }
+
+    .image-preview-container {
+      margin-top: 15px;
+      position: relative;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 200px;
+
+      .image-preview {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .remove-image-btn {
+        position: absolute;
+        top: 5px; right: 5px;
+        background: rgba(g.$primary-red, 0.8);
+        color: g.$white;
+        border: none;
+        border-radius: 50%;
+        width: 25px; height: 25px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        font-size: 0.8rem;
+        &:hover { background: g.$dark-red; }
+      }
+    }
+
+    .info-text {
+      font-size: 0.85rem;
+      color: g.$text-light;
+      margin-top: 5px;
+      display: block;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}

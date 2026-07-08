@@ -1,0 +1,20 @@
+@use 'sass:color';
+@use 'global-vars-mixins' as g;
+
+.productos-container { 
+    .role-badge {
+        &.activo {
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            border: 1px solid #2ecc71;
+        }
+
+
+        &.cajero {
+            background: rgba(g.$text-light, 0.1);
+            color: g.$text-light;
+            border: 1px solid g.$text-light;
+            font-style: italic;
+        }
+    }
+}

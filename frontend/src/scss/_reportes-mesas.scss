@@ -1,0 +1,100 @@
+@use 'buttons';
+
+
+.usuarios-container {
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 22px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(211, 47, 47, 0.06);
+
+    .header-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(211, 47, 47, 0.08);
+      color: var(--primary);
+      flex: 0 0 auto;
+
+      i {
+        font-size: 1.2rem;
+      }
+    }
+
+    .header-text {
+      flex: 1;
+
+      h2 {
+        margin-bottom: 6px;
+        font-size: 1.35rem;
+      }
+
+      p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 0 0 auto;
+
+      /* reportes-mesas usa solo btn-primary (sin btn-export-pdf) */
+      .btn-primary {
+        height: 44px;
+      }
+    }
+  }
+
+  .user-table-card {
+    margin-top: 18px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    padding: 18px;
+
+    /* Badge de visitas (refuerzo local por consistencia visual) */
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .role-mesero {
+      background: rgba(211, 47, 47, 0.08);
+      color: var(--primary);
+      border-color: rgba(211, 47, 47, 0.18);
+    }
+
+    .role-cajero {
+      background: rgba(212, 175, 55, 0.10);
+      color: var(--secondary);
+      border-color: rgba(212, 175, 55, 0.25);
+    }
+
+    /* Estado vacío: que se vea informativo, no “roto” */
+    td[colspan] {
+      color: var(--text-light);
+      padding: 22px 10px !important;
+    }
+  }
+
+}
+

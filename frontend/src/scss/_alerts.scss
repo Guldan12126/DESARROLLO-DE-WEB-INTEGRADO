@@ -1,0 +1,55 @@
+/* ========== COMPONENTES: ALERTAS ========== */
+
+.alert {
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+    animation: alert-fade-in 0.3s ease-out;
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+
+    i {
+        font-size: 1.25rem;
+    }
+}
+
+/* Modificadores basados en _base.scss */
+.alert-success {
+    background-color: #ecfdf5; /* Fondo verde muy claro */
+    color: var(--success);
+    border-color: #d1fae5;
+}
+
+.alert-danger {
+    background-color: #fef2f2; /* Fondo rojo muy claro */
+    color: var(--danger);
+    border-color: #fee2e2;
+}
+
+.alert-warning {
+    background-color: #fffbeb;
+    color: var(--warning);
+    border-color: #fef3c7;
+}
+
+.alert-info {
+    background-color: #eff6ff;
+    color: var(--info);
+    border-color: #dbeafe;
+}
+
+@keyframes alert-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

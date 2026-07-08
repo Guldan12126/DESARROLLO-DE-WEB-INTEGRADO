@@ -1,0 +1,80 @@
+<!-- Botón hamburguesa -->
+<div class="hamburger-btn" (click)="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</div>
+
+<!-- Overlay para cerrar en móvil -->
+<div class="sidebar-overlay" [class.active]="isOpen" (click)="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<div class="sidebar" [class.open]="isOpen">
+    
+    <div class="sidebar-header">
+        <button class="close-btn" (click)="closeSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="logo-area">
+            <img src="favicon.ico" alt="Logo" class="logo-img">
+            <h2>Chifa Xin Yan</h2>
+        </div>
+        <div class="user-info">
+            <div class="avatar avatar-cajero"> 
+                <img [src]="avatarUrl" 
+                     (error)="handleImageError($event)" 
+                     [alt]="nombreUsuario" 
+                     class="sidebar-profile-img">
+            </div>
+            <div class="user-details">
+                <span class="user-name">{{ nombreUsuario }}</span>
+                <span class="user-role cajero">💰 {{ rolUsuario }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <a routerLink="/cajero/dashboard" routerLinkActive="active" class="nav-link" (click)="closeSidebar()">
+            <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('caja')">
+                <i class="fas fa-cash-register"></i> <span>Caja</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.caja"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.caja">
+                <a routerLink="/cajero/caja/gestion" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-lock-open"></i> Apertura / Cierre</a>
+                <a routerLink="/cajero/caja/movimientos" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-exchange-alt"></i> Movimientos</a>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('ventas')">
+                <i class="fas fa-chart-simple"></i> <span>Ventas</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.ventas"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.ventas">
+                <a routerLink="/cajero/ventas/nueva" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-plus"></i> Nueva Venta</a>
+                <a routerLink="/cajero/ventas/historial" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-history"></i> Historial Ventas</a>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="section-title" (click)="toggleSection('pedidos')">
+                <i class="fas fa-clipboard-list"></i> <span>Pedidos</span>
+                <i class="fas fa-chevron-down toggle-icon" [class.rotated]="sections.pedidos"></i>
+            </div>
+            <div class="section-content" [class.open]="sections.pedidos">
+                <a routerLink="/cajero/pedidos/por-cobrar" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-hourglass-half"></i> Por Cobrar</a>
+                <a routerLink="/cajero/pedidos/historial" routerLinkActive="active" class="sub-link" (click)="closeSidebar()"><i class="fas fa-list"></i> Historial Pedidos</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <button class="logout-btn" (click)="onLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+        </button>
+    </div>
+
+</div>

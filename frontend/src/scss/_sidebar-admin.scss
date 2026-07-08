@@ -1,0 +1,256 @@
+//Paleta de colores de Xin Yang
+$primary-red: #8b0000;
+$dark-red: #4a0000;
+$gold-accent: #ffd700;
+$gold-hover: #ffec8b;
+$sidebar-width: 300px;
+$transition-speed: 0.4s;
+
+// Botón Hamburguesa
+.hamburger-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    background: $primary-red;
+    color: $gold-accent;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba($gold-accent, 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: $dark-red;
+        transform: scale(1.05);
+    }
+}
+
+// Fondo oscuro que aparece al abrir el sidebar en dispositivos móviles
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.sidebar {
+    width: $sidebar-width;
+    height: 100vh;
+    background: linear-gradient(180deg, $primary-red 0%, $dark-red 100%);
+    color: white;
+    position: fixed;
+    left: -$sidebar-width;
+    top: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    transition: all $transition-speed cubic-bezier(0.77, 0.2, 0.05, 1);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    border-right: 2px solid $gold-accent;
+    display: flex;
+    flex-direction: column;
+
+    &.open {
+        left: 0;
+    }
+
+    .sidebar-header {
+        padding: 40px 20px 20px;
+        position: relative;
+        border-bottom: 1px solid rgba($gold-accent, 0.2);
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none; // Solo visible en móviles
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        img {
+            width: 70px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px rgba($gold-accent, 0.5));
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: $gold-accent;
+            margin: 0;
+            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+
+            .avatar {
+                width: 40px;
+                height: 40px;
+                background: $gold-accent;
+                color: $dark-red;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    margin: 0;
+                }
+            }
+
+            .user-details {
+                display: flex;
+                flex-direction: column;
+
+                .user-name { font-weight: 600; font-size: 0.9rem; }
+                .user-role { 
+                    font-size: 0.75rem; 
+                    font-weight: 700;
+                    &.admin { color: $gold-accent; }
+                }
+            }
+        }
+    }
+
+    .sidebar-nav {
+        flex: 1;
+        padding: 20px 0;
+        margin: 0;
+
+        .nav-section {
+            margin-bottom: 5px;
+
+            .section-title {
+                display: flex;
+                align-items: center;
+                padding: 12px 25px;
+                cursor: pointer;
+                transition: background 0.3s;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.7);
+
+                i:first-child { width: 30px; }
+                span { flex: 1; }
+
+                .toggle-icon {
+                    font-size: 0.8rem;
+                    transition: transform 0.3s;
+                    &.rotated { transform: rotate(180deg); }
+                }
+
+                &:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+            }
+
+            .section-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-out;
+                background: rgba(0, 0, 0, 0.2);
+
+                &.open { max-height: 500px; }
+            }
+        }
+
+        .nav-link, .sub-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+
+            i { width: 30px; font-size: 1.1rem; }
+
+            &:hover {
+                color: $gold-hover;
+                background: rgba(255, 255, 255, 0.05);
+                padding-left: 30px;
+            }
+
+            &.active {
+                background: rgba($gold-accent, 0.1);
+                color: $gold-accent;
+                border-left: 4px solid $gold-accent;
+            }
+        }
+
+        .sub-link {
+            padding-left: 55px;
+            font-size: 0.9rem;
+            &:hover { padding-left: 60px; }
+        }
+    }
+
+    .sidebar-footer {
+        padding: 20px;
+        border-top: 1px solid rgba($gold-accent, 0.2);
+        background: rgba(0, 0, 0, 0.1);
+
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #ff4d4d; // Rojo para indicar salida/peligro
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            z-index: 100;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: rgba(255, 77, 77, 0.15);
+                border-color: #ff4d4d;
+                transform: translateY(-2px);
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar .sidebar-header .close-btn {
+        display: block;
+    }
+}

@@ -1,0 +1,138 @@
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-chair"></i></div>
+    <div class="header-text">
+      <h2>Gestión de Mesas</h2>
+      <p>Administre las mesas del restaurante y su disponibilidad</p>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/admin/mesas/crear" class="btn-nuevo">
+        <i class="fas fa-plus-circle"></i> Nueva Mesa
+      </a>
+    </div>
+  </div>
+
+  <div class="user-table-card search-filter-card">
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" [(ngModel)]="searchTerm" (input)="aplicarFiltros()"
+               placeholder="Buscar por número o ubicación..." class="search-input">
+      </div>
+      <button class="btn-primary btn-refresh-styled" (click)="cargarMesas()">
+        <i class="fas fa-sync" [class.fa-spin]="isLoading"></i> Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div class="user-table-card">
+    <div class="table-responsive">
+      <table class="xin-yan-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Mesa N°</th>
+            <th>Capacidad</th>
+            <th>Ubicación</th>
+            <th>Estado Actual</th>
+            <th>Sistema</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="7" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando mesas...</td>
+          </tr>
+          <tr *ngIf="!isLoading && mesasFiltradas.length === 0">
+            <td colspan="7" class="text-center">No se encontraron mesas.</td>
+          </tr>
+          <tr *ngFor="let mesa of mesasFiltradas">
+            <td>{{ mesa.id }}</td>
+            <td class="font-bold">Mesa {{ mesa.numero }}</td>
+            <td><i class="fas fa-users text-muted me-2"></i> {{ mesa.capacidad }} pers.</td>
+            <td>{{ mesa.ubicacion | titlecase }}</td>
+            <td>
+              <span class="role-badge" [ngClass]="getEstadoClase(mesa.estado)">
+                {{ mesa.estado.replace('_', ' ') }}
+              </span>
+            </td>
+            <td>
+              <span class="role-badge product-status-badge" [class.activo]="mesa.activo" [class.inactivo]="!mesa.activo">
+                {{ mesa.activo ? 'Activa' : 'Inactiva' }}
+              </span>
+            </td>
+            <td class="table-actions">
+              <button class="btn-action btn-edit" (click)="abrirEditar(mesa)" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-action btn-delete" (click)="confirmarEliminar(mesa)" title="Eliminar">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmar Eliminación -->
+  <div class="categoria-modal" *ngIf="showDeleteModal">
+    <div class="modal-content delete-modal-content">
+      <div class="delete-modal-icon"><i class="fas fa-circle-exclamation"></i></div>
+      <h3 class="delete-modal-title">¿Eliminar Mesa?</h3>
+      <p class="delete-modal-message">
+        Esta acción eliminará la <strong>Mesa #{{ mesaNumeroToDelete }}</strong>. No se puede deshacer.
+      </p>
+      <div class="delete-modal-actions">
+        <button (click)="cerrarDeleteModal()" class="btn-cancel-delete">Cancelar</button>
+        <button (click)="eliminarMesa()" class="btn-confirm-delete">
+          <i class="fas fa-trash"></i> Sí, Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Mesa -->
+  <div class="categoria-modal" *ngIf="showEditModal">
+    <div class="modal-content edit-modal-content">
+      <div class="edit-modal-header">
+        <h3 class="edit-modal-title"><i class="fas fa-edit edit-modal-icon"></i>Editar Mesa #{{ mesaEditando?.numero }}</h3>
+        <button (click)="cerrarEditModal()" class="edit-modal-close-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group form-group-half-width">
+          <label>Número de Mesa</label>
+          <input type="number" [(ngModel)]="editNumero" [class.is-invalid]="editErrors['numero']" class="form-input-styled">
+          <span class="error-text" *ngIf="editErrors['numero']"><i class="fas fa-exclamation-circle"></i> {{ editErrors['numero'] }}</span>
+        </div>
+        <div class="form-group form-group-half-width">
+          <label>Capacidad (personas)</label>
+          <input type="number" [(ngModel)]="editCapacidad" [class.is-invalid]="editErrors['capacidad']" class="form-input-styled">
+          <span class="error-text" *ngIf="editErrors['capacidad']"><i class="fas fa-exclamation-circle"></i> {{ editErrors['capacidad'] }}</span>
+        </div>
+        <div class="form-group form-group-half-width">
+          <label>Ubicación</label>
+          <select [(ngModel)]="editUbicacion" [class.is-invalid]="editErrors['ubicacion']" class="form-input-styled">
+            <option value="SALON_PRINCIPAL">Salón Principal</option>
+            <option value="TERRAZA">Terraza</option>
+            <option value="VIP">VIP</option>
+          </select>
+          <span class="error-text" *ngIf="editErrors['ubicacion']"><i class="fas fa-exclamation-circle"></i> {{ editErrors['ubicacion'] }}</span>
+        </div>
+        <div class="form-group form-group-half-width">
+          <label>Estado en Sistema</label>
+          <select [(ngModel)]="editActivo" class="form-input-styled">
+            <option [ngValue]="true">Activa (Visible)</option>
+            <option [ngValue]="false">Inactiva (Oculta)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions edit-modal-actions">
+        <button type="button" class="btn-nuevo btn-cancel-edit" (click)="cerrarEditModal()">Cancelar</button>
+        <button type="button" class="btn-primary btn-save-edit" (click)="guardarEdicion()" [disabled]="isSaving">
+          <i class="fas" [class.fa-save]="!isSaving" [class.fa-spinner]="isSaving" [class.fa-spin]="isSaving"></i> Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

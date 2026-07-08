@@ -1,0 +1,71 @@
+<div class="usuarios-container">
+    <div class="page-header">
+        <div class="header-icon">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="header-text">
+            <h2>Gestión de Personal</h2>
+            <p>Registre los datos del nuevo colaborador para el sistema</p>
+        </div>
+    </div>
+
+    <div class="form-card"> 
+        <form class="xin-yan-form" (ngSubmit)="userForm.valid && onSubmit(userForm)" #userForm="ngForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nombre"><i class="fas fa-id-card"></i> Nombre Completo</label>
+                    <input type="text" id="nombre" [(ngModel)]="nombre" name="nombre" 
+                           #nombreModel="ngModel" [class.is-invalid]="nombreModel.invalid && (nombreModel.dirty || nombreModel.touched)"
+                           placeholder="Ej. Roberto Alexander" required>
+                    <span class="error-text" *ngIf="nombreModel.invalid && (nombreModel.dirty || nombreModel.touched)">
+                        <i class="fas fa-exclamation-circle"></i> El nombre es obligatorio
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                    <input type="email" id="email" [(ngModel)]="email" name="email" 
+                           #emailModel="ngModel" [class.is-invalid]="emailModel.invalid && (emailModel.dirty || emailModel.touched)"
+                           placeholder="usuario@salonxinyan.com" required email>
+                    <span class="error-text" *ngIf="emailModel.invalid && (emailModel.dirty || emailModel.touched)">
+                        <i class="fas fa-exclamation-circle"></i> 
+                        {{ emailModel.errors?.['required'] ? 'El correo es obligatorio' : 'Formato de correo inválido' }}
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Contraseña de Acceso</label>
+                    <input type="password" id="password" [(ngModel)]="password" name="password" 
+                           #passModel="ngModel" [class.is-invalid]="passModel.invalid && (passModel.dirty || passModel.touched)"
+                           placeholder="Mínimo 6 caracteres" required minlength="6">
+                    <span class="error-text" *ngIf="passModel.invalid && (passModel.dirty || passModel.touched)">
+                        <i class="fas fa-exclamation-circle"></i> Mínimo 6 caracteres
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="rol"><i class="fas fa-user-tag"></i> Cargo / Rol</label>
+                    <select id="rol" [(ngModel)]="rol" name="rol" 
+                            #rolModel="ngModel" [class.is-invalid]="rolModel.invalid && (rolModel.dirty || rolModel.touched)"
+                            required>
+                        <option value="" disabled selected>Seleccione un cargo...</option>
+                        <option value="ADMIN">Administrador</option>
+                        <option value="MOZO">Mozo / Atención</option>
+                        <option value="COCINA">Cocina</option>
+                        <option value="CAJERO">Cajero</option>
+                    </select>
+                    <span class="error-text" *ngIf="rolModel.invalid && (rolModel.dirty || rolModel.touched)">
+                        <i class="fas fa-exclamation-circle"></i> Debe seleccionar un cargo
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-nuevo" style="background: #7f8c8d; margin-right: 10px;">Cancelar</button>
+                <button type="submit" class="btn-primary" [disabled]="userForm.invalid">
+                    <i class="fas fa-save"></i> <span>Registrar Usuario</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-receipt"></i></div>
+    <div class="header-text">
+      <h2>Comprobante de Venta COMP-{{ venta?.id | number:'4.0-0' }}</h2>
+      <p>Detalle financiero de la transacción</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-nuevo" style="background-color: #6c757d;" (click)="volver()">
+        <i class="fas fa-arrow-left"></i> Volver a Lista
+      </button>
+      <button class="btn-primary" onclick="window.print()">
+        <i class="fas fa-print"></i> Imprimir
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+  </div>
+
+  <div *ngIf="!isLoading && venta" class="comprobante-wrapper" id="ticket-print">
+    <!-- TICKET VISUAL -->
+    <div class="ticket">
+      <div class="ticket-header">
+        <i class="fas fa-store fa-2x mb-2 text-danger"></i>
+        <h3>CHIFA XIN YAN</h3>
+        <p>RUC: 20123456789</p>
+        <p>Av. Principal 123, Lima</p>
+        <div class="ticket-divider"></div>
+        <p class="ticket-title">COMPROBANTE ELECTRÓNICO</p>
+        <p><strong>N° COMP-{{ venta.id | number:'4.0-0' }}</strong></p>
+      </div>
+
+      <div class="ticket-info">
+        <p><strong>Fecha:</strong> {{ venta.fechaHora | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Pedido Ref:</strong> #{{ venta.pedido?.id }}</p>
+        <p><strong>Cajero:</strong> {{ venta.usuario?.nombre || 'Admin' }}</p>
+        <p><strong>Mesa:</strong> {{ venta.pedido?.mesa?.numero ? 'Mesa ' + venta.pedido.mesa.numero : 'Para Llevar' }}</p>
+      </div>
+
+      <div class="ticket-divider"></div>
+
+      <table class="ticket-table">
+        <thead>
+          <tr>
+            <th class="text-left">CANT</th>
+            <th class="text-left">DESCRIPCIÓN</th>
+            <th class="text-right">IMPORTE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let det of venta.pedido?.detalles">
+            <td class="text-left">{{ det.cantidad }}</td>
+            <td class="text-left">{{ det.producto?.nombre }}</td>
+            <td class="text-right">{{ (det.cantidad * det.precioUnitario) | currency:'PEN':'S/ ' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="ticket-divider"></div>
+
+      <div class="ticket-totals">
+        <div class="total-row">
+          <span>OP. GRAVADA:</span>
+          <span>{{ (venta.totalVenta / 1.18) | currency:'PEN':'S/ ' }}</span>
+        </div>
+        <div class="total-row">
+          <span>IGV (18%):</span>
+          <span>{{ (venta.totalVenta - (venta.totalVenta / 1.18)) | currency:'PEN':'S/ ' }}</span>
+        </div>
+        <div class="total-row main-total">
+          <span>TOTAL A PAGAR:</span>
+          <span>{{ venta.totalVenta | currency:'PEN':'S/ ' }}</span>
+        </div>
+      </div>
+
+      <div class="ticket-divider"></div>
+
+      <div class="ticket-payment">
+        <div class="total-row">
+          <span>MÉTODO DE PAGO:</span>
+          <span>{{ venta.metodoPago }}</span>
+        </div>
+        <div class="total-row">
+          <span>MONTO RECIBIDO:</span>
+          <span>{{ venta.montoRecibido | currency:'PEN':'S/ ' }}</span>
+        </div>
+        <div class="total-row">
+          <span>VUELTO:</span>
+          <span>{{ venta.vuelto | currency:'PEN':'S/ ' }}</span>
+        </div>
+      </div>
+
+      <div class="ticket-footer">
+        <p>¡Gracias por su preferencia!</p>
+        <p>Vuelva pronto a Chifa Xin Yan</p>
+      </div>
+    </div>
+  </div>
+</div>

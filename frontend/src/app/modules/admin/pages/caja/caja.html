@@ -1,0 +1,144 @@
+<section class="caja-container">
+  <header class="caja-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <i class="fas fa-cash-register"></i>
+      </div>
+      <div class="header-titles">
+        <h1>Módulo de Caja (Apertura / Movimientos / Cierre)</h1>
+        <p class="subtitle">Role: Cajero. Apertura y Cierre </p>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button class="btn-danger" (click)="cerrarCaja()" [disabled]="!cajaId || loading">
+        <i class="fas fa-lock"></i> Cerrar Caja
+      </button>
+    </div>
+  </header>
+
+  <div class="caja-grid">
+    <!-- APERTURA -->
+    <div class="caja-card" *ngIf="!cajaAbierta">
+      <h3><i class="fas fa-unlock-alt"></i> Apertura de Caja</h3>
+
+      <div class="form-group">
+        <label>Monto de Apertura (S/)</label>
+        <input type="number" class="form-control" [(ngModel)]="montoApertura" placeholder="0.00" [disabled]="loading" />
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-primary btn-block" (click)="abrirCaja()" [disabled]="loading || !esCajero">
+          <i class="fas fa-gavel"></i> Abrir Caja
+        </button>
+      </div>
+
+      <p class="text-muted mt-4" *ngIf="!esCajero">Solo el rol CAJERO puede abrir/cerrar caja.</p>
+    </div>
+
+    <!-- MOVIMIENTOS + COBRO -->
+    <div class="caja-card" *ngIf="cajaAbierta">
+      <h3>
+        <i class="fas fa-file-invoice"></i> Caja Abierta
+        <span class="badge">#{{ cajaId }}</span>
+      </h3>
+      <p class="text-muted">Registre cobros (INGRESO) y egresos (EGRESO). Se guarda en la tabla movimientos_caja.</p>
+
+      <hr class="divider" />
+
+      <h4 class="subsection-title"><i class="fas fa-money-check-alt"></i> Procesar Cobro</h4>
+
+      <div class="form-group">
+        <label>Total a Cobrar (S/)</label>
+        <input type="number" class="form-control amount-display" [(ngModel)]="montoCobrar" placeholder="0.00" />
+      </div>
+
+      <div class="form-group">
+        <label>Método de Pago</label>
+        <select class="form-control" [(ngModel)]="metodoPago">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta (POS)</option>
+          <option value="Yape">Yape / Plin</option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="metodoPago === 'Efectivo'">
+        <label>Monto Recibido (S/)</label>
+        <input type="number" class="form-control" [(ngModel)]="montoRecibido" placeholder="0.00" />
+      </div>
+
+      <div class="vuelto-display" *ngIf="metodoPago === 'Efectivo'">
+        <span>Vuelto a entregar:</span>
+        <h2 [class.text-danger]="montoRecibido > 0 && montoRecibido < montoCobrar">
+          S/ {{ vuelto | number:'1.2-2' }}
+        </h2>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-primary btn-block" (click)="procesarPago()" [disabled]="loading || !esCajero">
+          <i class="fas fa-check-circle"></i> Confirmar Pago (INGRESO)
+        </button>
+      </div>
+
+      <hr class="divider" />
+
+      <h4 class="subsection-title"><i class="fas fa-exchange-alt"></i> Movimiento Manual</h4>
+
+      <div class="form-group">
+        <label>Tipo</label>
+        <select class="form-control" [(ngModel)]="tipoMovimiento" [disabled]="loading">
+          <option value="INGRESO">INGRESO</option>
+          <option value="EGRESO">EGRESO</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Monto (S/)</label>
+        <input type="number" class="form-control" [(ngModel)]="montoMovimiento" placeholder="0.00" [disabled]="loading" />
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <input type="text" class="form-control" [(ngModel)]="descripcionMovimiento" placeholder="Ej. Compra insumos" [disabled]="loading" />
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-secondary btn-block" (click)="registrarMovimiento()" [disabled]="loading || !esCajero">
+          <i class="fas fa-plus-circle"></i> Registrar Movimiento
+        </button>
+      </div>
+    </div>
+
+    <!-- CIERRE + COMPROBANTES (UI) -->
+    <div class="caja-card" *ngIf="cajaAbierta">
+      <h3><i class="fas fa-lock"></i> Cierre de Caja</h3>
+      <p class="text-muted">Ingrese el monto final para cerrar (se guarda en cajas.monto_cierre).</p>
+
+      <div class="form-group">
+        <label>Monto de Cierre (S/)</label>
+        <input type="number" class="form-control amount-display" [(ngModel)]="montoCierre" placeholder="0.00" />
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-danger btn-block" (click)="cerrarCaja()" [disabled]="loading || !esCajero">
+          <i class="fas fa-lock"></i> Confirmar Cierre
+        </button>
+      </div>
+
+      <hr class="divider" />
+
+      <h3 class="mt-4"><i class="fas fa-file-invoice"></i> Comprobantes (UI)</h3>
+      <p class="text-muted">Aquí puedes integrar impresión/PDF luego.</p>
+
+      <div class="invoice-actions mt-4">
+        <button class="btn-secondary btn-block mb-3" (click)="generarComprobante()">
+          <i class="fas fa-print"></i> Imprimir Ticket / Boleta
+        </button>
+        <button class="btn-secondary btn-block" (click)="generarComprobante()">
+          <i class="fas fa-file-pdf"></i> Generar PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+

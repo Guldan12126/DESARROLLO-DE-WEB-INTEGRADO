@@ -1,0 +1,75 @@
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+    <div class="header-text">
+      <h2>Registro de Ventas</h2>
+      <p>Historial financiero, métodos de pago y montos recaudados</p>
+    </div>
+  </div>
+
+  <div class="user-table-card search-filter-card">
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" [(ngModel)]="searchTerm" (input)="aplicarFiltros()"
+               placeholder="Buscar por # comprobante, mesa o método de pago..." class="search-input">
+      </div>
+      <button class="btn-primary btn-refresh-styled" (click)="cargarVentas()" [disabled]="isLoading">
+        <i class="fas fa-sync" [class.fa-spin]="isLoading"></i> Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div class="user-table-card">
+    <div class="table-responsive">
+      <table class="xin-yan-table">
+        <thead>
+          <tr>
+            <th>Comprobante #</th>
+            <th>Pedido Ref.</th>
+            <th>Fecha de Emisión</th>
+            <th>Método de Pago</th>
+            <th>Total (S/)</th>
+            <th>Monto Recibido</th>
+            <th>Vuelto</th>
+            <th>Cajero / Usuario</th>
+            <th>Ver Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="9" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando ventas...</td>
+          </tr>
+          <tr *ngIf="!isLoading && ventasFiltradas.length === 0">
+            <td colspan="9" class="text-center">No hay ventas registradas.</td>
+          </tr>
+          <tr *ngFor="let venta of ventasFiltradas">
+            <td class="font-bold text-primary">COMP-{{ venta.id | number:'4.0-0' }}</td>
+            <td class="font-bold text-muted">#{{ venta.pedido?.id }}</td>
+            <td>{{ venta.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <span class="role-badge" 
+                [class.role-cajero]="venta.metodoPago === 'EFECTIVO'"
+                [class.role-admin]="venta.metodoPago === 'TARJETA'"
+                [class.role-mesero]="venta.metodoPago === 'YAPE' || venta.metodoPago === 'PLIN'">
+                <i class="fas fa-money-bill" *ngIf="venta.metodoPago === 'EFECTIVO'"></i>
+                <i class="fas fa-credit-card" *ngIf="venta.metodoPago === 'TARJETA'"></i>
+                <i class="fas fa-mobile-alt" *ngIf="venta.metodoPago === 'YAPE' || venta.metodoPago === 'PLIN'"></i>
+                {{ venta.metodoPago }}
+              </span>
+            </td>
+            <td class="font-bold text-success">{{ venta.totalVenta | currency:'PEN':'S/ ' }}</td>
+            <td>{{ venta.montoRecibido | currency:'PEN':'S/ ' }}</td>
+            <td class="text-danger">{{ venta.vuelto | currency:'PEN':'S/ ' }}</td>
+            <td><i class="fas fa-user-circle"></i> {{ venta.usuario?.nombre || 'Admin' }}</td>
+            <td>
+              <a [routerLink]="['/admin/ventas/ver']" [queryParams]="{ id: venta.id }" class="btn-action btn-edit" title="Ver Comprobante">
+                <i class="fas fa-eye"></i> Detalle
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

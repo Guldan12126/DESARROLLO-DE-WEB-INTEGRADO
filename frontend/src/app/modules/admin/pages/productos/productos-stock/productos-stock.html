@@ -1,0 +1,105 @@
+<div class="usuarios-container">
+  <!-- Cabecera -->
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-boxes-stacked"></i></div>
+    <div class="header-text">
+      <h2>Control de Stock</h2>
+      <p>Gestione el inventario y actualice la disponibilidad de productos</p>
+    </div>
+  </div>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="user-table-card search-filter-card">
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" [(ngModel)]="searchTerm" (input)="aplicarFiltros()"
+               placeholder="Buscar producto..." class="search-input">
+      </div>
+      
+      <!-- Botón Toggle de Bajo Stock -->
+      <button class="btn-action filter-btn" 
+              [class.active-filter]="mostrarSoloBajoStock"
+              (click)="toggleBajoStock()">
+        <i class="fas" [class.fa-exclamation-triangle]="!mostrarSoloBajoStock" [class.fa-check-circle]="mostrarSoloBajoStock"></i>
+        {{ mostrarSoloBajoStock ? 'Ver Todos' : 'Ver Stock Bajo (< 20)' }}
+      </button>
+
+      <button class="btn-primary btn-refresh-styled" (click)="cargarProductos()" [disabled]="isLoading">
+        <i class="fas fa-sync" [class.fa-spin]="isLoading"></i> Actualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="user-table-card">
+    <div class="table-responsive">
+      <table class="xin-yan-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Stock Actual</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="6" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando inventario...</td>
+          </tr>
+          <tr *ngIf="!isLoading && productosFiltrados.length === 0">
+            <td colspan="6" class="text-center">No se encontraron productos en el inventario.</td>
+          </tr>
+          <tr *ngFor="let producto of productosFiltrados">
+            <td>{{ producto.id }}</td>
+            <td class="font-semibold">{{ producto.nombre }}</td>
+            <td>
+              <span class="role-badge category-badge-table">
+                {{ producto.categoria?.nombre }}
+              </span>
+            </td>
+            
+            <!-- Columna Stock (Vista / Edición) -->
+            <td>
+              <div *ngIf="productoEditandoId !== producto.id" class="stock-display">
+                <span class="product-stock-value" [class.low-stock-warning]="producto.stock < 20">
+                  {{ producto.stock }}
+                </span>
+                <i *ngIf="producto.stock < 20" class="fas fa-exclamation-triangle low-stock-icon text-warning" title="Stock bajo"></i>
+                <i *ngIf="producto.stock === 0" class="fas fa-times-circle text-danger ms-1" title="Agotado"></i>
+              </div>
+
+              <!-- Input de Edición -->
+              <div *ngIf="productoEditandoId === producto.id" class="stock-edit-form d-flex align-items-center">
+                <input type="number" [(ngModel)]="nuevoStockVal" class="form-control form-control-sm me-2" style="width: 80px;" min="0">
+                <button class="btn btn-sm btn-success me-1" (click)="guardarStock(producto)" [disabled]="isSaving" title="Guardar">
+                  <i class="fas" [class.fa-check]="!isSaving" [class.fa-spinner]="isSaving" [class.fa-spin]="isSaving"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="cancelarEdicion()" [disabled]="isSaving" title="Cancelar">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </td>
+
+            <td>
+              <span class="role-badge product-status-badge"
+                    [class.activo]="producto.activo" 
+                    [class.inactivo]="!producto.activo">
+                {{ producto.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+
+            <td class="table-actions">
+              <!-- Botón Editar (Solo se muestra si no está editando) -->
+              <button *ngIf="productoEditandoId !== producto.id" class="btn-action btn-edit" (click)="iniciarEdicion(producto)" title="Actualizar Stock">
+                <i class="fas fa-edit"></i> Actualizar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="pos-container">
+  
+  <div class="page-header" style="grid-column: 1 / -1;">
+    <div class="header-icon"><i class="fas fa-cash-register"></i></div>
+    <div class="header-text">
+      <h2>Punto de Venta</h2>
+      <p>Seleccione una mesa, agregue platos y confirme la orden</p>
+    </div>
+  </div>
+
+  <!-- LADO IZQUIERDO: Menú de Productos -->
+  <div class="pos-menu-section">
+    <!-- Filtros de Categoría -->
+    <div class="categoria-filters mb-3">
+      <button class="btn-cat" [class.active]="categoriaFiltro === 'TODOS'" (click)="filtrarPorCategoria('TODOS')">Todos</button>
+      <button class="btn-cat" [class.active]="categoriaFiltro === 'PLATOS FUERTES'" (click)="filtrarPorCategoria('PLATOS FUERTES')">Platos</button>
+      <button class="btn-cat" [class.active]="categoriaFiltro === 'ENTRADAS'" (click)="filtrarPorCategoria('ENTRADAS')">Entradas</button>
+      <button class="btn-cat" [class.active]="categoriaFiltro === 'BEBIDAS'" (click)="filtrarPorCategoria('BEBIDAS')">Bebidas</button>
+      <button class="btn-cat" [class.active]="categoriaFiltro === 'POSTRES'" (click)="filtrarPorCategoria('POSTRES')">Postres</button>
+    </div>
+
+    <!-- Grilla de Productos -->
+    <div class="productos-grid">
+      <div class="producto-card" *ngFor="let prod of productosFiltrados" (click)="agregarAlCarrito(prod)">
+        <div class="prod-img">
+          <img *ngIf="prod.imagenUrl" [src]="prod.imagenUrl" [alt]="prod.nombre" />
+          <i *ngIf="!prod.imagenUrl" class="fas fa-utensils"></i>
+        </div>
+        <div class="prod-info">
+          <div class="prod-name">{{ prod.nombre }}</div>
+          <div class="prod-price">{{ prod.precio | currency:'PEN':'S/ ' }}</div>
+          <div class="prod-stock" [class.text-danger]="prod.stock < 10">Stock: {{ prod.stock }}</div>
+        </div>
+      </div>
+      <div *ngIf="productosFiltrados.length === 0" class="w-100 text-center py-4 text-muted">
+        No hay productos disponibles en esta categoría.
+      </div>
+    </div>
+  </div>
+
+  <!-- LADO DERECHO: Resumen del Pedido (Comanda) -->
+  <div class="pos-cart-section">
+    <div class="cart-card">
+      <h3 class="cart-title"><i class="fas fa-receipt"></i> Comanda Actual</h3>
+      
+      <!-- Selector de Mesa -->
+      <div class="form-group mb-3">
+        <label class="font-bold">Mesa de Destino:</label>
+        <select [(ngModel)]="mesaSeleccionadaId" class="form-input-styled">
+          <option [ngValue]="null" disabled>-- Seleccione una mesa --</option>
+          <option *ngFor="let mesa of mesasDisponibles" [ngValue]="mesa.id">
+            Mesa {{ mesa.numero }} ({{ mesa.ubicacion }})
+          </option>
+        </select>
+      </div>
+
+      <!-- Lista del Carrito -->
+      <div class="cart-items-container">
+        <div *ngIf="carrito.length === 0" class="empty-cart-msg">
+          <i class="fas fa-shopping-basket fa-2x mb-2"></i>
+          <p>La comanda está vacía.<br>Toque los productos para agregarlos.</p>
+        </div>
+
+        <div class="cart-item" *ngFor="let item of carrito; let i = index">
+          <div class="item-qty">{{ item.cantidad }}</div>
+          <div class="item-details">
+            <div class="item-name">{{ item.producto.nombre }}</div>
+            <div class="item-price">{{ item.producto.precio | currency:'PEN':'S/ ' }} c/u</div>
+          </div>
+          <div class="item-subtotal font-bold">{{ item.subtotal | currency:'PEN':'S/ ' }}</div>
+          <button class="btn-remove-item" (click)="quitarDelCarrito(i)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <!-- Footer Totales -->
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>TOTAL</span>
+          <span class="text-success">{{ totalCarrito | currency:'PEN':'S/ ' }}</span>
+        </div>
+        
+        <div class="cart-actions mt-3 d-flex gap-2">
+          <button class="btn btn-outline-secondary w-50" (click)="cancelar()">Cancelar</button>
+          <button class="btn btn-success w-50" (click)="confirmarPedido()" [disabled]="isSaving || carrito.length === 0 || !mesaSeleccionadaId">
+            <i class="fas fa-paper-plane" *ngIf="!isSaving"></i>
+            <i class="fas fa-spinner fa-spin" *ngIf="isSaving"></i> 
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

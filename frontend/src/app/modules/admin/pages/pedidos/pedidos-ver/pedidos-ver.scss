@@ -1,0 +1,39 @@
+.pedido-detalle-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  
+  i { margin-right: 8px; color: #6c757d; }
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+
+    &:last-child { border-bottom: none; }
+
+    .info-label {
+      color: #6c757d;
+      font-weight: 500;
+    }
+  }
+}
+
+.text-end { text-align: right; }

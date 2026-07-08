@@ -1,0 +1,56 @@
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-cash-register"></i></div>
+    <div class="header-text">
+      <h2>Apertura y Cierre de Caja</h2>
+      <p>Control de efectivo, aperturas y cuadres</p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <i class="fas fa-spinner fa-spin fa-3x text-muted"></i>
+  </div>
+
+  <div *ngIf="!isLoading" class="caja-grid" style="display: grid; grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; gap: 20px;">
+    
+    <!-- Caja Abierta -->
+    <div class="user-table-card" *ngIf="cajaAbierta">
+      <h3 class="card-title text-success"><i class="fas fa-lock-open"></i> Caja Abierta</h3>
+      <div class="p-4">
+        <p><strong>Cajero:</strong> {{ cajaAbierta.usuario?.nombre }}</p>
+        <p><strong>Fecha Apertura:</strong> {{ cajaAbierta.fechaApertura | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Monto Inicial:</strong> {{ cajaAbierta.montoApertura | currency:'PEN':'S/ ' }}</p>
+        
+        <hr class="my-4">
+        
+        <h4 class="mb-3">Cierre de Caja</h4>
+        <div class="form-group mb-3">
+          <label>Monto de Cierre Físico (Efectivo en Caja)</label>
+          <input type="number" class="form-control" [(ngModel)]="montoCierre" placeholder="0.00" min="0">
+        </div>
+        
+        <button class="btn btn-danger w-100" (click)="cerrarCaja()" [disabled]="isLoading">
+          <i class="fas fa-lock"></i> Cerrar Caja Ahora
+        </button>
+      </div>
+    </div>
+
+    <!-- Caja Cerrada -->
+    <div class="user-table-card" *ngIf="!cajaAbierta">
+      <h3 class="card-title text-muted"><i class="fas fa-lock"></i> Caja Cerrada</h3>
+      <div class="p-4">
+        <p class="text-muted mb-4">No hay ninguna caja abierta. Debe abrir la caja para procesar cobros y ventas.</p>
+        
+        <div class="form-group mb-3">
+          <label>Monto Inicial de Apertura (Efectivo Base)</label>
+          <input type="number" class="form-control" [(ngModel)]="montoApertura" placeholder="0.00" min="0">
+        </div>
+        
+        <button class="btn btn-success w-100" (click)="abrirCaja()" [disabled]="isLoading">
+          <i class="fas fa-key"></i> Abrir Caja Ahora
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

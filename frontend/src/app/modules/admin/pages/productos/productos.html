@@ -1,0 +1,100 @@
+<div class="productos-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-plus-circle"></i></div>
+    <div class="header-text">
+      <h2>Nuevo Plato / Producto</h2>
+      <p>Complete la información para agregar un nuevo elemento a la carta</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <form (ngSubmit)="registrarProducto()">
+      <div class="form-grid">
+        <!-- Nombre del Producto -->
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label><i class="fas fa-tag"></i> Nombre del Producto</label>
+          <input type="text" [(ngModel)]="nuevoProducto.nombre" name="nombre" 
+                 [class.is-invalid]="formErrors.nombre" placeholder="Ej. Aeropuerto Especial">
+          <span class="error-text" *ngIf="formErrors.nombre">{{ formErrors.nombre }}</span>
+        </div>
+
+        <!-- Categoría -->
+        <div class="form-group">
+          <label><i class="fas fa-layer-group"></i> Categoría</label>
+          <select [(ngModel)]="nuevoProducto.categoria.id" name="categoria" [class.is-invalid]="formErrors.categoria">
+            <option value="">Seleccione...</option>
+            <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
+          </select>
+          <span class="error-text" *ngIf="formErrors.categoria">{{ formErrors.categoria }}</span>
+        </div>
+
+        <!-- Precio -->
+        <div class="form-group">
+          <label><i class="fas fa-money-bill-wave"></i> Precio de Venta (S/)</label>
+          <input type="number" [(ngModel)]="nuevoProducto.precio" name="precio" 
+                 step="0.10" placeholder="0.00" [class.is-invalid]="formErrors.precio">
+          <span class="error-text" *ngIf="formErrors.precio">{{ formErrors.precio }}</span>
+        </div>
+
+        <!-- Stock Inicial -->
+        <div class="form-group">
+          <label><i class="fas fa-boxes-stacked"></i> Stock Inicial</label>
+          <input type="number" [(ngModel)]="nuevoProducto.stock" name="stock" 
+                 placeholder="0" [class.is-invalid]="formErrors.stock">
+          <span class="error-text" *ngIf="formErrors.stock">{{ formErrors.stock }}</span>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-group">
+          <label><i class="fas fa-eye"></i> Visibilidad</label>
+          <select [(ngModel)]="nuevoProducto.activo" name="activo">
+            <option [ngValue]="true">Visible en Carta</option>
+            <option [ngValue]="false">Oculto / Agotado</option>
+          </select>
+        </div>
+
+        <!-- URL Imagen -->
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label><i class="fas fa-image"></i> URL de la Imagen</label>
+          <input type="text" [(ngModel)]="nuevoProducto.imagenUrl" name="imagenUrl"
+                 placeholder="https://ejemplo.com/foto-plato.jpg" [disabled]="!!selectedFile">
+          <small class="info-text" *ngIf="selectedFile">Se usará la imagen seleccionada abajo.</small>
+        </div>
+
+        <!-- Subir Imagen Local -->
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label><i class="fas fa-upload"></i> Subir Imagen Local</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input-hidden" #fileInput>
+          <button type="button" class="btn-upload-file" (click)="fileInput.click()">
+            <i class="fas fa-folder-open"></i> 
+            {{ selectedFile ? selectedFile.name : 'Explorar archivos...' }}
+          </button>
+          
+          <div *ngIf="imagePreview" class="image-preview-container">
+            <img [src]="imagePreview" alt="Vista previa" class="image-preview">
+            <button type="button" class="remove-image-btn" (click)="removeImage()">
+              <i class="fas fa-times-circle"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label><i class="fas fa-align-left"></i> Descripción del Plato</label>
+          <textarea [(ngModel)]="nuevoProducto.descripcion" name="descripcion" rows="3" 
+                    placeholder="Ingredientes, porción, etc."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-nuevo" (click)="cancelar()">
+          <i class="fas fa-arrow-left"></i> Cancelar
+        </button>
+        <button type="submit" class="btn-primary" [disabled]="isSaving">
+          <i class="fas" [class.fa-save]="!isSaving" [class.fa-spinner]="isSaving" [class.fa-spin]="isSaving"></i>
+          <span>{{ isSaving ? 'Registrando...' : 'Registrar Producto' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

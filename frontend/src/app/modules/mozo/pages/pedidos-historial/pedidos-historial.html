@@ -1,0 +1,70 @@
+<div class="dashboard-container">
+  <div class="dashboard-header" style="margin-bottom: 20px;">
+    <div class="title-area">
+      <h1>Historial de Pedidos 📜</h1>
+      <p class="subtitle">Registro de comandas entregadas a los clientes</p>
+    </div>
+    <div class="filter-bar">
+      <button class="btn-refresh" (click)="cargarHistorial()" [disabled]="isLoading"
+              style="background: #8e44ad; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;">
+        <i class="fas" [class.fa-sync]="!isLoading" [class.fa-spinner]="isLoading" [class.fa-spin]="isLoading"></i> Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" style="text-align: center; padding: 40px;">
+    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #8e44ad;"></i>
+  </div>
+
+  <div class="charts-grid" *ngIf="!isLoading">
+    <div class="chart-card" style="border-top: 4px solid #8e44ad; width: 100%; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+      <div class="chart-body" style="padding: 20px;">
+        
+        <div *ngIf="historialPedidos.length === 0" style="text-align: center; padding: 40px; color: #999;">
+          <i class="fas fa-file-invoice" style="font-size: 4rem; color: #ddd; margin-bottom: 15px; display: block;"></i>
+          <span style="font-size: 1.1rem;">No hay pedidos en el historial de este turno.</span>
+        </div>
+
+        <div style="overflow-x: auto;" *ngIf="historialPedidos.length > 0">
+          <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 2px solid #eee; background: #fafafa;">
+                <th style="padding: 15px; color: #666; font-weight: bold;">ID Pedido</th>
+                <th style="padding: 15px; color: #666; font-weight: bold;">Mesa</th>
+                <th style="padding: 15px; color: #666; font-weight: bold;">Platos Entregados</th>
+                <th style="padding: 15px; color: #666; font-weight: bold;">Fecha/Hora</th>
+                <th style="padding: 15px; color: #666; font-weight: bold;">Total</th>
+                <th style="padding: 15px; color: #666; font-weight: bold;">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pedido of historialPedidos" style="border-bottom: 1px solid #f9f9f9; transition: background 0.2s;" onmouseover="this.style.background='#fdfdfd'" onmouseout="this.style.background='transparent'">
+                <td style="padding: 15px; font-weight: bold; color: #333;">#{{ pedido.id }}</td>
+                <td style="padding: 15px; font-weight: bold; color: #2980b9;">Mesa {{ pedido.mesa?.numero }}</td>
+                <td style="padding: 15px;">
+                  <ul style="margin: 0; padding-left: 20px; color: #555;">
+                    <li *ngFor="let det of pedido.detalles" style="margin-bottom: 4px;">
+                      <span style="font-weight: 800; color: #8e44ad;">{{ det.cantidad }}x</span> {{ det.producto?.nombre }}
+                    </li>
+                  </ul>
+                </td>
+                <td style="padding: 15px; color: #777;">{{ pedido.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td style="padding: 15px; font-weight: 900; color: #2c3e50;">S/ {{ pedido.total | number:'1.2-2' }}</td>
+                <td style="padding: 15px;">
+                  <span [ngStyle]="{
+                    'background': pedido.estado === 'PAGADO' ? '#eafaf1' : '#eaf2f8',
+                    'color': pedido.estado === 'PAGADO' ? '#27ae60' : '#2980b9',
+                    'border': '1px solid ' + (pedido.estado === 'PAGADO' ? '#27ae60' : '#2980b9')
+                  }" style="padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+                    {{ pedido.estado }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

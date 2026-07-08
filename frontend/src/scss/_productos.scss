@@ -1,0 +1,120 @@
+@use 'sass:color';
+@use 'global-vars-mixins' as g;
+
+.productos-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    gap: 20px;
+    border-bottom: 2px solid rgba(g.$gold-accent, 0.2);
+    padding-bottom: 1.5rem;
+
+    .header-icon {
+      font-size: 2.5rem;
+      color: g.$primary-red;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .header-text {
+      text-align: left;
+      h2 {
+        font-size: 2.2rem;
+        color: g.$text-dark;
+        font-family: 'Playfair Display', serif;
+        margin: 0;
+      }
+      p {
+        color: g.$text-light;
+        margin: 5px 0 0;
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  .form-card {
+    @include g.card-style;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 3rem;
+    border-top: 4px solid g.$primary-red;
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+
+      @media (min-width: 600px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .form-group {
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: g.$text-dark;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        
+        i { color: g.$primary-red; margin-right: 8px; width: 20px; text-align: center; }
+      }
+
+      input, select, textarea {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+
+        &:focus {
+          border-color: g.$primary-red;
+          outline: none;
+          box-shadow: 0 0 0 4px rgba(g.$primary-red, 0.1);
+          background-color: white;
+        }
+
+        &:disabled {
+          background-color: #f8f9fa;
+          border-color: #e9ecef;
+          color: #adb5bd;
+        }
+      }
+
+      .error-text {
+        color: #e74c3c;
+        font-size: 0.85rem;
+        margin-top: 6px;
+        font-weight: 500;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #eee;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

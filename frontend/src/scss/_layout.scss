@@ -1,0 +1,64 @@
+// Variables de layout (deben coincidir con tus otros archivos scss)
+$sidebar-width: 300px;
+$header-height: 75px;
+$transition-speed: 0.4s;
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--bg-body);
+
+    .main-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        transition: padding-left $transition-speed cubic-bezier(0.77, 0.2, 0.05, 1);
+        
+        // Padding dinámico: Si el sidebar es fijo, el contenido debe desplazarse
+        padding-left: 0; 
+
+        &.sidebar-open {
+            @media (min-width: 992px) {
+                padding-left: $sidebar-width;
+            }
+        }
+    }
+
+    // Área donde se cargan las páginas (Dashboard, Pedidos, etc.)
+    .page-content {
+        flex: 1;
+        padding: 30px;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        animation: pageFadeIn 0.5s ease-out;
+    }
+}
+
+// Animación suave para el cambio de páginas
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Ajustes para móviles
+@media (max-width: 991px) {
+    .admin-layout {
+        .main-container {
+            padding-left: 0 !important;
+        }
+
+        .page-content {
+            padding: 20px 15px;
+            padding-top: 25px; // Espacio extra para el botón hamburguesa
+        }
+    }
+}

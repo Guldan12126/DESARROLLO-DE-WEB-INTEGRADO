@@ -1,0 +1,87 @@
+<header class="main-header">
+  <div class="header-actions">
+    <div class="notifications-wrapper">
+      <button
+        class="notifications-btn"
+        type="button"
+        title="Notificaciones"
+        (click)="toggleNotifications($event)"
+      >
+        <i class="fas fa-bell"></i>
+        @if (unreadCount > 0) {
+          <span class="badge">{{ unreadCount }}</span>
+        }
+      </button>
+
+      @if (isNotificationsOpen) {
+        <div class="notifications-panel" (click)="$event.stopPropagation()">
+          <div class="notifications-header">
+            <div>
+              <h3>Notificaciones</h3>
+              <p>{{ rolUsuario }}</p>
+            </div>
+
+            <button
+              class="mark-read-btn"
+              type="button"
+              [disabled]="isLoadingNotifications || unreadCount === 0"
+              (click)="marcarComoLeidas($event)"
+            >
+              Marcar leidas
+            </button>
+          </div>
+
+          @if (isLoadingNotifications) {
+            <div class="notifications-state">Cargando notificaciones...</div>
+          } @else if (notifications.length === 0) {
+            <div class="notifications-state">No hay notificaciones por el momento.</div>
+          } @else {
+            <div class="notifications-list">
+              @for (notification of notifications; track trackByNotification($index, notification)) {
+                <article class="notification-item" [class.read]="notification.leida">
+                  <div class="notification-icon" [class]="notification.tipo">
+                    <i class="fas fa-bell"></i>
+                  </div>
+
+                  <div class="notification-body">
+                    <div class="notification-top">
+                      <h4>{{ notification.titulo }}</h4>
+                      @if (!notification.leida) {
+                        <span class="status-dot"></span>
+                      }
+                    </div>
+
+                    <p>{{ notification.mensaje }}</p>
+                    <span class="notification-date">{{ notification.fecha | date: 'dd/MM/yyyy HH:mm' }}</span>
+                  </div>
+                </article>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="user-profile-container">
+      <div class="user-profile" (click)="toggleDropdown($event)">
+        <div class="avatar-wrapper">
+          <img [src]="avatarUrl" 
+               alt="Avatar Usuario" 
+               class="user-avatar" 
+               (error)="handleImageError($event)">
+        </div>
+        <span class="user-name">{{ nombreUsuario }}</span>
+        <i class="fas fa-chevron-down chevron-icon" [class.rotated]="isDropdownOpen"></i>
+      </div>
+
+      @if (isDropdownOpen) {
+        <div class="dropdown-menu">
+          <a class="dropdown-item"><i class="fas fa-user-circle"></i> Mi Perfil</a>
+          <a class="dropdown-item"><i class="fas fa-cog"></i> Configuración</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item logout" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </div>
+      }
+    </div>
+  </div>
+</header>

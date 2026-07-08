@@ -1,0 +1,112 @@
+<div class="usuarios-container">
+  <div class="page-header">
+    <div class="header-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+    <div class="header-text">
+      <h2>Pedidos por Cobrar</h2>
+      <p>Lista de pedidos listos para ser procesados por caja</p>
+    </div>
+  </div>
+
+  <div class="user-table-card search-filter-card">
+    <div class="search-filter-container d-flex justify-content-end">
+      <button class="btn-primary btn-refresh-styled" (click)="cargarPedidos()" [disabled]="isLoading">
+        <i class="fas fa-sync" [class.fa-spin]="isLoading"></i> Actualizar Lista
+      </button>
+    </div>
+  </div>
+
+  <div class="user-table-card">
+    <div class="table-responsive">
+      <table class="xin-yan-table">
+        <thead>
+          <tr>
+            <th>Pedido #</th>
+            <th>Mesa</th>
+            <th>Atendido por</th>
+            <th>Total a Cobrar</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="6" class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando pedidos...</td>
+          </tr>
+          <tr *ngIf="!isLoading && pedidos.length === 0">
+            <td colspan="6" class="text-center text-muted py-4">No hay pedidos pendientes de cobro.</td>
+          </tr>
+          <tr *ngFor="let pedido of pedidos">
+            <td class="font-bold text-muted">#{{ pedido.id }}</td>
+            <td>
+              <span class="font-bold" *ngIf="pedido.mesa">Mesa {{ pedido.mesa.numero }}</span>
+              <span class="text-muted" *ngIf="!pedido.mesa">Para llevar</span>
+            </td>
+            <td>{{ pedido.usuario?.nombre }}</td>
+            <td class="font-bold text-success">{{ calcularTotal(pedido) | currency:'PEN':'S/ ' }}</td>
+            <td>
+              <span class="role-badge" [ngClass]="{'activo': pedido.estado === 'LISTO', 'role-admin': pedido.estado === 'ENTREGADO'}">
+                {{ pedido.estado }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-success btn-sm" (click)="abrirModalCobro(pedido)">
+                <i class="fas fa-cash-register"></i> Cobrar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Cobro Overlay -->
+<div class="modal-overlay" *ngIf="pedidoSeleccionado">
+  <div class="modal-content-styled">
+    <div class="modal-header-styled">
+      <h3>Procesar Pago - Pedido #{{ pedidoSeleccionado.id }}</h3>
+      <button class="btn-close" (click)="cerrarModal()"><i class="fas fa-times"></i></button>
+    </div>
+    
+    <div class="modal-body-styled">
+      <div class="mb-3 text-center">
+        <h4 class="text-muted m-0">Total a Pagar</h4>
+        <h2 class="text-success m-0" style="font-size: 2.5rem;">{{ calcularTotal(pedidoSeleccionado) | currency:'PEN':'S/ ' }}</h2>
+      </div>
+
+      <div class="form-group mb-3">
+        <label class="font-bold">Método de Pago:</label>
+        <select class="form-control" [(ngModel)]="metodoPago">
+          <option value="EFECTIVO">Efectivo</option>
+          <option value="TARJETA_DEBITO">Tarjeta Débito</option>
+          <option value="TARJETA_CREDITO">Tarjeta Crédito</option>
+          <option value="YAPE">Yape / Plin</option>
+        </select>
+      </div>
+
+      <div class="form-group mb-3">
+        <label class="font-bold">Monto Recibido (S/):</label>
+        <input type="number" class="form-control" [(ngModel)]="montoRecibido" min="0" step="0.10">
+      </div>
+      
+      <div class="vuelto-container p-3 mb-3" *ngIf="metodoPago === 'EFECTIVO' && montoRecibido >= calcularTotal(pedidoSeleccionado)" style="background: #f8f9fa; border-radius: 8px;">
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="font-bold">Vuelto a entregar:</span>
+          <span class="font-bold text-danger" style="font-size: 1.2rem;">
+            {{ (montoRecibido - calcularTotal(pedidoSeleccionado)) | currency:'PEN':'S/ ' }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer-styled d-flex gap-2">
+      <button class="btn btn-outline-secondary w-50" (click)="cerrarModal()" [disabled]="isSaving">Cancelar</button>
+      <button class="btn btn-success w-50" (click)="registrarVenta()" [disabled]="isSaving || montoRecibido < calcularTotal(pedidoSeleccionado)">
+        <i class="fas fa-check" *ngIf="!isSaving"></i>
+        <i class="fas fa-spinner fa-spin" *ngIf="isSaving"></i> 
+        Confirmar Pago
+      </button>
+    </div>
+  </div>
+</div>
